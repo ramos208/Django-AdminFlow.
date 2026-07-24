@@ -1,0 +1,11 @@
+{{ adminflow_title|default:adminflow_company|default:"AdminFlow" }} Verification Code
+
+Enter this code to complete your verification:
+
+    {{ token }}
+
+• Code expires in 15 minutes.
+• Didn't request this code? You can safely ignore this email.
+
+--
+{{ adminflow_title|default:adminflow_company|default:"AdminFlow" }} Automated Security

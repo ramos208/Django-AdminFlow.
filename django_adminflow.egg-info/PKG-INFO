@@ -1,0 +1,321 @@
+Metadata-Version: 2.4
+Name: django-adminflow
+Version: 1.0.0
+Summary: A premium, modern SaaS design system for the Django Admin interface with built-in 2FA, history tracking, and import/export
+Author-email: Edgar <edgar@example.com>
+License: MIT
+Project-URL: Homepage, https://pypi.org/project/django-adminflow/
+Project-URL: Documentation, https://github.com/edgar/django-adminflow#readme
+Project-URL: Repository, https://github.com/edgar/django-adminflow
+Project-URL: Bug Tracker, https://github.com/edgar/django-adminflow/issues
+Project-URL: Changelog, https://github.com/edgar/django-adminflow/blob/main/CHANGELOG.md
+Keywords: django,admin,saas,design-system,2fa,otp,history,import,export,adminflow
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 4.2
+Classifier: Framework :: Django :: 5.0
+Classifier: Framework :: Django :: 5.1
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: Django>=4.2
+Provides-Extra: otp
+Requires-Dist: django-otp>=1.4; extra == "otp"
+Provides-Extra: history
+Requires-Dist: django-simple-history>=3.4; extra == "history"
+Provides-Extra: import-export
+Requires-Dist: django-import-export>=4.0; extra == "import-export"
+Requires-Dist: tablib[xlsx]>=3.5; extra == "import-export"
+Requires-Dist: openpyxl>=3.1; extra == "import-export"
+Provides-Extra: all
+Requires-Dist: django-otp>=1.4; extra == "all"
+Requires-Dist: django-simple-history>=3.4; extra == "all"
+Requires-Dist: django-import-export>=4.0; extra == "all"
+Requires-Dist: tablib[xlsx]>=3.5; extra == "all"
+Requires-Dist: openpyxl>=3.1; extra == "all"
+
+# django-adminflow
+
+**A premium, modern SaaS design system for the Django Admin interface.**
+
+[![PyPI version](https://img.shields.io/pypi/v/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
+[![Python versions](https://img.shields.io/pypi/pyversions/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
+[![Django versions](https://img.shields.io/pypi/djversions/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+AdminFlow replaces the default Django admin skin with a clean, minimalist SaaS design system — dark mode ready, responsive, and production-hardened. Drop it into any Django project with minimal configuration.
+
+---
+
+## Features
+
+| Feature | Description |
+|---|---|
+| 🎨 **Modern UI** | Minimalist SaaS design — clean typography, subtle shadows, responsive layout |
+| 🔒 **Two-Factor Auth** | TOTP (Google/Authy), email OTP, and backup codes — add multiple devices |
+| 📜 **Audit History** | Per-record change history with delta diffs, powered by `django-simple-history` |
+| 📤 **Import / Export** | Multi-sheet XLSX and nested JSON export with related models in one file |
+| 🔌 **Plug & Play** | One `INSTALLED_APPS` entry — no boilerplate required |
+| 🌐 **i18n Ready** | All UI strings wrapped in `{% translate %}` |
+
+---
+
+## Installation
+
+### Minimal (UI only)
+
+```bash
+pip install django-adminflow
+```
+
+### With 2FA support
+
+```bash
+pip install "django-adminflow[otp]"
+```
+
+### With audit history
+
+```bash
+pip install "django-adminflow[history]"
+```
+
+### With import / export
+
+```bash
+pip install "django-adminflow[import-export]"
+```
+
+### Everything
+
+```bash
+pip install "django-adminflow[all]"
+```
+
+---
+
+## Quick Setup
+
+### 1. `settings.py`
+
+```python
+INSTALLED_APPS = [
+    "adminflow",          # must come BEFORE django.contrib.admin
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+
+    # Optional: add only the ones you installed
+    "simple_history",
+    "import_export",
+    "django_otp",
+    "django_otp.plugins.otp_totp",
+    "django_otp.plugins.otp_email",
+    "django_otp.plugins.otp_static",
+]
+
+# Optional: customize the admin title
+ADMINFLOW_TITLE = "My App"
+
+MIDDLEWARE = [
+    ...
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_otp.middleware.OTPMiddleware",
+    ...
+    "simple_history.middleware.HistoryRequestMiddleware",
+]
+```
+
+---
+
+## 3rd Party Integrations
+
+AdminFlow has built-in support for the following packages. Each is **optional**.
+
+### 🔒 Two-Factor Authentication — `django-otp`
+
+```bash
+pip install "django-adminflow[otp]"
+```
+
+What AdminFlow adds:
+- OTP verification screen on login (TOTP / email)
+- Per-device 2FA management in the user admin
+- Add multiple authenticator apps or devices per user
+- Backup codes (static OTP) generation
+- Admin actions: *Enable 2FA*, *Generate 10 backup codes*
+
+```python
+# admin.py — minimal setup
+from adminflow.user_admin import AdminFlowUserAdminMixin, get_2fa_inlines, unregister_otp_models
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+
+@admin.register(User)
+class UserAdmin(AdminFlowUserAdminMixin, BaseUserAdmin):
+    inlines = get_2fa_inlines()
+
+unregister_otp_models()
+```
+
+---
+
+### 📜 Audit History — `django-simple-history`
+
+```bash
+pip install "django-adminflow[history]"
+```
+
+What AdminFlow adds:
+- Styled history list with delta diff highlighting
+- Related model history merged into parent history view
+
+```python
+# models.py
+from simple_history.models import HistoricalRecords
+
+class Product(models.Model):
+    name = models.CharField(max_length=200)
+    history = HistoricalRecords()
+
+# admin.py
+from simple_history.admin import SimpleHistoryAdmin
+
+@admin.register(Product)
+class ProductAdmin(SimpleHistoryAdmin):
+    ...
+```
+
+---
+
+### 📤 Import / Export — `django-import-export`
+
+```bash
+pip install "django-adminflow[import-export]"
+```
+
+Add `import_export` to `INSTALLED_APPS`.
+
+Export formats:
+
+| Format | Output |
+|---|---|
+| **XLSX** | One `.xlsx` file — one sheet per related model |
+| **JSON** | One `.json` file — child records nested inside parent records |
+
+```python
+# resources.py
+from import_export import resources, fields
+from import_export.widgets import ForeignKeyWidget
+from .models import Customer, Order
+
+class CustomerResource(resources.ModelResource):
+    class Meta:
+        model = Customer
+        fields = ('id', 'name', 'email', 'phone', 'notes', 'date_created')
+
+class OrderResource(resources.ModelResource):
+    customer = fields.Field(
+        column_name='customer_email',
+        attribute='customer',
+        widget=ForeignKeyWidget(Customer, field='email'),
+    )
+    class Meta:
+        model = Order
+        fields = ('id', 'customer', 'product', 'order_date', 'status', 'total_amount')
+
+# admin.py
+from adminflow.import_export import MultiSheetExportImportMixin
+from import_export.admin import ImportExportModelAdmin
+
+@admin.register(Customer)
+class CustomerAdmin(MultiSheetExportImportMixin, ImportExportModelAdmin, admin.ModelAdmin):
+    combined_sheets = [
+        ('General Details', CustomerResource, None),
+        ('Orders', OrderResource, lambda qs: Order.objects.filter(customer__in=qs)),
+    ]
+```
+
+JSON output structure:
+
+```json
+[
+  {
+    "id": "1",
+    "name": "Rooney Hutchinson",
+    "email": "rooney@example.com",
+    "orders": [
+      {
+        "id": "1",
+        "customer_email": "rooney@example.com",
+        "order_date": "2026-07-22",
+        "status": "delivered",
+        "total_amount": "42222.00"
+      }
+    ]
+  }
+]
+```
+
+---
+
+## Admin Customisation
+
+```python
+# settings.py
+ADMINFLOW_TITLE = "My SaaS App"
+```
+
+```python
+# admin.py — custom Material Symbols icon
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    icon = "inventory_2"
+```
+
+---
+
+## Changelog
+
+### v1.0.0 — 2026-07-23
+
+- Initial stable release
+- Modern SaaS admin UI (minimalist, responsive)
+- Full 2FA: TOTP, email OTP, backup codes, multi-device support
+- Audit history with delta diffs (django-simple-history)
+- Multi-sheet XLSX export/import (one sheet per related model)
+- Nested JSON export (children embedded inside parent records)
+- `MultiSheetExportImportMixin` for plug-and-play multi-resource export
+- Styled Import / Export buttons and export page
+
+---
+
+## Publishing to PyPI
+
+```bash
+pip install build twine
+
+# Build
+cd "AdminFlow Package"
+python -m build
+
+# Upload
+twine upload dist/*
+```
+
+---
+
+## License
+
+MIT

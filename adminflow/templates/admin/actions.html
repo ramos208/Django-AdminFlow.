@@ -1,0 +1,79 @@
+{% load i18n %}
+<div class="flex flex-wrap items-center gap-3 bg-surface-low border border-outline-variant p-3 rounded-xl">
+    {% block actions %}
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-on-surface-variant">{% translate "Actions:" %}</span>
+            {% block actions-form %}
+                {% for field in action_form %}
+                    <div class="inline-block relative">
+                        {{ field }}
+                    </div>
+                {% endfor %}
+            {% endblock %}
+        </div>
+        
+        {% block actions-submit %}
+            <button type="submit" class="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary/90 transition-all shadow-sm" 
+                    title="{% translate "Run the selected action" %}" name="index" value="{{ action_index|default:0 }}">
+                {% translate "Go" %}
+            </button>
+        {% endblock %}
+        
+        {% block actions-counter %}
+            {% if actions_selection_counter %}
+                <span class="text-xs text-on-surface-variant font-medium ml-2 action-counter" data-actions-icnt="{{ cl.result_list|length }}">
+                    {{ selection_note }}
+                </span>
+                {% if cl.show_full_result_count %}
+                    <span class="hidden text-xs text-primary hover:underline cursor-pointer ml-2 clear-selection">
+                        {% translate "Clear selection" %}
+                    </span>
+                {% endif %}
+            {% endif %}
+        {% endblock %}
+    {% endblock %}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Style the action select dropdown
+        const select = document.querySelector('select[name="action"]');
+        if (select) {
+            select.className = "pl-3 pr-8 py-1.5 bg-surface-lowest border border-outline-variant rounded-lg text-xs appearance-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none";
+        }
+
+        // Live Action Counter update script
+        function updateActionCounter() {
+            const counter = document.querySelector('span.action-counter');
+            if (!counter) return;
+            const total = counter.dataset.actionsIcnt || document.querySelectorAll('input[type="checkbox"].action-select').length;
+            const selected = document.querySelectorAll('input[type="checkbox"].action-select:checked').length;
+            counter.textContent = selected + " of " + total + " selected";
+        }
+
+        // Handle #action-toggle select all / unselect all
+        const actionToggle = document.getElementById("action-toggle");
+        if (actionToggle) {
+            actionToggle.addEventListener("click", function() {
+                const isChecked = this.checked;
+                const rowCheckboxes = document.querySelectorAll('input[type="checkbox"].action-select');
+                rowCheckboxes.forEach(cb => {
+                    cb.checked = isChecked;
+                    const tr = cb.closest('tr');
+                    if (tr) tr.classList.toggle('selected', isChecked);
+                });
+                setTimeout(updateActionCounter, 10);
+            });
+        }
+
+        // Listen for any individual checkbox click/change
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.type === 'checkbox') {
+                setTimeout(updateActionCounter, 10);
+            }
+        });
+
+        // Sync counter on load
+        updateActionCounter();
+    });
+</script>

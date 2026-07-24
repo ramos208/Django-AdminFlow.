@@ -1,0 +1,73 @@
+{% load i18n adminflow_tags %}
+<fieldset class="space-y-4 {% if not is_inline %}border border-outline-variant bg-surface-lowest p-4 sm:p-6 rounded-xl shadow-sm{% endif %}">
+    {% if fieldset.name %}
+        {% if is_inline %}
+            <h4 class="text-xs font-bold text-on-surface uppercase tracking-wider mb-2 px-1">
+                {{ fieldset.name }}
+            </h4>
+        {% else %}
+            <legend class="text-xs font-black text-on-surface uppercase tracking-wider px-2 bg-surface-lowest">
+                {{ fieldset.name }}
+            </legend>
+        {% endif %}
+    {% endif %}
+    
+    {% if fieldset.description %}
+        <p class="text-xs text-on-surface-variant italic mb-4">{{ fieldset.description|safe }}</p>
+    {% endif %}
+    
+    <div class="space-y-4">
+        {% for line in fieldset %}
+            <div class="grid grid-cols-1 {% if line.fields|length > 1 %}md:grid-cols-{{ line.fields|length }}{% endif %} gap-4">
+                {% for field in line %}
+                    <div class="space-y-1.5 {% if field.errors %}text-danger{% endif %}">
+                        <!-- Label -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" for="{{ field.field.id_for_label }}">
+                                {{ field.field.label }}
+                                {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                        </div>
+                        
+                        <!-- Input Control -->
+                        <div class="relative">
+                            {% if field.is_readonly %}
+                                <div class="px-3 py-2 bg-surface-low border border-outline-variant rounded-lg text-xs text-on-surface font-mono">
+                                    {{ field.contents }}
+                                </div>
+                            {% else %}
+                                {% if field.field|is_checkbox %}
+                                    <div class="flex items-center gap-2 py-2">
+                                        {{ field.field|add_class:"w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer dark:bg-slate-800 dark:border-slate-700" }}
+                                        <span class="text-xs text-on-surface-variant font-medium select-none">{{ field.field.help_text|safe }}</span>
+                                    </div>
+                                {% elif field.field|is_textarea %}
+                                    {{ field.field|add_class:"w-full px-3 py-2 rounded-lg border border-outline-variant bg-surface-lowest text-xs text-on-surface focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900 dark:border-slate-800" }}
+                                {% elif field.field|is_select %}
+                                    {{ field.field|add_class:"w-full pl-3 pr-8 py-2 bg-surface-lowest border border-outline-variant rounded-lg text-xs focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900 dark:border-slate-800" }}
+                                {% elif field.field|is_file %}
+                                    {{ field.field|add_class:"text-xs text-on-surface-variant file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary hover:file:text-white transition-all cursor-pointer" }}
+                                {% else %}
+                                    {{ field.field|add_class:"w-full h-10 px-3 rounded-lg border border-outline-variant bg-surface-lowest text-xs text-on-surface focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900 dark:border-slate-800" }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Field Errors -->
+                        {% if field.errors %}
+                            <p class="text-[11px] text-danger font-semibold flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">error</span>
+                                {{ field.errors|striptags }}
+                            </p>
+                        {% endif %}
+                        
+                        <!-- Help Text (Only for non-checkboxes where it is shown inline above) -->
+                        {% if field.field.help_text and not field.field|is_checkbox %}
+                            <p class="text-[10px] text-on-surface-variant opacity-80">{{ field.field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</fieldset>

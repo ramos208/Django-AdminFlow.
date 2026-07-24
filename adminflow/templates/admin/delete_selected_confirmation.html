@@ -1,0 +1,118 @@
+{% extends "admin/base_site.html" %}
+{% load i18n l10n admin_urls static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ media }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} delete-confirmation delete-selected-confirmation{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="flex items-center gap-1.5 text-xs text-on-surface-variant/70 mb-4">
+    <a href="{% url 'admin:index' %}" class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[16px]">home</span></a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url 'admin:app_list' app_label=opts.app_label %}" class="hover:text-primary transition-colors capitalize font-medium">{{ opts.app_config.verbose_name }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="hover:text-primary transition-colors font-bold">{{ opts.verbose_name_plural|capfirst }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <span class="text-danger font-bold">{% translate 'Confirm Bulk Deletion' %}</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-2xl mx-auto w-full border border-outline-variant bg-surface-lowest p-8 rounded-xl shadow-md my-8">
+
+{% if perms_lacking %}
+    <!-- Permission Error -->
+    <div class="text-center space-y-3">
+        <div class="inline-flex items-center justify-center p-4 bg-warning/10 text-warning rounded-full">
+            <span class="material-symbols-outlined text-4xl">gpp_bad</span>
+        </div>
+        <h2 class="text-xl md:text-2xl font-black text-on-surface">{% translate "Permission Denied" %}</h2>
+        <p class="text-xs text-on-surface-variant max-w-md mx-auto">
+            {% blocktranslate %}Deleting the selected {{ objects_name }} would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:{% endblocktranslate %}
+        </p>
+    </div>
+    <div class="bg-warning/5 border border-warning/20 p-4 rounded-lg space-y-1">
+        <ul class="text-xs text-on-surface-variant space-y-1 list-disc pl-5">{{ perms_lacking|unordered_list }}</ul>
+    </div>
+
+{% elif protected %}
+    <!-- Protected Objects Error -->
+    <div class="text-center space-y-3">
+        <div class="inline-flex items-center justify-center p-4 bg-warning/10 text-warning rounded-full">
+            <span class="material-symbols-outlined text-4xl">shield</span>
+        </div>
+        <h2 class="text-xl md:text-2xl font-black text-on-surface">{% translate "Protected Objects" %}</h2>
+        <p class="text-xs text-on-surface-variant max-w-md mx-auto">
+            {% blocktranslate %}Deleting the selected {{ objects_name }} would require deleting the following protected related objects:{% endblocktranslate %}
+        </p>
+    </div>
+    <div class="bg-warning/5 border border-warning/20 p-4 rounded-lg space-y-1">
+        <ul class="text-xs text-on-surface-variant space-y-1 list-disc pl-5">{{ protected|unordered_list }}</ul>
+    </div>
+
+{% else %}
+    <!-- Danger Icon & Warning Title -->
+    <div class="text-center space-y-3">
+        <div class="inline-flex items-center justify-center p-4 bg-danger/10 text-danger rounded-full">
+            <span class="material-symbols-outlined text-4xl">delete_forever</span>
+        </div>
+        <h2 class="text-xl md:text-2xl font-black text-on-surface">{% translate 'Confirm Bulk Deletion' %}</h2>
+        <p class="text-xs text-on-surface-variant max-w-md mx-auto">
+            {% blocktranslate %}Are you sure you want to delete the selected {{ objects_name }}? All of the following objects and their related items will be deleted permanently.{% endblocktranslate %}
+        </p>
+    </div>
+
+    <!-- Summary -->
+    <div class="bg-surface-low border border-outline-variant p-4 rounded-lg">
+        <h3 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">summarize</span>
+            {% translate "Summary" %}
+        </h3>
+        <div class="flex flex-wrap gap-2">
+            {% for model_name, object_count in model_count %}
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold border" style="background:color-mix(in srgb, var(--danger) 5%, transparent);border-color:color-mix(in srgb, var(--danger) 15%, transparent);color:var(--danger);">
+                <span class="material-symbols-outlined text-[14px]">folder</span>
+                {{ model_name|capfirst }}: {{ object_count }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Objects list -->
+    <div class="bg-surface-low border border-outline-variant p-4 rounded-lg space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
+        <h3 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">list</span>
+            {% translate "Objects to be deleted" %}
+        </h3>
+        {% for deletable_object in deletable_objects %}
+        <div class="text-xs text-on-surface-variant space-y-1 font-mono pl-2 border-l-2 border-danger/40">
+            <ul class="space-y-0.5">{{ deletable_object|unordered_list }}</ul>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Confirmation form -->
+    <form method="post" class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-outline-variant">
+        {% csrf_token %}
+        {% for obj in queryset %}
+        <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk|unlocalize }}">
+        {% endfor %}
+        <input type="hidden" name="action" value="delete_selected">
+        <input type="hidden" name="post" value="yes">
+
+        <button type="submit" class="w-full sm:w-auto flex items-center justify-center gap-1.5 px-6 py-2.5 bg-danger text-white rounded-lg text-xs font-bold hover:bg-danger/90 shadow-md active:scale-[0.98] transition-all">
+            <span class="material-symbols-outlined text-sm">delete</span>
+            {% translate "Yes, I'm sure" %}
+        </button>
+
+        <a href="#" class="cancel-link w-full sm:w-auto flex items-center justify-center gap-1.5 px-6 py-2.5 bg-surface-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-low text-center rounded-lg text-xs font-bold shadow-sm transition-all">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            {% translate "No, take me back" %}
+        </a>
+    </form>
+{% endif %}
+</div>
+{% endblock %}

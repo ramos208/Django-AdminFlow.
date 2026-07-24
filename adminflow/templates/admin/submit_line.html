@@ -1,0 +1,48 @@
+{% load i18n admin_urls %}
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 border border-outline-variant bg-surface-low/50 rounded-xl mt-6">
+    {% block submit-row %}
+        <!-- Delete Link (Destructive Action) -->
+        <div class="w-full sm:w-auto">
+            {% if show_delete_link and original %}
+                {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+                <a href="{% add_preserved_filters delete_url %}" 
+                   class="flex items-center justify-center gap-1.5 w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all text-xs font-bold shadow-sm">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                    <span>{% translate "Delete" %}</span>
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Positive Actions -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+            {% if show_save_as_new %}
+                <button type="submit" name="_saveasnew" 
+                        class="w-full sm:w-auto text-center justify-center px-4 py-2.5 sm:py-2 bg-surface-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-low rounded-lg text-xs font-bold transition-all shadow-sm">
+                    {% translate 'Save as new' %}
+                </button>
+            {% endif %}
+            
+            {% if show_save_and_add_another %}
+                <button type="submit" name="_addanother" 
+                        class="w-full sm:w-auto text-center justify-center px-4 py-2.5 sm:py-2 bg-surface-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-low rounded-lg text-xs font-bold transition-all shadow-sm">
+                    {% translate 'Save and add another' %}
+                </button>
+            {% endif %}
+            
+            {% if show_save_and_continue %}
+                <button type="submit" name="_continue" 
+                        class="w-full sm:w-auto text-center justify-center px-4 py-2.5 sm:py-2 bg-surface-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-low rounded-lg text-xs font-bold transition-all shadow-sm">
+                    {% translate 'Save and continue editing' %}
+                </button>
+            {% endif %}
+            
+            {% if show_save %}
+                <button type="submit" name="_save" 
+                        class="flex items-center justify-center gap-1.5 w-full sm:w-auto px-6 py-2.5 sm:py-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary/95 transition-all shadow-md active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                    <span>{% translate 'Save' %}</span>
+                </button>
+            {% endif %}
+        </div>
+    {% endblock %}
+</div>

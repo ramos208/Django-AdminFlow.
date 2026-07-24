@@ -1,0 +1,216 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  {% if cl.formset or action_form %}
+    <script src="{% url 'admin:jsi18n' %}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}change-list-page{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="flex items-center gap-1.5 text-xs text-on-surface-variant/70 mb-4">
+    <a href="{% url 'admin:index' %}" class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[16px]">home</span></a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <span class="capitalize font-medium">{{ cl.opts.app_label }}</span>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <span class="text-primary font-bold">{{ cl.opts.verbose_name_plural|capfirst }}</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-[1600px] mx-auto w-full">
+    <!-- Header Summary Block -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl md:text-2xl font-black text-on-surface tracking-tight">{{ cl.opts.verbose_name_plural|capfirst }}</h2>
+            <p class="text-xs text-on-surface-variant mt-1">
+                {% blocktranslate with name=cl.opts.verbose_name_plural %}Manage list, modify records, and run bulk operations on {{ name }}.{% endblocktranslate %}
+            </p>
+        </div>
+        
+        <!-- Action Buttons (Import / Export / Add Model / Mobile Filters) -->
+        <div class="flex items-center gap-2 flex-wrap">
+            {% if cl.has_filters %}
+            <!-- Mobile Filter Popup Button -->
+            <button type="button" onclick="toggleMobileFilterModal()" class="lg:hidden flex items-center gap-1.5 px-3.5 py-2 bg-surface-lowest border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-low text-xs font-bold rounded-lg shadow-sm transition-all">
+                <span class="material-symbols-outlined text-[16px] text-primary">filter_list</span>
+                {% translate "Filters" %}
+                {% if cl.has_active_filters %}
+                    <span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+                {% endif %}
+            </button>
+            {% endif %}
+
+            <!-- django-import-export: Import / Export buttons -->
+            {% block object-tools-items %}
+                {% block import-item %}{% endblock %}
+                {% block export-item %}{% endblock %}
+            {% endblock %}
+
+            {% if has_add_permission %}
+            {% url cl.opts|admin_urlname:'add' as add_url %}
+            <a href="{% add_preserved_filters add_url is_popup to_field %}" class="flex items-center gap-1.5 px-4 py-2 bg-primary text-white text-xs font-bold rounded-lg shadow-md hover:bg-primary/95 hover:shadow transition-all active:scale-[0.98]">
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                {% blocktranslate with name=cl.opts.verbose_name %}Add {{ name }}{% endblocktranslate %}
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Error/Messages Area -->
+    {% if cl.formset and cl.formset.errors %}
+        <p class="p-3 bg-danger/10 border border-danger/20 text-danger rounded-lg text-xs font-semibold">
+            {% blocktranslate count counter=cl.formset.total_error_count %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktranslate %}
+        </p>
+        {{ cl.formset.non_form_errors }}
+    {% endif %}
+
+    <!-- Main Grid: Table & Filters Split -->
+    <div class="{% if cl.has_filters %}grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6 items-start{% else %}w-full{% endif %}">
+        
+        <!-- Left: Table & Search & Actions -->
+        <div class="{% if cl.has_filters %}lg:col-span-3{% else %}w-full{% endif %} border border-outline-variant bg-surface-lowest rounded-xl shadow-sm overflow-hidden lg:min-h-[500px] flex flex-col justify-between">
+            
+            <!-- Search block & Actions bar -->
+            <div class="p-3 md:p-4 bg-surface-low/30 border-b border-outline-variant space-y-3 shrink-0">
+                {% block search %}
+                    {% search_form cl %}
+                {% endblock %}
+                
+                {% block date_hierarchy %}
+                    {% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}
+                {% endblock %}
+            </div>
+
+            <!-- Table Form for Actions & List Editable -->
+            <form id="changelist-form" method="post" {% if cl.formset and cl.formset.is_multipart %}enctype="multipart/form-data"{% endif %} novalidate class="flex-1 flex flex-col justify-between">
+                {% csrf_token %}
+                
+                {% if cl.formset %}
+                    <div>{{ cl.formset.management_form }}</div>
+                {% endif %}
+
+                <!-- Actions selector -->
+                {% if action_form and actions_on_top and cl.show_admin_actions %}
+                    <div class="p-3 border-b border-outline-variant bg-surface-lowest shrink-0">
+                        {% admin_actions %}
+                    </div>
+                {% endif %}
+
+                <!-- Table Rows results list (scrollable on mobile) -->
+                {% block result_list %}
+                    <div class="overflow-x-auto flex-1">
+                        {% result_list cl %}
+                    </div>
+                {% endblock %}
+
+                <!-- Actions at bottom -->
+                {% if action_form and actions_on_bottom and cl.show_admin_actions %}
+                    <div class="p-3 border-t border-outline-variant bg-surface-lowest shrink-0">
+                        {% admin_actions %}
+                    </div>
+                {% endif %}
+
+                <!-- Pagination block (anchored to bottom) -->
+                <div class="shrink-0">
+                    {% block pagination %}
+                        {% pagination cl %}
+                    {% endblock %}
+                </div>
+            </form>
+        </div>
+
+        <!-- Right: Filters Sidebar (Desktop View Only) -->
+        {% if cl.has_filters %}
+        <div class="hidden lg:block border border-outline-variant bg-surface-lowest rounded-xl shadow-sm overflow-hidden p-5 space-y-4 lg:sticky lg:top-20">
+            <div class="flex items-center justify-between border-b border-outline-variant pb-3">
+                <h3 class="text-xs font-black text-on-surface uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    {% translate 'Filters' %}
+                </h3>
+                {% if cl.has_active_filters %}
+                    <a href="{{ cl.clear_all_filters_qs }}" class="text-[10px] font-bold text-danger hover:underline">
+                        {% translate 'Clear all' %}
+                    </a>
+                {% endif %}
+            </div>
+            
+            <div class="divide-y divide-outline-variant/40 space-y-3">
+                {% for spec in cl.filter_specs %}
+                    {% admin_list_filter cl spec %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% if cl.has_filters %}
+<!-- Mobile Filter Modal (Popup / Bottom Sheet for Mobile View) -->
+<div id="mobile-filter-modal" class="fixed inset-0 z-50 hidden lg:hidden flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm" onclick="if(event.target===this) toggleMobileFilterModal()">
+    <div class="bg-surface-lowest border border-outline-variant w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col transition-all">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-4 border-b border-outline-variant bg-surface-low/50">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[20px]">filter_list</span>
+                <h3 class="text-xs font-black text-on-surface uppercase tracking-wider">
+                    {% translate 'Filter Records' %}
+                </h3>
+            </div>
+            <div class="flex items-center gap-3">
+                {% if cl.has_active_filters %}
+                    <a href="{{ cl.clear_all_filters_qs }}" class="text-[11px] font-bold text-danger hover:underline">
+                        {% translate 'Clear all' %}
+                    </a>
+                {% endif %}
+                <button type="button" onclick="toggleMobileFilterModal()" class="p-1 rounded-lg text-on-surface-variant hover:bg-surface-low transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Filter Options Body -->
+        <div class="p-4 overflow-y-auto custom-scrollbar divide-y divide-outline-variant/40 space-y-4 flex-1">
+            {% for spec in cl.filter_specs %}
+                {% admin_list_filter cl spec %}
+            {% endfor %}
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="p-4 border-t border-outline-variant bg-surface-low/50 flex items-center justify-between gap-3">
+            {% if cl.has_active_filters %}
+                <a href="{{ cl.clear_all_filters_qs }}" class="px-4 py-2 bg-surface-lowest border border-outline-variant text-danger hover:bg-danger/10 text-xs font-bold rounded-lg transition-all text-center">
+                    {% translate 'Clear Filters' %}
+                </a>
+            {% endif %}
+            <button type="button" onclick="toggleMobileFilterModal()" class="ml-auto px-6 py-2 bg-primary text-white text-xs font-bold rounded-lg shadow-md hover:bg-primary/95 transition-all">
+                {% translate 'Apply / Close' %}
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleMobileFilterModal() {
+    const modal = document.getElementById('mobile-filter-modal');
+    if (!modal) return;
+    modal.classList.toggle('hidden');
+    if (!modal.classList.contains('hidden')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+</script>
+{% endif %}
+{% endblock %}

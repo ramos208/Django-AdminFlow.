@@ -1,0 +1,103 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls %}
+{% load url from simple_history_compat %}
+
+{% block breadcrumbs %}
+  <div class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium px-6 py-3">
+    <a href="{% url "admin:index" %}" class="hover:text-primary transition-colors">{% trans "Home" %}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url "admin:app_list" app_label %}" class="hover:text-primary transition-colors">{{app_label|capfirst|escape}}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{{changelist_url}}" class="hover:text-primary transition-colors">{{opts.verbose_name_plural|capfirst}}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{{change_url}}" class="hover:text-primary transition-colors">{{original|truncatewords:"18"}}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="../" class="hover:text-primary transition-colors">{% trans "History" %}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <span class="text-on-surface font-bold">
+      {% if revert_disabled %}{% blocktrans with original_opts.verbose_name as verbose_name %}View {{verbose_name}}{% endblocktrans %}{% else %}{% blocktrans with original_opts.verbose_name as verbose_name %}Revert {{verbose_name}}{% endblocktrans %}{% endif %}
+    </span>
+  </div>
+{% endblock %}
+
+{% block submit_buttons_top %}
+  {% include "simple_history/submit_line.html" %}
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+  {% include "simple_history/submit_line.html" %}
+{% endblock %}
+
+{% block object-tools-items %}
+<li>
+    <a href="{% add_preserved_filters history_url %}" class="historylink">{% translate "History" %}</a>
+</li>
+{% if has_absolute_url %}<li><a href="{{ absolute_url }}" class="viewsitelink">{% translate "View on site" %}</a></li>{% endif %}
+{% endblock %}
+
+{% block form_top %}
+<div class="flex items-start gap-3 p-4 rounded-xl border mb-4" style="background:color-mix(in srgb, var(--info) 5%, transparent);border-color:color-mix(in srgb, var(--info) 20%, transparent);">
+    <span class="material-symbols-outlined text-xl shrink-0" style="color:var(--info);">info</span>
+    <div class="text-xs">
+        <p class="font-bold text-on-surface mb-0.5">{% trans "Read-Only Historical View" %}</p>
+        <p class="text-on-surface-variant">
+            {% if not revert_disabled %}{% blocktrans %}This is a snapshot of the object at this point in time. Press <strong>'Revert'</strong> to restore this version, or <strong>'Close'</strong> to go back.{% endblocktrans %}{% else %}{% trans "This is a read-only view of the object at this point in time." %}{% endif %}
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Make all form fields read-only/disabled on history detail view
+    const form = document.getElementById('{{ opts.model_name }}_form') || document.querySelector('form');
+    if (!form) return;
+
+    // Disable all input, select, textarea elements
+    form.querySelectorAll('input, select, textarea').forEach(el => {
+        // Skip the revert submit button and hidden CSRF/form fields
+        if (el.type === 'submit' || el.type === 'hidden') return;
+        el.disabled = true;
+        el.style.opacity = '0.7';
+        el.style.cursor = 'not-allowed';
+        el.style.pointerEvents = 'none';
+    });
+
+    // Hide file input "Choose File" buttons and "Remove" buttons
+    form.querySelectorAll('input[type="file"]').forEach(el => {
+        const wrapper = el.closest('div');
+        if (wrapper) wrapper.style.display = 'none';
+    });
+
+    // Hide the clear/remove buttons from file preview cards
+    form.querySelectorAll('.adminflow-clear-btn').forEach(btn => {
+        btn.style.display = 'none';
+    });
+
+    // Add a read-only visual badge to each fieldset
+    form.querySelectorAll('fieldset').forEach(fieldset => {
+        const legend = fieldset.querySelector('legend, h2, .fieldset-header');
+        if (legend) {
+            const badge = document.createElement('span');
+            badge.className = 'ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-bold uppercase';
+            badge.style.cssText = 'color:var(--info);background:color-mix(in srgb, var(--info) 10%, transparent);vertical-align:middle;';
+            badge.innerHTML = '<span class="material-symbols-outlined text-[11px]">lock</span> Read-only';
+            legend.appendChild(badge);
+        }
+    });
+
+    // Hide tabs if any (no editing needed)
+    // Disable inline add buttons
+    form.querySelectorAll('.add-row, .inline-group .add-row a').forEach(el => {
+        el.style.display = 'none';
+    });
+
+    // Disable delete checkboxes on inlines
+    form.querySelectorAll('.inline-deletelink, .delete input').forEach(el => {
+        el.style.display = 'none';
+    });
+});
+</script>
+{% endblock %}

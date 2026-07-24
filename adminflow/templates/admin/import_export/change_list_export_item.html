@@ -1,0 +1,8 @@
+{% load i18n admin_urls %}
+{% if has_export_permission %}
+<a href="{% url opts|admin_urlname:'export' %}{{ cl.get_query_string }}"
+   class="flex items-center gap-1.5 px-3.5 py-2 bg-surface-lowest border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-low text-xs font-bold rounded-lg shadow-sm transition-all">
+    <span class="material-symbols-outlined text-[15px] text-primary">download</span>
+    {% translate "Export" %}
+</a>
+{% endif %}

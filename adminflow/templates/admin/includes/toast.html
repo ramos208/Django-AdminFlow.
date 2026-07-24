@@ -1,0 +1,102 @@
+{% load i18n %}
+<!-- AdminFlow Unified Reusable Floating Toast Notifications -->
+{% if messages or form.errors or form.non_field_errors or errors %}
+<div id="toast-container" class="fixed top-6 right-6 z-[9999] space-y-3 max-w-md w-full px-4 pointer-events-none">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="toast-item pointer-events-auto relative overflow-hidden flex items-start gap-3 p-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-2xl border transition-all transform translate-y-0 opacity-100 duration-300 animate-slide-in {% if message.tags == 'warning' %}border-amber-400/80 text-amber-950 dark:text-amber-200 bg-amber-50/90{% elif message.tags == 'error' %}border-rose-400/80 text-rose-950 dark:text-rose-200 bg-rose-50/90{% else %}border-emerald-400/80 text-emerald-950 dark:text-emerald-200 bg-emerald-50/90{% endif %}" role="alert">
+            <div class="p-2 rounded-xl shrink-0 {% if message.tags == 'warning' %}bg-amber-500/20 text-amber-700 dark:text-amber-400{% elif message.tags == 'error' %}bg-rose-500/20 text-rose-700 dark:text-rose-400{% else %}bg-emerald-500/20 text-emerald-700 dark:text-emerald-400{% endif %}">
+                <span class="material-symbols-outlined text-[22px]">
+                    {% if message.tags == 'warning' %}warning{% elif message.tags == 'error' %}error{% else %}check_circle{% endif %}
+                </span>
+            </div>
+            <div class="flex-1 pt-0.5">
+                <h4 class="text-[11px] font-bold uppercase tracking-wider mb-0.5 {% if message.tags == 'warning' %}text-amber-800{% elif message.tags == 'error' %}text-rose-800{% else %}text-emerald-800{% endif %}">
+                    {% if message.tags == 'warning' %}Security Alert{% elif message.tags == 'error' %}Error Notification{% else %}Success Notification{% endif %}
+                </h4>
+                <p class="text-xs font-semibold leading-relaxed text-slate-800 dark:text-slate-100">{{ message }}</p>
+            </div>
+            <button type="button" onclick="dismissToast(this.closest('.toast-item'))" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+
+            <!-- Progress Bar -->
+            <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-200/50 dark:bg-slate-800/50">
+                <div class="toast-progress h-full {% if message.tags == 'warning' %}bg-amber-500{% elif message.tags == 'error' %}bg-rose-500{% else %}bg-emerald-500{% endif %}"></div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <div class="toast-item pointer-events-auto relative overflow-hidden flex items-start gap-3 p-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-2xl border border-rose-400/80 text-rose-950 dark:text-rose-200 bg-rose-50/90 transition-all transform translate-y-0 opacity-100 duration-300 animate-slide-in" role="alert">
+            <div class="p-2 rounded-xl shrink-0 bg-rose-500/20 text-rose-700 dark:text-rose-400">
+                <span class="material-symbols-outlined text-[22px]">error</span>
+            </div>
+            <div class="flex-1 pt-0.5">
+                <h4 class="text-[11px] font-bold uppercase tracking-wider mb-0.5 text-rose-800">Form Error</h4>
+                <p class="text-xs font-semibold leading-relaxed text-slate-800 dark:text-slate-100">{{ error }}</p>
+            </div>
+            <button type="button" onclick="dismissToast(this.closest('.toast-item'))" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+            <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-200/50 dark:bg-slate-800/50">
+                <div class="toast-progress h-full bg-rose-500"></div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if errors and not form.non_field_errors %}
+        <div class="toast-item pointer-events-auto relative overflow-hidden flex items-start gap-3 p-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-2xl border border-rose-400/80 text-rose-950 dark:text-rose-200 bg-rose-50/90 transition-all transform translate-y-0 opacity-100 duration-300 animate-slide-in" role="alert">
+            <div class="p-2 rounded-xl shrink-0 bg-rose-500/20 text-rose-700 dark:text-rose-400">
+                <span class="material-symbols-outlined text-[22px]">error</span>
+            </div>
+            <div class="flex-1 pt-0.5">
+                <h4 class="text-[11px] font-bold uppercase tracking-wider mb-0.5 text-rose-800">Validation Error</h4>
+                <p class="text-xs font-semibold leading-relaxed text-slate-800 dark:text-slate-100">
+                    {% blocktranslate count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktranslate %}
+                </p>
+            </div>
+            <button type="button" onclick="dismissToast(this.closest('.toast-item'))" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+            <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-200/50 dark:bg-slate-800/50">
+                <div class="toast-progress h-full bg-rose-500"></div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    @keyframes slideInRight {
+        from { transform: translateX(120%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes toastProgress {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+    .animate-slide-in {
+        animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .toast-progress {
+        animation: toastProgress 7s linear forwards;
+    }
+</style>
+
+<script>
+    function dismissToast(el) {
+        if (!el) return;
+        el.style.transform = 'translateX(120%)';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 300);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            document.querySelectorAll('.toast-item').forEach(dismissToast);
+        }, 7000);
+    });
+</script>
+{% endif %}

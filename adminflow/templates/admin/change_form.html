@@ -1,0 +1,315 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrastyle %}{{ block.super }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="{% url 'admin:jsi18n' %}"></script>
+{{ media }}
+{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.model_name }} change-form{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="flex items-center gap-1.5 text-xs text-on-surface-variant/70 mb-4">
+    <a href="{% url 'admin:index' %}" class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[16px]">home</span></a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url 'admin:app_list' app_label=opts.app_label %}" class="hover:text-primary transition-colors capitalize font-medium">{{ opts.app_label }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="hover:text-primary transition-colors font-bold">{{ opts.verbose_name_plural|capfirst }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <span class="text-primary font-bold">{% if add %}{% translate 'Add' %}{% else %}{% translate 'Edit' %}{% endif %}</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-4xl mx-auto w-full">
+    <!-- Header Block -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl md:text-2xl font-black text-on-surface tracking-tight">
+                {% if add %}{% blocktranslate with name=opts.verbose_name %}Add new {{ name }}{% endblocktranslate %}{% else %}{{ original|truncatewords:"10" }}{% endif %}
+            </h2>
+            <p class="text-xs text-on-surface-variant mt-1">{% translate "Fill out the fields below. Required inputs are marked with an asterisk." %}</p>
+        </div>
+        
+        <!-- History / Object tools -->
+        {% if not add and has_view_permission %}
+        <div class="flex items-center gap-2">
+            {% block object-tools %}
+                {% if change %}{% if another %}{% endif %}
+                    {% block object-tools-items %}
+                        {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
+                        <a href="{% add_preserved_filters history_url %}" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-lowest text-on-surface-variant hover:bg-surface-low text-xs font-bold shadow-sm transition-all">
+                            <span class="material-symbols-outlined text-sm">history</span>
+                            {% translate "History" %}
+                        </a>
+                        {% if show_on_site %}
+                            <a href="{{ absolute_url }}" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-lowest text-on-surface-variant hover:bg-surface-low text-xs font-bold shadow-sm transition-all">
+                                <span class="material-symbols-outlined text-sm">open_in_new</span>
+                                {% translate "View on site" %}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                {% endif %}
+            {% endblock %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Floating Toast Notifications -->
+    {% include "admin/includes/toast.html" %}
+
+    <!-- Main edit/create Form -->
+    <form {% if has_file_field %}enctype="multipart/form-data"{% endif %}{% if change %}action="{{ Oscar_change_url }}"{% endif %} method="post" id="{{ opts.model_name }}_form" novalidate class="space-y-6">
+        {% csrf_token %}
+        
+        {% block form_top %}{% endblock %}
+        
+        <div>
+            {% if is_popup %}<input type="hidden" name="_popup" value="1">{% endif %}
+            {% if to_field %}<input type="hidden" name="_to_field" value="{{ to_field }}">{% endif %}
+            {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+            
+            <!-- Render core Fieldsets and Inlines grouped into tabs -->
+            {% if inline_admin_formsets %}
+            <!-- Tab Headers (horizontally scrollable on mobile) -->
+            <div class="flex overflow-x-auto custom-scrollbar bg-surface-low border border-outline-variant/60 p-1.5 rounded-xl gap-1.5 w-full shadow-sm mb-6">
+                <button type="button" class="tab-btn shrink-0 active bg-primary text-white text-[11px] font-bold px-4 py-2.5 rounded-lg shadow-sm transition-all focus:outline-none cursor-pointer" data-tab="general-details">
+                    {% translate "General Details" %}
+                </button>
+                {% for inline_admin_formset in inline_admin_formsets %}
+                <button type="button" class="tab-btn shrink-0 text-on-surface-variant hover:text-on-surface hover:bg-surface-lowest/50 text-[11px] font-semibold px-4 py-2.5 rounded-lg transition-all focus:outline-none cursor-pointer" data-tab="inline-{{ forloop.counter }}">
+                    {{ inline_admin_formset.opts.verbose_name_plural|capfirst }}
+                </button>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Tab 1: General Details -->
+            <div class="tab-content" id="general-details">
+                <div class="space-y-6">
+                    {% block field_sets %}
+                        {% for fieldset in adminform %}
+                            {% include "admin/includes/fieldset.html" %}
+                        {% endfor %}
+                    {% endblock %}
+                </div>
+            </div>
+
+            {% block after_field_sets %}{% endblock %}
+
+            <!-- Tab 2+: Inlines -->
+            {% block inline_field_sets %}
+                {% for inline_admin_formset in inline_admin_formsets %}
+                <div class="tab-content {% if inline_admin_formsets %}hidden{% endif %}" id="inline-{{ forloop.counter }}">
+                    {% include inline_admin_formset.opts.template %}
+                </div>
+                {% endfor %}
+            {% endblock %}
+
+            {% block after_related_objects %}{% endblock %}
+
+            <!-- Bottom action submit bar -->
+            {% block submit_buttons_bottom %}
+                {% submit_row %}
+            {% endblock %}
+
+            {% block admin_change_form_document_ready %}
+            {{ block.super }}
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const tabBtns = document.querySelectorAll('.tab-btn');
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    
+                    function activateTab(tabId) {
+                        tabBtns.forEach(btn => {
+                            if (btn.getAttribute('data-tab') === tabId) {
+                                btn.classList.add('active', 'bg-primary', 'text-white', 'shadow-sm', 'font-bold');
+                                btn.classList.remove('text-on-surface-variant', 'hover:bg-surface-lowest/50', 'font-semibold');
+                            } else {
+                                btn.classList.remove('active', 'bg-primary', 'text-white', 'shadow-sm', 'font-bold');
+                                btn.classList.add('text-on-surface-variant', 'hover:bg-surface-lowest/50', 'font-semibold');
+                            }
+                        });
+                        
+                        tabContents.forEach(content => {
+                            if (content.id === tabId) {
+                                content.classList.remove('hidden');
+                            } else {
+                                content.classList.add('hidden');
+                            }
+                        });
+                    }
+                    
+                    tabBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            activateTab(this.getAttribute('data-tab'));
+                        });
+                    });
+                    
+                    // Auto-detect errors and switch to that tab
+                    tabContents.forEach(content => {
+                        if (content.querySelector('.errors, .errorlist, .text-danger')) {
+                            activateTab(content.id);
+                        }
+                    });
+
+                    // ── File Preview & Clear UI Enhancement ──
+                    // Django admin ClearableFileInput renders:
+                    // <p class="file-upload">
+                    //   Currently: <a href="URL">filename</a>
+                    //   <span class="clearable-file-input"><input type="checkbox" name="...-clear"> <label>Clear</label></span><br>
+                    //   Change: <input type="file" ...>
+                    // </p>
+                    document.querySelectorAll('p.file-upload').forEach(pWrapper => {
+                        const fileInput = pWrapper.querySelector('input[type="file"]');
+                        const currentLink = pWrapper.querySelector('a[href]');
+                        const clearSpan = pWrapper.querySelector('span.clearable-file-input');
+                        const clearCheckbox = clearSpan ? clearSpan.querySelector('input[type="checkbox"]') : null;
+                        if (!fileInput || !currentLink) return;
+
+                        const fileUrl = currentLink.getAttribute('href');
+                        const fileName = currentLink.textContent.trim().split('/').pop();
+                        const ext = fileName.split('.').pop().toLowerCase();
+                        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'].includes(ext);
+                        const isVideo = ['mp4', 'webm', 'mov', 'avi', 'mkv'].includes(ext);
+                        const isPdf = ext === 'pdf';
+
+                        // Build preview card
+                        const previewCard = document.createElement('div');
+                        previewCard.className = 'adminflow-file-preview flex items-center gap-3 p-3 rounded-xl border border-outline-variant/50 bg-surface-low/30 mb-3';
+                        previewCard.style.cssText = 'transition: all 0.2s ease;';
+
+                        let previewHtml = '';
+                        if (isImage) {
+                            previewHtml = `<a href="${fileUrl}" target="_blank" class="shrink-0 block rounded-lg overflow-hidden border border-outline-variant/30 hover:shadow-md transition-shadow" style="width:56px;height:56px;">
+                                <img src="${fileUrl}" alt="${fileName}" style="width:56px;height:56px;object-fit:cover;" />
+                            </a>`;
+                        } else {
+                            const iconName = isVideo ? 'videocam' : isPdf ? 'picture_as_pdf' : 'description';
+                            const iconColor = isVideo ? 'text-info' : isPdf ? 'text-danger' : 'text-primary';
+                            const bgColor = isVideo ? 'bg-info/10' : isPdf ? 'bg-danger/10' : 'bg-primary/10';
+                            previewHtml = `<a href="${fileUrl}" target="_blank" class="shrink-0 flex items-center justify-center rounded-lg ${bgColor} hover:shadow-md transition-shadow" style="width:56px;height:56px;">
+                                <span class="material-symbols-outlined text-2xl ${iconColor}">${iconName}</span>
+                            </a>`;
+                        }
+
+                        const fileInfo = `<div class="flex-1 min-w-0">
+                            <a href="${fileUrl}" target="_blank" class="text-[11px] font-bold text-on-surface hover:text-primary transition-colors truncate block" title="${fileName}">${fileName}</a>
+                            <p class="text-[9px] text-on-surface-variant/60 font-medium uppercase mt-0.5">${ext} file</p>
+                        </div>`;
+
+                        let clearBtnHtml = '';
+                        if (clearCheckbox) {
+                            clearBtnHtml = `<button type="button" class="adminflow-clear-btn shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition-all" style="color:var(--danger);background:color-mix(in srgb, var(--danger) 8%, transparent);border-color:color-mix(in srgb, var(--danger) 15%, transparent);" title="Remove file">
+                                <span class="material-symbols-outlined text-[14px]">delete</span>
+                                Remove
+                            </button>`;
+                        }
+
+                        previewCard.innerHTML = previewHtml + fileInfo + clearBtnHtml;
+
+                        // Hide original content inside p.file-upload
+                        pWrapper.style.fontSize = '0';
+                        pWrapper.style.lineHeight = '0';
+                        // Hide all original children except our preview and the file input
+                        Array.from(pWrapper.childNodes).forEach(node => {
+                            if (node.nodeType === Node.ELEMENT_NODE && node !== fileInput) {
+                                node.style.display = 'none';
+                            }
+                        });
+                        // Hide <br> tags
+                        pWrapper.querySelectorAll('br').forEach(br => br.style.display = 'none');
+
+                        // Insert preview card at top of p
+                        pWrapper.insertBefore(previewCard, pWrapper.firstChild);
+                        // Reset font for preview card and file input
+                        previewCard.style.fontSize = '';
+                        previewCard.style.lineHeight = '';
+                        fileInput.style.fontSize = '';
+                        fileInput.style.lineHeight = '';
+                        // Wrap the file input in a styled div
+                        const inputWrapper = document.createElement('div');
+                        inputWrapper.style.cssText = 'font-size:0.75rem; line-height:1.5;';
+                        fileInput.parentNode.insertBefore(inputWrapper, fileInput);
+                        inputWrapper.appendChild(fileInput);
+
+                        // Wire up the clear button
+                        const clearBtn = previewCard.querySelector('.adminflow-clear-btn');
+                        if (clearBtn && clearCheckbox) {
+                            clearBtn.addEventListener('click', function() {
+                                if (clearCheckbox.checked) {
+                                    clearCheckbox.checked = false;
+                                    previewCard.style.opacity = '1';
+                                    previewCard.style.filter = '';
+                                    clearBtn.innerHTML = '<span class="material-symbols-outlined text-[14px]">delete</span> Remove';
+                                    clearBtn.style.color = 'var(--danger)';
+                                    clearBtn.style.background = 'color-mix(in srgb, var(--danger) 8%, transparent)';
+                                    clearBtn.style.borderColor = 'color-mix(in srgb, var(--danger) 15%, transparent)';
+                                } else {
+                                    clearCheckbox.checked = true;
+                                    previewCard.style.opacity = '0.4';
+                                    previewCard.style.filter = 'grayscale(1)';
+                                    clearBtn.innerHTML = '<span class="material-symbols-outlined text-[14px]">undo</span> Undo';
+                                    clearBtn.style.color = 'var(--success)';
+                                    clearBtn.style.background = 'color-mix(in srgb, var(--success) 8%, transparent)';
+                                    clearBtn.style.borderColor = 'color-mix(in srgb, var(--success) 15%, transparent)';
+                                }
+                            });
+                        }
+                    });
+
+                    // Live preview on new file selection (works for all file inputs)
+                    document.querySelectorAll('input[type="file"]').forEach(fileInput => {
+                        fileInput.addEventListener('change', function(e) {
+                            const file = e.target.files[0];
+                            if (!file) return;
+                            // Find and remove any existing live preview
+                            const container = fileInput.closest('p.file-upload') || fileInput.closest('div');
+                            if (!container) return;
+                            const existingLivePreview = container.querySelector('.adminflow-live-preview');
+                            if (existingLivePreview) existingLivePreview.remove();
+
+                            const liveCard = document.createElement('div');
+                            liveCard.className = 'adminflow-live-preview flex items-center gap-3 p-3 rounded-xl border mb-3';
+                            liveCard.style.cssText = 'border-color:color-mix(in srgb, var(--primary) 30%, transparent);background:color-mix(in srgb, var(--primary) 5%, transparent);font-size:0.75rem;line-height:1.5;';
+
+                            const ext = file.name.split('.').pop().toLowerCase();
+                            const isImg = ['jpg','jpeg','png','gif','webp','svg','bmp','ico'].includes(ext);
+
+                            if (isImg) {
+                                const reader = new FileReader();
+                                reader.onload = function(ev) {
+                                    liveCard.innerHTML = `<div class="shrink-0 rounded-lg overflow-hidden border" style="width:56px;height:56px;border-color:color-mix(in srgb, var(--primary) 20%, transparent);">
+                                        <img src="${ev.target.result}" style="width:56px;height:56px;object-fit:cover;" />
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[11px] font-bold text-on-surface truncate">${file.name}</p>
+                                        <p class="text-[9px] font-semibold mt-0.5" style="color:var(--primary)">New file selected</p>
+                                    </div>`;
+                                };
+                                reader.readAsDataURL(file);
+                            } else {
+                                const iconName = ['mp4','webm','mov','avi','mkv'].includes(ext) ? 'videocam' : ext === 'pdf' ? 'picture_as_pdf' : 'description';
+                                liveCard.innerHTML = `<div class="shrink-0 flex items-center justify-center rounded-lg" style="width:56px;height:56px;background:color-mix(in srgb, var(--primary) 10%, transparent);">
+                                    <span class="material-symbols-outlined text-2xl" style="color:var(--primary)">${iconName}</span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-[11px] font-bold text-on-surface truncate">${file.name}</p>
+                                    <p class="text-[9px] font-semibold mt-0.5" style="color:var(--primary)">New file selected</p>
+                                </div>`;
+                            }
+
+                            const inputW = fileInput.closest('div') || fileInput.parentNode;
+                            inputW.insertBefore(liveCard, fileInput);
+                        });
+                    });
+                });
+            </script>
+            {% endblock %}
+        </div>
+    </form>
+</div>
+{% endblock %}

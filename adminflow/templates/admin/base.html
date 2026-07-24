@@ -1,0 +1,1263 @@
+{% load i18n static adminflow_tags log %}<!DOCTYPE html>
+<html lang="{{ adminflow_language|default:'en' }}" class="light" {% if adminflow_rtl %}dir="rtl"{% endif %}>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}{% endblock %} | {{ adminflow_title }}</title>
+    
+    {% if adminflow_favicon %}
+        <link rel="icon" href="{{ adminflow_favicon }}" type="image/x-icon"/>
+    {% endif %}
+
+    <!-- Google Fonts & Material Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Flatpickr CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/light.css" id="flatpickr-theme"/>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: "{{ adminflow_primary_color|default:'#2563EB' }}",
+                            fixed: "{{ adminflow_primary_fixed|default:'#dbe1ff' }}",
+                            dim: "{{ adminflow_primary_fixed_dim|default:'#b4c5ff' }}"
+                        },
+                        secondary: {
+                            DEFAULT: "{{ adminflow_secondary_color|default:'#64748B' }}",
+                            fixed: "{{ adminflow_secondary_fixed|default:'#d8e2ff' }}",
+                            dim: "{{ adminflow_secondary_fixed_dim|default:'#adc6ff' }}"
+                        },
+                        success: {
+                            DEFAULT: "{{ adminflow_success_color|default:'#22C55E' }}",
+                            fixed: "{{ adminflow_tertiary_fixed|default:'#6ffbbe' }}",
+                            dim: "{{ adminflow_tertiary_fixed_dim|default:'#4edea3' }}"
+                        },
+                        warning: {
+                            DEFAULT: "{{ adminflow_warning_color|default:'#F59E0B' }}"
+                        },
+                        danger: {
+                            DEFAULT: "{{ adminflow_danger_color|default:'#EF4444' }}"
+                        },
+                        info: {
+                            DEFAULT: "{{ adminflow_info_color|default:'#06B6D4' }}"
+                        },
+                        surface: {
+                            DEFAULT: "{{ adminflow_bg_color|default:'#f8f9ff' }}",
+                            dim: "{{ adminflow_surface_dim|default:'#cbdbf5' }}",
+                            bright: "{{ adminflow_surface_bright|default:'#f8f9ff' }}",
+                            lowest: "{{ adminflow_surface_container_lowest|default:'#ffffff' }}",
+                            low: "{{ adminflow_surface_container_low|default:'#eff4ff' }}",
+                            container: "{{ adminflow_surface_container|default:'#e5eeff' }}",
+                            high: "{{ adminflow_surface_container_high|default:'#dce9ff' }}",
+                            highest: "{{ adminflow_surface_container_highest|default:'#d3e4fe' }}"
+                        },
+                        "on-surface": "{{ adminflow_on_surface|default:'#0b1c30' }}",
+                        "on-surface-variant": "{{ adminflow_on_surface_variant|default:'#434655' }}",
+                        "inverse-surface": "{{ adminflow_inverse_surface|default:'#213145' }}",
+                        "inverse-on-surface": "{{ adminflow_inverse_on_surface|default:'#eaf1ff' }}",
+                        "outline-variant": "{{ adminflow_outline_variant|default:'#c3c6d7' }}",
+                        "outline": "{{ adminflow_outline|default:'#737686' }}",
+                        "sidebar-bg": "{{ adminflow_sidebar_color|default:'#0f172a' }}"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "{{ adminflow_border_radius|default:'12px' }}",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "density-compact": "4px",
+                        "density-comfortable": "12px",
+                        gutter: "16px",
+                        "container-margin": "24px",
+                        "base-unit": "4px"
+                    },
+                    fontFamily: {
+                        sans: ["{{ adminflow_font|default:'Inter' }}", "sans-serif"],
+                        mono: ["JetBrains Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        
+        /* Related widget action wrapper style */
+        .related-widget-wrapper {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            width: 100% !important;
+        }
+        .related-widget-wrapper select {
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+        .related-widget-wrapper a {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .related-widget-wrapper a:hover {
+            opacity: 1;
+        }
+        .related-widget-wrapper a img {
+            width: 16px !important;
+            height: 16px !important;
+            object-fit: contain !important;
+        }
+        .related-widget-wrapper .add-related {
+            display: none !important;
+        }
+
+        /* ── Collapsed Mini Sidebar Styles ── */
+        #admin-sidebar.sidebar-collapsed {
+            width: 64px !important;
+        }
+        #admin-sidebar.sidebar-collapsed .sidebar-text {
+            display: none !important;
+        }
+        #admin-sidebar.sidebar-collapsed .brand-header {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+            justify-content: center !important;
+        }
+        #admin-sidebar.sidebar-collapsed .brand-header a {
+            justify-content: center !important;
+            gap: 0 !important;
+        }
+        #admin-sidebar.sidebar-collapsed .sidebar-toggle-btn {
+            display: none !important;
+        }
+        #admin-sidebar.sidebar-collapsed nav {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        #admin-sidebar.sidebar-collapsed .sidebar-link {
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            width: 44px !important;
+            height: 44px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            border-radius: 12px !important;
+        }
+        #admin-sidebar.sidebar-collapsed .sidebar-app-group {
+            padding-top: 0.5rem !important;
+            margin-top: 0.5rem !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+        #admin-sidebar.sidebar-collapsed .sidebar-footer {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        
+        /* Object History Table Styles */
+        #change-history {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin-top: 16px !important;
+            background-color: #ffffff !important;
+            border-radius: 12px !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            overflow: hidden !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+        }
+        .dark #change-history {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        #change-history th, #change-history td {
+            padding: 12px 16px !important;
+            text-align: left !important;
+            font-size: 12px !important;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+            color: #334155 !important;
+        }
+        .dark #change-history th, .dark #change-history td {
+            border-bottom-color: #334155 !important;
+            color: #cbd5e1 !important;
+        }
+        #change-history thead {
+            background-color: #f8fafc !important;
+        }
+        .dark #change-history thead {
+            background-color: #0f172a !important;
+        }
+        #change-history thead th {
+            font-weight: 600 !important;
+            color: #475569 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            font-size: 10px !important;
+        }
+        .dark #change-history thead th {
+            color: #94a3b8 !important;
+        }
+        #change-history tbody tr {
+            transition: background-color 150ms ease !important;
+        }
+        #change-history tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+        .dark #change-history tbody tr:hover {
+            background-color: rgba(30, 41, 59, 0.5) !important;
+        }
+        #change-history tbody tr:last-child th,
+        #change-history tbody tr:last-child td {
+            border-bottom: none !important;
+        }
+        #change-history a {
+            color: {{ adminflow_primary_color|default:'#2563EB' }} !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+        }
+        #change-history a:hover {
+            text-decoration: underline !important;
+        }
+        #content-main p {
+            font-size: 13px !important;
+            color: #64748b !important;
+            margin-top: 8px !important;
+            margin-bottom: 16px !important;
+        }
+        .dark #content-main p {
+            color: #94a3b8 !important;
+        }
+
+        /* Submit Row / Revert Page styling fallback */
+        .submit-row {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+            gap: 8px !important;
+            padding: 16px !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            background-color: rgba(248, 250, 252, 0.5) !important;
+            border-radius: 12px !important;
+            margin-top: 24px !important;
+            margin-bottom: 24px !important;
+            width: 100% !important;
+        }
+        .dark .submit-row {
+            border-color: #334155 !important;
+            background-color: rgba(30, 41, 59, 0.5) !important;
+        }
+        .submit-row input[type="submit"], .submit-row button {
+            padding: 8px 24px !important;
+            border-radius: 8px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            transition: all 150ms ease !important;
+            outline: none !important;
+            border: none !important;
+        }
+        .submit-row input[type="submit"].default, .submit-row button.default {
+            background-color: {{ adminflow_primary_color|default:'#2563EB' }} !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2) !important;
+        }
+        .submit-row input[type="submit"].default:hover, .submit-row button.default:hover {
+            background-color: {{ adminflow_primary_color|default:'#2563EB' }}ee !important;
+            transform: translateY(-1px) !important;
+        }
+        .submit-row input[type="submit"].default:active, .submit-row button.default:active {
+            transform: translateY(0) !important;
+        }
+        .submit-row a, .submit-row .closelink {
+            padding: 8px 16px !important;
+            border-radius: 8px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+            transition: all 150ms ease !important;
+            display: inline-block !important;
+            background-color: #ffffff !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            color: #475569 !important;
+        }
+        .dark .submit-row a, .dark .submit-row .closelink {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #cbd5e1 !important;
+        }
+        .submit-row a:hover, .submit-row .closelink:hover {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+        }
+        .dark .submit-row a:hover, .dark .submit-row .closelink:hover {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+        }
+
+        /* Hide Django's default DateTimeShortcuts links and icons */
+        .datetimeshortcuts {
+            display: none !important;
+        }
+        /* Add Flatpickr custom styling to match our design tokens */
+        .flatpickr-calendar {
+            border-radius: 12px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            font-family: inherit !important;
+        }
+        .dark .flatpickr-calendar {
+            border: 1px solid rgba(51, 65, 85, 0.5) !important;
+            background: #1e293b !important;
+        }
+        .flatpickr-day.selected {
+            background: {{ adminflow_primary_color|default:'#2563EB' }} !important;
+            border-color: {{ adminflow_primary_color|default:'#2563EB' }} !important;
+        }
+        .flatpickr-input[readonly] {
+            background-color: transparent !important;
+        }
+        
+        /* Style Django's FilteredSelectMultiple selector widget */
+        .selector {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 16px !important;
+            width: 100% !important;
+            margin-top: 8px !important;
+        }
+        @media (min-width: 768px) {
+            .selector {
+                flex-direction: row !important;
+                align-items: center !important;
+            }
+        }
+        .selector-available, .selector-chosen {
+            flex: 1 !important;
+            min-width: 0 !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            background-color: #ffffff !important;
+            border-radius: 12px !important;
+            padding: 16px !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+        }
+        .dark .selector-available, .dark .selector-chosen {
+            border: 1px solid rgba(51, 65, 85, 0.5) !important;
+            background-color: #0f172a !important;
+        }
+        .selector h2 {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            color: #475569 !important;
+            margin-bottom: 8px !important;
+            border: none !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+        .dark .selector h2 {
+            color: #94a3b8 !important;
+        }
+        .selector .selector-filter {
+            display: flex !important;
+            align-items: center !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            border-radius: 8px !important;
+            padding: 4px 8px !important;
+            margin-bottom: 8px !important;
+            background-color: #f8fafc !important;
+        }
+        .dark .selector .selector-filter {
+            border-color: #334155 !important;
+            background-color: #1e293b !important;
+        }
+        .selector .selector-filter label {
+            margin-right: 6px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        .selector .selector-filter input {
+            border: none !important;
+            background: transparent !important;
+            padding: 4px !important;
+            font-size: 12px !important;
+            outline: none !important;
+            width: 100% !important;
+            box-shadow: none !important;
+        }
+        .selector select {
+            width: 100% !important;
+            min-height: 150px !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            border-radius: 8px !important;
+            padding: 8px !important;
+            font-size: 11px !important;
+            outline: none !important;
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            overflow-x: auto !important;
+        }
+        .dark .selector select {
+            border-color: #334155 !important;
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+        .selector select option {
+            width: max-content !important;
+            min-width: 100% !important;
+            padding: 4px 6px !important;
+            color: #0f172a !important;
+        }
+        .dark .selector select option {
+            color: #e2e8f0 !important;
+        }
+        .list-footer-display {
+            display: none !important;
+        }
+        .selector-chosen--with-filtered .list-footer-display {
+            display: flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            font-size: 11px !important;
+            color: #ef4444 !important;
+            margin-top: 8px !important;
+            font-weight: 500 !important;
+        }
+        .list-footer-display__clear {
+            color: {{ adminflow_primary_color|default:'#2563EB' }} !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+        }
+        .selector-chooser {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 8px !important;
+            align-items: center !important;
+            justify-content: center !important;
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 12px 0 !important;
+        }
+        @media (min-width: 768px) {
+            .selector-chooser {
+                flex-direction: column !important;
+                margin: 0 !important;
+            }
+        }
+        .selector-chooser li {
+            list-style: none !important;
+        }
+        .selector-chooser button, .selector-chooser a {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 32px !important;
+            height: 32px !important;
+            background-color: {{ adminflow_primary_color|default:'#2563EB' }} !important;
+            color: transparent !important;
+            font-size: 0 !important;
+            border-radius: 8px !important;
+            position: relative !important;
+            transition: all 0.2s !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 0 !important;
+        }
+        .selector-chooser button:hover, .selector-chooser a:hover {
+            opacity: 0.9 !important;
+            transform: scale(1.05) !important;
+        }
+        .selector-chooser button.selector-add::before, .selector-chooser a.selector-add::before {
+            content: "→" !important;
+            position: absolute !important;
+            color: #ffffff !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+        }
+        .selector-chooser button.selector-remove::before, .selector-chooser a.selector-remove::before {
+            content: "←" !important;
+            position: absolute !important;
+            color: #ffffff !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+        }
+        .selector-chooser button.selector-chooseall::before, .selector-chooser a.selector-chooseall::before {
+            content: "»" !important;
+            position: absolute !important;
+            color: #ffffff !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+        }
+        .selector-chooser button.selector-clearall::before, .selector-chooser a.selector-clearall::before {
+            content: "«" !important;
+            position: absolute !important;
+            color: #ffffff !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+        }
+        button.selector-chooseall, 
+        button.selector-clearall,
+        .selector-available a.selector-chooseall, 
+        .selector-chosen a.selector-clearall {
+            display: inline-block !important;
+            font-size: 11px !important;
+            font-weight: bold !important;
+            color: {{ adminflow_primary_color|default:'#2563EB' }} !important;
+            margin-top: 8px !important;
+            text-decoration: none !important;
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            cursor: pointer !important;
+        }
+        button.selector-chooseall:hover, 
+        button.selector-clearall:hover,
+        .selector-available a.selector-chooseall:hover, 
+        .selector-chosen a.selector-clearall:hover {
+            text-decoration: underline !important;
+        }
+        
+        /* Hide Django inline empty form template row */
+        .empty-form {
+            display: none !important;
+        }
+        /* Style dynamic Django inline Add row link as a premium button */
+        .add-row td {
+            padding: 12px 16px !important;
+        }
+        .add-row a {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            background-color: {{ adminflow_primary_color|default:'#2563EB' }} !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            font-size: 11px !important;
+            padding: 6px 12px !important;
+            border-radius: 8px !important;
+            text-decoration: none !important;
+            transition: opacity 0.2s !important;
+        }
+        .add-row a:hover {
+            opacity: 0.9 !important;
+        }
+        .add-row a::before {
+            content: "+" !important;
+            font-size: 14px !important;
+            font-weight: bold !important;
+            line-height: 1 !important;
+        }
+    </style>
+    {% block extrahead %}{% endblock %}
+    {% block extrastyle %}{% endblock %}
+</head>
+<body class="{% block bodyclass %}{% endblock %} bg-surface text-on-surface font-sans min-h-screen flex flex-col custom-scrollbar overflow-x-hidden">
+    
+    {% if not is_popup and user.is_authenticated %}
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden md:hidden" onclick="toggleMobileSidebar()"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="admin-sidebar" style="color: {{ adminflow_sidebar_text_color|default:'#94a3b8' }};" class="w-[{{ adminflow_sidebar_width|default:'280' }}px] bg-sidebar-bg fixed top-0 bottom-0 left-0 -translate-x-full md:translate-x-0 md:flex flex-col z-50 transition-all duration-300 flex">
+        <!-- Sidebar Brand Header -->
+        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-700/50 shrink-0 brand-header">
+            <a href="{% url 'admin:index' %}" class="flex items-center gap-3 font-semibold tracking-tight" style="color: {{ adminflow_sidebar_active_text_color|default:'#ffffff' }};" title="{{ adminflow_title }}">
+                {% if adminflow_logo %}
+                    <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-8 w-auto shrink-0"/>
+                {% else %}
+                    <div class="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-white shrink-0 shadow-md">
+                        <span class="material-symbols-outlined text-[22px]">hub</span>
+                    </div>
+                {% endif %}
+                <span class="text-lg sidebar-text font-bold tracking-tight">{{ adminflow_title }}</span>
+            </a>
+            
+            {% if adminflow_sidebar_collapsible %}
+            <button onclick="toggleSidebar()" class="p-1.5 rounded-lg hover:bg-slate-800/60 transition-all opacity-80 hover:opacity-100 sidebar-toggle-btn" title="{% translate 'Toggle Sidebar' %}">
+                <span class="material-symbols-outlined text-[20px]" id="sidebar-toggle-icon">first_page</span>
+            </button>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar Menu Items -->
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1.5 custom-scrollbar">
+            {% get_admin_app_list as apps %}
+            
+            <a href="{% url 'admin:index' %}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == '/admin/' %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == '/admin/' %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{% translate 'Dashboard' %}">
+                <span class="material-symbols-outlined text-[22px] shrink-0">dashboard</span>
+                <span class="text-body-sm sidebar-text font-medium">{% translate "Dashboard" %}</span>
+            </a>
+            
+            {% for app in apps %}
+            {% if app.app_label != 'otp_email' and app.app_label != 'otp_static' and app.app_label != 'otp_totp' %}
+            <div class="space-y-1 pt-2 sidebar-app-group" id="sidebar-app-{{ app.app_label }}">
+                <div class="flex items-center justify-between px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider sidebar-text opacity-50">
+                    <span>{{ app.name }}</span>
+                </div>
+                
+                {% for model in app.models %}
+                {% if model.object_name != 'UserInformation' and model.object_name != 'EmailDevice' and model.object_name != 'StaticDevice' and model.object_name != 'TOTPDevice' %}
+                {% url 'admin:'|add:app.app_label|add:'_'|add:model.object_name|lower|add:'_changelist' as model_changelist_url %}
+                <a href="{{ model_changelist_url }}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == model_changelist_url %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == model_changelist_url %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{{ model.name }}">
+                    <span class="material-symbols-outlined text-[22px] shrink-0">{{ model|adminflow_icon }}</span>
+                    <span class="text-body-sm sidebar-text font-medium">{{ model.name }}</span>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% empty %}
+            <p class="text-xs opacity-60 px-4">{% translate "No applications available" %}</p>
+            {% endfor %}
+            
+            <!-- Quick System Utilities -->
+            <div class="pt-4 border-t border-slate-700/30 sidebar-app-group">
+                <div class="px-4 py-1 text-[11px] font-bold uppercase tracking-wider sidebar-text opacity-50">System</div>
+                
+                <a href="{% url 'admin:password_change' %}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == '/admin/password_change/' %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == '/admin/password_change/' %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{% translate 'Change Password' %}">
+                    <span class="material-symbols-outlined text-[22px] shrink-0">password</span>
+                    <span class="text-body-sm sidebar-text font-medium">{% translate "Change Password" %}</span>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- Sidebar Footer -->
+        <div class="p-3 border-t border-slate-700/50 flex flex-col gap-2 shrink-0 sidebar-footer">
+            <form method="post" action="{% url 'admin:logout' %}" class="w-full">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-rose-400 hover:bg-rose-900/20 hover:text-rose-300 transition-all text-left" title="{% translate 'Log Out' %}">
+                    <span class="material-symbols-outlined text-[22px] shrink-0">logout</span>
+                    <span class="text-body-sm sidebar-text font-medium">{% translate "Log Out" %}</span>
+                </button>
+            </form>
+            
+            <div class="px-4 text-[10px] text-slate-500 sidebar-text">
+                &copy; {{ adminflow_company }}
+            </div>
+        </div>
+    </aside>
+    {% endif %}
+
+    <!-- Content Shell -->
+    <div class="flex-1 flex flex-col min-h-screen {% if not is_popup and user.is_authenticated %}md:ml-[{{ adminflow_sidebar_width|default:'280' }}px]{% endif %} transition-all duration-300" id="main-content-shell">
+        {% if not is_popup and user.is_authenticated %}
+        <!-- Header / Top Bar -->
+        <header class="sticky top-0 z-40 flex justify-between items-center px-3 md:px-6 h-14 md:h-16 w-full bg-surface-lowest border-b border-outline-variant shadow-sm">
+            <div class="flex items-center gap-2 md:gap-4 flex-1">
+                <!-- Mobile Sidebar Toggle -->
+                <button onclick="toggleMobileSidebar()" class="md:hidden p-2 rounded-lg hover:bg-surface-low transition-colors text-on-surface-variant">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+
+                <!-- Mobile Brand (visible only on mobile) -->
+                <a href="{% url 'admin:index' %}" class="md:hidden flex items-center gap-2 font-bold text-on-surface text-sm tracking-tight">
+                    {% if adminflow_logo %}
+                        <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-6 w-auto"/>
+                    {% else %}
+                        <div class="h-7 w-7 rounded-md bg-primary flex items-center justify-center text-white">
+                            <span class="material-symbols-outlined text-[18px]">hub</span>
+                        </div>
+                    {% endif %}
+                    {{ adminflow_title }}
+                </a>
+                
+                {% if adminflow_enable_global_search %}
+                <!-- Global Search (hidden on mobile) -->
+                <div class="relative w-full max-w-md cursor-pointer hidden md:block" onclick="openCommandPalette()">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-60">search</span>
+                    <input type="text" readonly class="w-full pl-10 pr-4 py-1.5 rounded-lg border border-outline-variant bg-surface-low focus:outline-none text-body-sm cursor-pointer" placeholder="Search resources, actions (Cmd + K)"/>
+                </div>
+                <!-- Mobile Search Button -->
+                <button onclick="openCommandPalette()" class="md:hidden ml-auto p-2 rounded-lg hover:bg-surface-low transition-colors text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[20px]">search</span>
+                </button>
+                {% endif %}
+            </div>
+            
+            <!-- User Options / Badges -->
+            <div class="flex items-center gap-3">
+                {% if adminflow_enable_notifications %}
+                {% get_admin_log 5 as notification_log for_user user %}
+                <div class="relative" id="notifications-dropdown-container">
+                    <button onclick="toggleNotificationsDropdown()" class="p-2 rounded-full hover:bg-surface-high transition-colors text-on-surface-variant relative focus:outline-none">
+                        <span class="material-symbols-outlined">notifications</span>
+                        {% if notification_log %}
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-danger"></span>
+                        {% endif %}
+                    </button>
+                    <!-- Notifications Dropdown Popover -->
+                    <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-surface-lowest border border-outline-variant rounded-2xl shadow-2xl z-[9999] hidden flex-col overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                        <div class="p-4 border-b border-outline-variant bg-surface-low/30 flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-on-surface uppercase tracking-wider flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[16px] text-primary">notifications</span>
+                                {% translate 'Recent Actions' %}
+                            </h4>
+                            {% if notification_log %}
+                            <span class="text-[9px] font-black bg-danger/10 text-danger px-1.5 py-0.5 rounded-full">NEW</span>
+                            {% endif %}
+                        </div>
+                        <div class="max-h-72 overflow-y-auto divide-y divide-outline-variant/40">
+                            {% if notification_log %}
+                                {% for entry in notification_log %}
+                                    {% if entry.get_admin_url %}
+                                    <a href="{{ entry.get_admin_url }}" class="p-3.5 hover:bg-surface-low/20 transition-colors flex items-start gap-3 border-none block">
+                                    {% else %}
+                                    <div class="p-3.5 flex items-start gap-3 opacity-60">
+                                    {% endif %}
+                                        <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 {% if entry.is_addition %}bg-success/15 text-success{% elif entry.is_change %}bg-primary/15 text-primary{% else %}bg-danger/15 text-danger{% endif %}">
+                                            <span class="material-symbols-outlined text-[16px]">
+                                                {% if entry.is_addition %}add_circle{% elif entry.is_change %}edit{% else %}delete{% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="space-y-0.5 text-left">
+                                            <p class="text-[11px] font-bold text-on-surface leading-tight">
+                                                {% if entry.is_addition %}Added{% elif entry.is_change %}Changed{% else %}Deleted{% endif %} {{ entry.object_repr }}
+                                            </p>
+                                            <p class="text-[10px] text-on-surface-variant/80">
+                                                {{ entry.content_type.name|capfirst }}
+                                            </p>
+                                            <p class="text-[9px] text-on-surface-variant/60 font-medium">
+                                                {{ entry.action_time|date:"M d, g:i a" }}
+                                            </p>
+                                        </div>
+                                    {% if entry.get_admin_url %}
+                                    </a>
+                                    {% else %}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="p-6 text-center text-on-surface-variant/70 space-y-2">
+                                    <span class="material-symbols-outlined text-3xl opacity-30">notifications_off</span>
+                                    <p class="text-xs font-medium">No recent actions logged</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="h-8 w-px bg-outline-variant mx-1"></div>
+                
+                <!-- Profile Dropdown -->
+                <div class="relative" id="profile-dropdown-container">
+                    <button onclick="toggleProfileDropdown()" class="flex items-center gap-2 pl-2 focus:outline-none group">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-xs font-bold text-on-surface">{{ user.get_username|upper }}</p>
+                            <p class="text-[10px] text-on-surface-variant">{% if user.is_superuser %}Superuser{% else %}Staff{% endif %}</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden border border-primary/20">
+                            {{ user.get_username|slice:":2"|upper }}
+                        </div>
+                    </button>
+                    
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-surface-lowest border border-outline-variant rounded-xl shadow-lg py-2 z-50">
+                        <div class="px-4 py-2 border-b border-outline-variant">
+                            <p class="text-xs font-semibold text-on-surface">Signed in as</p>
+                            <p class="text-xs text-on-surface-variant truncate font-mono">{{ user.email|default:user.get_username }}</p>
+                        </div>
+                        {% if site_url %}
+                            <a href="{{ site_url }}" class="flex items-center gap-2 px-4 py-2 text-xs text-on-surface hover:bg-surface-low"><span class="material-symbols-outlined text-sm">open_in_new</span>{% translate "View Site" %}</a>
+                        {% endif %}
+                        <a href="{% url 'admin:password_change' %}" class="flex items-center gap-2 px-4 py-2 text-xs text-on-surface hover:bg-surface-low"><span class="material-symbols-outlined text-sm">settings</span>{% translate "Change Password" %}</a>
+                        <form method="post" action="{% url 'admin:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-xs text-rose-500 hover:bg-rose-50 text-left">
+                                <span class="material-symbols-outlined text-sm">logout</span>{% translate "Log Out" %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+        {% endif %}
+
+        <!-- Main Breadcrumbs & Alert Messages Banner -->
+        <div class="px-3 py-3 md:px-6 md:py-4 flex-1 flex flex-col">
+            {% block breadcrumbs %}
+            {% endblock %}
+
+            {% block messages %}
+            {% include "admin/includes/toast.html" %}
+            {% endblock %}
+
+            <!-- Actual Main Content -->
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    {% if adminflow_enable_command_palette %}
+    <!-- Command Palette Backdrop -->
+    <div id="command-palette" class="hidden fixed inset-0 bg-slate-900/60 backdrop-filter backdrop-blur-sm z-50 flex items-start justify-center pt-[10vh]">
+        <div class="bg-surface-lowest border border-outline-variant w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+            <!-- Search bar -->
+            <div class="flex items-center gap-3 px-4 border-b border-outline-variant">
+                <span class="material-symbols-outlined text-on-surface-variant opacity-60">search</span>
+                <input type="text" id="command-palette-input" class="w-full py-4 bg-transparent outline-none border-none text-body-md text-on-surface focus:ring-0" placeholder="Type a command or model name..."/>
+                <kbd class="px-2 py-1 bg-surface-low border border-outline-variant rounded text-[10px] text-on-surface-variant uppercase font-mono">esc</kbd>
+            </div>
+            
+            <!-- Quick list -->
+            <div class="p-3 max-h-[300px] overflow-y-auto custom-scrollbar space-y-1" id="command-palette-results">
+                <div class="px-3 py-1.5 text-[11px] font-bold text-on-surface-variant opacity-60 uppercase tracking-wider">Navigation</div>
+                <a href="{% url 'admin:index' %}" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-body-sm">
+                    <span class="flex items-center gap-3"><span class="material-symbols-outlined text-sm">dashboard</span>Go to Dashboard</span>
+                    <span class="text-xs text-on-surface-variant font-mono">⌘D</span>
+                </a>
+                
+                <div class="px-3 py-1.5 pt-3 text-[11px] font-bold text-on-surface-variant opacity-60 uppercase tracking-wider">Registered Models</div>
+                {% for app in apps %}
+                    {% for model in app.models %}
+                        <a href="{{ model.admin_url }}" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-primary/10 hover:text-primary transition-all text-body-sm search-item" data-search="{{ model.name }} {{ app.name }}">
+                            <span class="flex items-center gap-3"><span class="material-symbols-outlined text-sm">{{ model.object_name|adminflow_icon }}</span>Manage {{ model.name }}</span>
+                            <span class="text-xs text-on-surface-variant font-mono">{{ app.name }}</span>
+                        </a>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Core Scripts -->
+    <script>
+        // Collapsible Sidebar logic
+        let sidebarCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+        const sidebar = document.getElementById('admin-sidebar');
+        const mainContent = document.getElementById('main-content-shell');
+        const sidebarIcon = document.getElementById('sidebar-toggle-icon');
+        const sidebarTexts = document.querySelectorAll('.sidebar-text');
+
+        function applySidebarState() {
+            if (!sidebar) return;
+            const isDesktop = window.innerWidth >= 768;
+            if (sidebarCollapsed && isDesktop) {
+                sidebar.classList.add('sidebar-collapsed');
+                sidebar.style.width = '64px';
+                if (mainContent) mainContent.style.marginLeft = '64px';
+                if (sidebarIcon) sidebarIcon.textContent = 'menu_open';
+                sidebarTexts.forEach(el => el.classList.add('hidden'));
+            } else {
+                sidebar.classList.remove('sidebar-collapsed');
+                sidebar.style.width = '{{ adminflow_sidebar_width|default:"280" }}px';
+                if (mainContent) mainContent.style.marginLeft = isDesktop ? '{{ adminflow_sidebar_width|default:"280" }}px' : '0px';
+                if (sidebarIcon) sidebarIcon.textContent = 'first_page';
+                sidebarTexts.forEach(el => el.classList.remove('hidden'));
+            }
+        }
+        
+        function toggleSidebar() {
+            sidebarCollapsed = !sidebarCollapsed;
+            localStorage.setItem('sidebar_collapsed', sidebarCollapsed);
+            applySidebarState();
+        }
+
+        // Hover auto-expand sidebar when collapsed
+        if (sidebar) {
+            sidebar.addEventListener('mouseenter', () => {
+                if (sidebarCollapsed && window.innerWidth >= 768) {
+                    sidebar.classList.remove('sidebar-collapsed');
+                    sidebar.style.width = '{{ adminflow_sidebar_width|default:"280" }}px';
+                    sidebar.classList.add('shadow-2xl');
+                    sidebarTexts.forEach(el => el.classList.remove('hidden'));
+                }
+            });
+
+            sidebar.addEventListener('mouseleave', () => {
+                if (sidebarCollapsed && window.innerWidth >= 768) {
+                    sidebar.classList.add('sidebar-collapsed');
+                    sidebar.style.width = '64px';
+                    sidebar.classList.remove('shadow-2xl');
+                    sidebarTexts.forEach(el => el.classList.add('hidden'));
+                }
+            });
+        }
+        
+        // Initial Sidebar Apply & Resize Listener
+        applySidebarState();
+        window.addEventListener('resize', applySidebarState);
+
+        // Mobile sidebar control
+        const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+        let mobileSidebarOpen = false;
+
+        function toggleMobileSidebar() {
+            if (!sidebar) return;
+            mobileSidebarOpen = !mobileSidebarOpen;
+            if (mobileSidebarOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                if (sidebarBackdrop) sidebarBackdrop.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                if (sidebarBackdrop) sidebarBackdrop.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close mobile sidebar on link click
+        if (sidebar && window.innerWidth < 768) {
+            sidebar.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (mobileSidebarOpen) toggleMobileSidebar();
+                });
+            });
+        }
+
+        // Notifications & Profile Dropdown logic
+        function toggleNotificationsDropdown() {
+            const dropdown = document.getElementById('notifications-dropdown');
+            if (dropdown) dropdown.classList.toggle('hidden');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            if (profileDropdown) profileDropdown.classList.add('hidden');
+        }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            if (dropdown) dropdown.classList.toggle('hidden');
+            const notificationsDropdown = document.getElementById('notifications-dropdown');
+            if (notificationsDropdown) notificationsDropdown.classList.add('hidden');
+        }
+        
+        window.addEventListener('click', function(e) {
+            const profileDropdown = document.getElementById('profile-dropdown');
+            if (profileDropdown && !e.target.closest('#profile-dropdown-container')) {
+                profileDropdown.classList.add('hidden');
+            }
+            const notificationsDropdown = document.getElementById('notifications-dropdown');
+            if (notificationsDropdown && !e.target.closest('#notifications-dropdown-container')) {
+                notificationsDropdown.classList.add('hidden');
+            }
+        });
+
+        // Dark Mode Logic
+        let darkMode = localStorage.getItem('dark_mode') === 'true';
+        if (darkMode || (localStorage.getItem('dark_mode') === null && window.matchMedia('(prefers-color-scheme: dark)').matches && "{{ adminflow_theme }}" === "system")) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            localStorage.setItem('dark_mode', darkMode);
+            if (darkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Command Palette Logic
+        const cmdPalette = document.getElementById('command-palette');
+        const cmdInput = document.getElementById('command-palette-input');
+        
+        function openCommandPalette() {
+            if (cmdPalette) {
+                cmdPalette.classList.remove('hidden');
+                if (cmdInput) cmdInput.focus();
+            }
+        }
+        
+        function closeCommandPalette() {
+            if (cmdPalette) cmdPalette.classList.add('hidden');
+        }
+        
+        // Hotkey cmd+k or ctrl+k
+        window.addEventListener('keydown', function(e) {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                openCommandPalette();
+            }
+            if (e.key === 'Escape') {
+                closeCommandPalette();
+            }
+        });
+        
+        if (cmdPalette) {
+            cmdPalette.addEventListener('click', function(e) {
+                if (e.target === cmdPalette) {
+                    closeCommandPalette();
+                }
+            });
+        }
+        
+        // Command Palette Search filter
+        if (cmdInput) {
+            cmdInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('.search-item');
+                items.forEach(item => {
+                    const searchData = item.getAttribute('data-search').toLowerCase();
+                    if (searchData.includes(query)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Dynamic format conversion utility
+        function convertMomentToFlatpickr(format) {
+            if (!format) return "M j, Y";
+            return format
+                .replace(/MMMM/g, 'F') // July
+                .replace(/MMM/g, 'M')  // Jul
+                .replace(/MM/g, 'm')   // 07
+                .replace(/M/g, 'n')    // 7
+                .replace(/dddd/g, 'l') // Wednesday
+                .replace(/ddd/g, 'D')  // Wed
+                .replace(/dd/g, 'd')   // 22
+                .replace(/d/g, 'j')    // 22
+                .replace(/yyyy/g, 'Y') // 2026
+                .replace(/yy/g, 'y')   // 26
+                .replace(/HH/g, 'H')   // 24hr with leading zero
+                .replace(/H/g, 'G')    // 24hr without leading zero
+                .replace(/hh/g, 'h')   // 12hr with leading zero
+                .replace(/h/g, 'g')    // 12hr without leading zero
+                .replace(/mm/g, 'i')   // minutes
+                .replace(/ss/g, 'S')   // seconds
+                .replace(/a/g, 'K')    // AM/PM
+                .replace(/A/g, 'K');   // AM/PM
+        }
+
+        // Flatpickr Initializer
+        function initFlatpickr(container = document) {
+            // Bind Flatpickr to Date fields (.vDateField)
+            container.querySelectorAll('.vDateField').forEach(el => {
+                flatpickr(el, {
+                    dateFormat: "Y-m-d",
+                    allowInput: true,
+                    altInput: true,
+                    altFormat: convertMomentToFlatpickr("{{ adminflow_date_format|default:'MMM dd, yyyy' }}"),
+                });
+            });
+            
+            // Bind Flatpickr to Time fields (.vTimeField)
+            container.querySelectorAll('.vTimeField').forEach(el => {
+                flatpickr(el, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i:S",
+                    allowInput: true,
+                    altInput: true,
+                    altFormat: convertMomentToFlatpickr("{% if adminflow_time_format == '12h' %}hh:mm a{% else %}HH:mm{% endif %}"),
+                });
+            });
+        }
+
+        // Tooltip adder for selector options
+        function addSelectorOptionsTooltip() {
+            document.querySelectorAll('.selector select option').forEach(opt => {
+                if (!opt.hasAttribute('title')) {
+                    opt.setAttribute('title', opt.textContent.trim());
+                }
+            });
+        }
+
+        // Tooltip adder for chooser buttons
+        function setupChooserTooltips() {
+            document.querySelectorAll('.selector-chooser button, .selector-chooser a').forEach(btn => {
+                const text = btn.textContent.trim();
+                if (text && !btn.hasAttribute('title')) {
+                    btn.setAttribute('title', text);
+                }
+            });
+        }
+
+        // Initialize flatpickr on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            initFlatpickr();
+            updateFlatpickrTheme(document.documentElement.classList.contains('dark'));
+            addSelectorOptionsTooltip();
+            setupChooserTooltips();
+            
+            // Re-bind when dynamic inline forms are added
+            if (window.django && window.django.jQuery) {
+                django.jQuery(document).on('formset:added', function(event, $row) {
+                    initFlatpickr($row[0]);
+                });
+            }
+
+            // Also re-apply tooltips when moving items via click
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.selector')) {
+                    setTimeout(function() {
+                        addSelectorOptionsTooltip();
+                        setupChooserTooltips();
+                    }, 50);
+                }
+            });
+
+            // Custom Tooltip Element Initialization
+            const tooltipEl = document.createElement('div');
+            tooltipEl.id = 'adminflow-custom-tooltip';
+            tooltipEl.className = 'fixed hidden z-[9999] px-3 py-1.5 bg-slate-900 text-white text-[11px] font-semibold rounded-lg shadow-lg pointer-events-none opacity-0 transition-opacity duration-150 border border-slate-700/60 max-w-sm whitespace-pre-wrap';
+            document.body.appendChild(tooltipEl);
+
+            let tooltipTimeout;
+
+            document.addEventListener('mouseover', function(e) {
+                // Ignore standard dropdown option tags since they do not trigger mouse events reliably in Chrome/Safari
+                if (e.target.tagName === 'OPTION') return;
+
+                const target = e.target.closest('[title], [data-custom-tooltip], input, textarea, select, .selector-chooser button, .selector-chooser a');
+                if (!target) return;
+
+                // Dynamically prepare tooltips for dropdowns and inputs
+                if (target.matches('select')) {
+                    if (target.multiple) {
+                        const selectedText = Array.from(target.selectedOptions).map(o => o.textContent.trim()).join(', ');
+                        target.setAttribute('data-custom-tooltip', selectedText);
+                    } else if (target.selectedIndex !== -1) {
+                        const selectedOption = target.options[target.selectedIndex];
+                        if (selectedOption) {
+                            target.setAttribute('data-custom-tooltip', selectedOption.textContent.trim());
+                        }
+                    }
+                } else if (target.matches('input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="date"], input:not([type]), textarea')) {
+                    target.setAttribute('data-custom-tooltip', target.value.trim());
+                } else if (target.matches('.selector-chooser button, .selector-chooser a')) {
+                    const text = target.textContent.trim();
+                    if (text) target.setAttribute('data-custom-tooltip', text);
+                } else if (target.hasAttribute('title')) {
+                    const titleText = target.getAttribute('title');
+                    if (titleText) {
+                        target.setAttribute('data-custom-tooltip', titleText);
+                        target.removeAttribute('title');
+                    }
+                }
+
+                const tooltipText = target.getAttribute('data-custom-tooltip');
+                if (!tooltipText || !tooltipText.trim()) return;
+
+                clearTimeout(tooltipTimeout);
+                tooltipTimeout = setTimeout(function() {
+                    tooltipEl.textContent = tooltipText;
+                    tooltipEl.classList.remove('hidden');
+                    
+                    // Position immediately near cursor (handles static hover positions)
+                    const tooltipWidth = tooltipEl.offsetWidth;
+                    const tooltipHeight = tooltipEl.offsetHeight;
+                    
+                    let top = e.clientY + 14;
+                    let left = e.clientX + 14;
+
+                    if (left + tooltipWidth > window.innerWidth) {
+                        left = e.clientX - tooltipWidth - 10;
+                    }
+                    if (top + tooltipHeight > window.innerHeight) {
+                        top = e.clientY - tooltipHeight - 10;
+                    }
+
+                    tooltipEl.style.top = top + 'px';
+                    tooltipEl.style.left = left + 'px';
+                    tooltipEl.style.opacity = '1';
+                }, 50); // Fast 50ms display delay
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (tooltipEl.classList.contains('hidden')) return;
+                
+                const tooltipWidth = tooltipEl.offsetWidth;
+                const tooltipHeight = tooltipEl.offsetHeight;
+                
+                let top = e.clientY + 14;
+                let left = e.clientX + 14;
+
+                // Viewport boundaries checks
+                if (left + tooltipWidth > window.innerWidth) {
+                    left = e.clientX - tooltipWidth - 10;
+                }
+                if (top + tooltipHeight > window.innerHeight) {
+                    top = e.clientY - tooltipHeight - 10;
+                }
+
+                tooltipEl.style.top = top + 'px';
+                tooltipEl.style.left = left + 'px';
+            });
+
+            function hideCustomTooltip() {
+                clearTimeout(tooltipTimeout);
+                tooltipEl.style.opacity = '0';
+                tooltipEl.classList.add('hidden');
+            }
+
+            document.addEventListener('mouseout', function(e) {
+                if (e.target.closest('[data-custom-tooltip], [title], input, textarea, select, .selector-chooser button, .selector-chooser a')) {
+                    hideCustomTooltip();
+                }
+            });
+
+            // Dismiss tooltip immediately on click or scroll
+            document.addEventListener('mousedown', hideCustomTooltip);
+            document.addEventListener('scroll', hideCustomTooltip, true);
+        });
+
+        // Swap Flatpickr themes when toggling dark mode
+        function updateFlatpickrTheme(isDark) {
+            const themeLink = document.getElementById('flatpickr-theme');
+            if (themeLink) {
+                if (isDark) {
+                    themeLink.href = "https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css";
+                } else {
+                    themeLink.href = "https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/light.css";
+                }
+            }
+        }
+
+        // Hook into toggleDarkMode to update flatpickr theme
+        const originalToggleDarkMode = toggleDarkMode;
+        toggleDarkMode = function() {
+            originalToggleDarkMode();
+            updateFlatpickrTheme(document.documentElement.classList.contains('dark'));
+        };
+    </script>
+</body>
+</html>

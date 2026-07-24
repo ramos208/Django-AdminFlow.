@@ -1,0 +1,38 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block bodyclass %}bg-background h-full flex items-center justify-center p-4 md:p-8{% endblock %}
+
+{% block content %}
+<main class="w-full max-w-md flex flex-col overflow-hidden rounded-2xl shadow-xl bg-surface-lowest border border-outline-variant mx-auto my-[10vh] text-center p-8 md:p-12 space-y-6">
+    <!-- Icon Header -->
+    <div class="flex justify-center">
+        <div class="h-16 w-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
+            <span class="material-symbols-outlined text-3xl">logout</span>
+        </div>
+    </div>
+
+    <!-- Title & Subtitle -->
+    <div class="space-y-2">
+        <h1 class="text-2xl font-extrabold text-on-surface tracking-tight">{% translate "Logged Out" %}</h1>
+        <p class="text-xs text-on-surface-variant leading-relaxed max-w-xs mx-auto">
+            {% translate "Thanks for spending some quality time with the web site today." %}
+        </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="pt-4 space-y-3">
+        <a href="{% url 'admin:login' %}" class="w-full h-11 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/95 active:scale-[0.99] transition-all shadow-md flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">login</span>
+            <span>{% translate "Log in again" %}</span>
+        </a>
+
+        {% if site_url %}
+        <a href="{{ site_url }}" class="w-full h-10 border border-outline-variant bg-surface hover:bg-surface-low text-on-surface-variant rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[16px]">home</span>
+            <span>{% translate "Return to site" %}</span>
+        </a>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

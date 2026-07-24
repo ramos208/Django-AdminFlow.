@@ -1,0 +1,144 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block bodyclass %}bg-background h-full flex items-center justify-center p-4 md:p-8{% endblock %}
+
+{% block messages %}{% endblock %}
+
+{% block content %}
+<main class="w-full max-w-5xl h-[650px] flex overflow-hidden rounded-xl shadow-lg bg-surface-lowest border border-outline-variant mx-auto my-[5vh]">
+    <!-- Left Side: Decorative Enterprise panel -->
+    <section class="hidden md:flex flex-1 bg-gradient-to-br from-primary to-inverse-surface relative items-center justify-center p-12 overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-success/10 rounded-full blur-3xl"></div>
+        <div class="relative z-10 text-center space-y-6">
+            <div class="inline-flex items-center justify-center p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 mb-2 shadow-xl">
+                {% if adminflow_logo_icon %}
+                    <span class="material-symbols-outlined text-white text-5xl">{{ adminflow_logo_icon }}</span>
+                {% elif adminflow_logo %}
+                    <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-12 w-auto max-w-[140px] object-contain filter brightness-0 invert"/>
+                {% else %}
+                    <svg class="h-12 w-12 text-white fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                {% endif %}
+            </div>
+            <h1 class="text-3xl font-extrabold text-white leading-tight font-sans">{{ adminflow_login_title|default:"Master Your Enterprise Flow" }}</h1>
+            <p class="text-xs text-white/80 max-w-sm mx-auto leading-relaxed">
+                {{ adminflow_login_subtitle|default:"A unified administrative engine built for scale, security, and developer productivity within the Django ecosystem." }}
+            </p>
+        </div>
+        
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+            <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+                <path d="M-100 100 Q 200 300 600 100 T 1200 400" fill="none" stroke="white" stroke-width="2"></path>
+                <path d="M-100 400 Q 300 100 700 500 T 1300 200" fill="none" stroke="white" stroke-width="1.5"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Right Side: Login Form -->
+    <section class="flex-1 flex flex-col items-center justify-center p-8 md:p-12 bg-surface">
+        <div class="w-full max-w-sm space-y-6">
+            <!-- Brand & Header -->
+            <div class="text-center space-y-2">
+                <div class="flex justify-center">
+                    {% if adminflow_logo %}
+                        <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-12 w-auto"/>
+                    {% else %}
+                        <div class="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-white shadow-md">
+                            <span class="material-symbols-outlined text-2xl">hub</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-on-surface">Welcome back</h2>
+                    <p class="text-xs text-on-surface-variant">Sign in to manage {{ adminflow_title }}</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form action="{{ app_path }}" method="post" id="login-form" class="space-y-4">
+                {% csrf_token %}
+                
+                <!-- Username -->
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" for="id_username">{% translate "Username" %}</label>
+                    <input type="text" name="username" autofocus required id="id_username" 
+                           class="w-full h-11 px-3 rounded-lg border border-outline-variant bg-surface-lowest text-on-surface text-xs focus:ring-2 focus:ring-primary/15 focus:border-primary transition-all outline-none" 
+                           placeholder="admin"/>
+                    {% if form.username.errors %}
+                        <p class="text-[11px] text-danger">{{ form.username.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center">
+                        <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" for="id_password">{% translate "Password" %}</label>
+                        {% if password_reset_url %}
+                            <a href="{{ password_reset_url }}" class="text-[10px] font-bold text-primary hover:underline transition-all">Forgot?</a>
+                        {% endif %}
+                    </div>
+                    <div class="relative">
+                        <input type="password" name="password" required id="id_password" 
+                               class="w-full h-11 px-3 pr-10 rounded-lg border border-outline-variant bg-surface-lowest text-on-surface text-xs focus:ring-2 focus:ring-primary/15 focus:border-primary transition-all outline-none" 
+                               placeholder="••••••••"/>
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors focus:outline-none">
+                            <span class="material-symbols-outlined text-[18px]" id="visibilityIcon">visibility</span>
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        <p class="text-[11px] text-danger">{{ form.password.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+
+                <input type="hidden" name="next" value="{{ next }}"/>
+
+                <!-- Sign In Button -->
+                <button type="submit" id="btn-signin" class="w-full h-11 mt-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary/95 active:scale-[0.99] transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                    <span id="btn-signin-text">{% translate "Sign In" %}</span>
+                </button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<!-- Floating Toast Notifications -->
+{% include "admin/includes/toast.html" %}
+
+<script>
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('id_password');
+        const icon = document.getElementById('visibilityIcon');
+        if (passwordInput && icon) {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('login-form');
+        const signinBtn = document.getElementById('btn-signin');
+
+        if (loginForm && signinBtn) {
+            loginForm.addEventListener('submit', function() {
+                signinBtn.disabled = true;
+                signinBtn.classList.add('opacity-75', 'cursor-not-allowed', 'pointer-events-none');
+                signinBtn.innerHTML = `
+                    <svg class="animate-spin h-4 w-4 text-white inline-block shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Signing In...</span>
+                `;
+            });
+        }
+    });
+</script>
+{% endblock %}

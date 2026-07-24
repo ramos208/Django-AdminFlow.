@@ -1,0 +1,24 @@
+/* AdminFlow docs — RTD theme overrides */
+
+/* Sidebar logo text */
+.wy-side-nav-search {
+    background-color: #1a1a2e;
+}
+
+/* Code blocks */
+.highlight {
+    border-radius: 4px;
+}
+
+/* Screenshot images — full-width with shadow */
+.screenshot img {
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    margin: 16px 0;
+}
+
+/* Note / tip / warning callouts — match RTD style */
+.rst-content .note .admonition-title {
+    background: #2980b9;
+}

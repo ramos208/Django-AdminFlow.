@@ -1,0 +1,60 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<nav class="flex items-center gap-1.5 text-xs text-on-surface-variant/70 mb-4">
+    <a href="{% url 'admin:index' %}" class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[16px]">home</span></a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url 'admin:app_list' app_label=opts.app_label %}" class="hover:text-primary transition-colors capitalize font-medium">{{ opts.app_config.verbose_name }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="hover:text-primary transition-colors font-bold">{{ opts.verbose_name_plural|capfirst }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    {% if object %}
+    <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}" class="hover:text-primary transition-colors font-bold">{{ object|truncatewords:"18" }}</a>
+    {% else %}
+    <span class="font-bold text-on-surface-variant">{{ object_id }}</span>
+    {% endif %}
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <span class="text-primary font-bold">{% translate 'History' %}</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-4xl mx-auto w-full">
+    <!-- Header Block -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl md:text-2xl font-black text-on-surface tracking-tight">
+                {% if object %}{{ object|truncatewords:"10" }}{% else %}{{ object_id }}{% endif %} {% translate 'History' %}
+            </h2>
+            <p class="text-xs text-on-surface-variant mt-1">{% translate 'Overview of modifications and updates tracked on this object.' %}</p>
+        </div>
+    </div>
+
+    <!-- Core Model History Content Tab -->
+    <div class="module">
+      {% if action_list %}
+        <table id="change-history">
+            <thead>
+                <tr>
+                    <th scope="col">{% translate 'Date/time' %}</th>
+                    <th scope="col">{% translate 'User' %}</th>
+                    <th scope="col">{% translate 'Action' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for action in action_list %}
+                <tr>
+                    <th scope="row" class="font-normal">{{ action.action_time }}</th>
+                    <td>{{ action.user.get_username }}</td>
+                    <td>{{ action.change_message }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      {% else %}
+        <p class="text-sm text-on-surface-variant">{% trans "This object doesn't have a change history." %}</p>
+      {% endif %}
+    </div>
+</div>
+{% endblock %}

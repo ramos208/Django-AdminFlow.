@@ -1,0 +1,244 @@
+Customisation
+=============
+
+AdminFlow exposes all its branding and behaviour through ``settings.py`` variables.
+Every setting has a sensible default so you only need to add what you want to change.
+
+.. warning::
+
+   ``adminflow.context_processors.adminflow_settings`` **must** be in ``TEMPLATES``
+   for any of these settings to take effect in the UI:
+
+   .. code-block:: python
+
+      TEMPLATES = [{
+          ...
+          "OPTIONS": {
+              "context_processors": [
+                  ...
+                  "adminflow.context_processors.adminflow_settings",  # ← required
+              ],
+          },
+      }]
+
+----
+
+All Settings
+------------
+
+Branding
+~~~~~~~~
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 15 50
+
+   * - Setting
+     - Default
+     - Description
+   * - ``ADMINFLOW_TITLE``
+     - ``"AdminFlow"``
+     - Text in the sidebar header and browser tab title
+   * - ``ADMINFLOW_COMPANY``
+     - ``"AdminFlow"``
+     - Company name shown in the admin footer
+   * - ``ADMINFLOW_LOGO``
+     - *(not set)*
+     - Filename relative to ``MEDIA_URL`` (e.g. ``"logo.svg"`` → ``/media/logo.svg``)
+
+.. code-block:: python
+
+   ADMINFLOW_TITLE   = "My SaaS App"
+   ADMINFLOW_COMPANY = "Acme Corp"
+   ADMINFLOW_LOGO    = "branding/logo.svg"   # optional
+
+Login Page
+~~~~~~~~~~
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 30 35
+
+   * - Setting
+     - Default
+     - Description
+   * - ``ADMINFLOW_LOGIN_TITLE``
+     - ``"Master Your Enterprise Flow"``
+     - Hero heading on the login page right panel
+   * - ``ADMINFLOW_LOGIN_SUBTITLE``
+     - *(long default text)*
+     - Subheading under the login title
+
+.. code-block:: python
+
+   ADMINFLOW_LOGIN_TITLE    = "Welcome back"
+   ADMINFLOW_LOGIN_SUBTITLE = "Sign in to manage your application."
+
+Theme Colours
+~~~~~~~~~~~~~
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 20 40
+
+   * - Setting
+     - Default
+     - Description
+   * - ``ADMINFLOW_PRIMARY_COLOR``
+     - ``"#1f2021"``
+     - Primary action colour (buttons, links, active states)
+   * - ``ADMINFLOW_SECONDARY_COLOR``
+     - ``"#475569"``
+     - Secondary / muted colour
+   * - ``ADMINFLOW_SUCCESS_COLOR``
+     - ``"#10B981"``
+     - Success badge / toast colour
+   * - ``ADMINFLOW_WARNING_COLOR``
+     - ``"#F59E0B"``
+     - Warning badge / toast colour
+   * - ``ADMINFLOW_DANGER_COLOR``
+     - ``"#EF4444"``
+     - Error / delete action colour
+
+.. code-block:: python
+
+   ADMINFLOW_PRIMARY_COLOR   = "#2563eb"   # blue
+   ADMINFLOW_SUCCESS_COLOR   = "#16a34a"   # green
+   ADMINFLOW_DANGER_COLOR    = "#dc2626"   # red
+
+Sidebar
+~~~~~~~
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 20 40
+
+   * - Setting
+     - Default
+     - Description
+   * - ``ADMINFLOW_SIDEBAR_COLOR``
+     - ``"#0f172a"``
+     - Sidebar background colour
+   * - ``ADMINFLOW_SIDEBAR_TEXT_COLOR``
+     - ``"#94a3b8"``
+     - Inactive navigation item text colour
+   * - ``ADMINFLOW_SIDEBAR_ACTIVE_TEXT_COLOR``
+     - ``"#ffffff"``
+     - Active / hover navigation item text colour
+   * - ``ADMINFLOW_SIDEBAR_COLLAPSIBLE``
+     - ``True``
+     - Allow the sidebar to be collapsed by clicking the toggle
+   * - ``ADMINFLOW_SIDEBAR_WIDTH``
+     - ``280``
+     - Sidebar width in pixels when expanded
+
+.. code-block:: python
+
+   ADMINFLOW_SIDEBAR_COLOR             = "#1e293b"
+   ADMINFLOW_SIDEBAR_TEXT_COLOR        = "#94a3b8"
+   ADMINFLOW_SIDEBAR_ACTIVE_TEXT_COLOR = "#ffffff"
+   ADMINFLOW_SIDEBAR_COLLAPSIBLE       = True
+   ADMINFLOW_SIDEBAR_WIDTH             = 260
+
+UI & Layout
+~~~~~~~~~~~
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 20 40
+
+   * - Setting
+     - Default
+     - Description
+   * - ``ADMINFLOW_BORDER_RADIUS``
+     - ``"16px"``
+     - CSS border-radius applied to cards, inputs, and buttons
+   * - ``ADMINFLOW_FONT``
+     - ``"Inter"``
+     - Google Font loaded for the entire admin UI
+   * - ``ADMINFLOW_ENABLE_COMMAND_PALETTE``
+     - ``True``
+     - Enable the Cmd+K / Ctrl+K quick-search command palette
+
+.. code-block:: python
+
+   ADMINFLOW_BORDER_RADIUS          = "8px"      # sharper corners
+   ADMINFLOW_FONT                   = "Roboto"
+   ADMINFLOW_ENABLE_COMMAND_PALETTE = False       # disable if not needed
+
+Two-Factor Auth
+~~~~~~~~~~~~~~~
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 15 50
+
+   * - Setting
+     - Default
+     - Description
+   * - ``ADMINFLOW_DJANGO_OTP``
+     - ``True``
+     - Show the OTP verification screen after login when a user has a confirmed device
+
+.. code-block:: python
+
+   ADMINFLOW_DJANGO_OTP = True   # set False to disable the 2FA flow UI
+
+----
+
+Per-Model Icon
+--------------
+
+Set the ``icon`` attribute on any ``ModelAdmin`` to show a
+`Material Symbols <https://fonts.google.com/icons>`_ icon in the sidebar:
+
+.. code-block:: python
+
+   from django.contrib import admin
+   from .models import Customer, Order, Product
+
+   @admin.register(Customer)
+   class CustomerAdmin(admin.ModelAdmin):
+       icon = "person"
+
+   @admin.register(Order)
+   class OrderAdmin(admin.ModelAdmin):
+       icon = "shopping_cart"
+
+   @admin.register(Product)
+   class ProductAdmin(admin.ModelAdmin):
+       icon = "inventory_2"
+
+Browse icon names at https://fonts.google.com/icons — use the **Symbols** (outline) variant name.
+
+----
+
+App Label in Sidebar
+--------------------
+
+AdminFlow uses each app's ``verbose_name`` from ``AppConfig`` as the sidebar group label:
+
+.. code-block:: python
+
+   # myapp/apps.py
+   from django.apps import AppConfig
+
+   class MyAppConfig(AppConfig):
+       name         = "myapp"
+       verbose_name = "Customer Relations (CRM)"   # ← shown in sidebar
+
+----
+
+Export Format Override
+-----------------------
+
+``MultiSheetExportImportMixin`` defaults to **xlsx** and **json** when ``combined_sheets``
+is set. Override per-admin class:
+
+.. code-block:: python
+
+   from import_export.formats.base_formats import XLSX
+
+   class ProductAdmin(MultiSheetExportImportMixin, ImportExportModelAdmin):
+       export_formats_override = [XLSX]    # xlsx only
+       # export_formats_override = None    # restore all formats

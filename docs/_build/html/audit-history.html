@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audit History &mdash; django-adminflow</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/custom/custom.css?v=64936ca2" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=bf67f3fc"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Import / Export" href="import-export.html" />
+    <link rel="prev" title="Two-Factor Authentication" href="two-factor-auth.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            django-adminflow
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-adminflow">Installing AdminFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#core-ui-only">Core UI only</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#with-two-factor-authentication">With Two-Factor Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#with-audit-history">With Audit History</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#with-import-export">With Import / Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#everything-at-once">Everything at once</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#dependency-reference">Dependency Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-1-install">Step 1 — Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-2-settings-py">Step 2 — <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-3-run-migrations">Step 3 — Run migrations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-4-collect-static-files">Step 4 — Collect static files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-5-visit-your-admin">Step 5 — Visit your admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ui-features.html">UI Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#dashboard">Dashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#sidebar-navigation">Sidebar Navigation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#model-list-changelist">Model List (Changelist)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#model-change-form">Model Change Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#login-page">Login Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#customisation-settings">Customisation Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="two-factor-auth.html">Two-Factor Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#setting-up-the-user-admin">Setting Up the User Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#how-it-works">How It Works</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="two-factor-auth.html#login-flow">Login Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="two-factor-auth.html#user-2fa-management">User 2FA Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#admin-bulk-actions">Admin Bulk Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#email-otp-settings">Email OTP Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#disabling-2fa-requirement">Disabling 2FA Requirement</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Audit History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-history-to-a-model">Adding History to a Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enabling-the-history-admin">Enabling the History Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#history-view">History View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#querying-history">Querying History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#excluding-fields-from-history">Excluding Fields from History</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="import-export.html">Import / Export</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#export-formats">Export Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#setting-up-resources">Setting Up Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#enabling-multi-sheet-export">Enabling Multi-Sheet Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#the-export-page">The Export Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#xlsx-output">XLSX Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#json-output">JSON Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#the-import-page">The Import Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#api-reference">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.combined_sheets"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.combined_sheets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.export_formats_override"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.export_formats_override</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.get_export_formats"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.get_export_formats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.import_action"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.import_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.init_request_context_data"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.init_request_context_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#admin-title">Admin Title</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#per-model-icons">Per-Model Icons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#app-label-display">App Label Display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#restricting-export-formats">Restricting Export Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#custom-2fa-inlines">Custom 2FA Inlines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#added">Added</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">django-adminflow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Audit History</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/edgar/django-adminflow/blob/main/docs/audit-history.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="two-factor-auth.html" class="btn btn-neutral float-left" title="Two-Factor Authentication" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="import-export.html" class="btn btn-neutral float-right" title="Import / Export" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="audit-history">
+<h1>Audit History<a class="headerlink" href="#audit-history" title="Link to this heading"></a></h1>
+<p>AdminFlow integrates with <a class="reference external" href="https://django-simple-history.readthedocs.io/">django-simple-history</a>
+to give every model a full per-record change log — who changed what, when, with
+field-level before/after diffs rendered in a clean timeline.</p>
+<hr class="docutils" />
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;django-adminflow[history]&quot;</span>
+</pre></div>
+</div>
+<p>Add to <code class="docutils literal notranslate"><span class="pre">INSTALLED_APPS</span></code> and <code class="docutils literal notranslate"><span class="pre">MIDDLEWARE</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;adminflow&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.admin&quot;</span><span class="p">,</span>
+    <span class="o">...</span>
+    <span class="s2">&quot;simple_history&quot;</span><span class="p">,</span>    <span class="c1"># ← add this</span>
+<span class="p">]</span>
+
+<span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">...</span>
+    <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># ← add this (records who made the change)</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Run migrations:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="adding-history-to-a-model">
+<h2>Adding History to a Model<a class="headerlink" href="#adding-history-to-a-model" title="Link to this heading"></a></h2>
+<p>Add <code class="docutils literal notranslate"><span class="pre">HistoricalRecords</span></code> to any model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># models.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">simple_history.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">HistoricalRecords</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span>         <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">email</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">phone</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">notes</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">date_created</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">history</span> <span class="o">=</span> <span class="n">HistoricalRecords</span><span class="p">()</span>   <span class="c1"># ← this is all you need</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="enabling-the-history-admin">
+<h2>Enabling the History Admin<a class="headerlink" href="#enabling-the-history-admin" title="Link to this heading"></a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">SimpleHistoryAdmin</span></code> as your admin base class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># admin.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">simple_history.admin</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleHistoryAdmin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Customer</span>
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Customer</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomerAdmin</span><span class="p">(</span><span class="n">SimpleHistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;phone&#39;</span><span class="p">,</span> <span class="s1">&#39;date_created&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>AdminFlow automatically styles the history list and diff view — no extra code needed.</p>
+</section>
+<hr class="docutils" />
+<section id="history-view">
+<h2>History View<a class="headerlink" href="#history-view" title="Link to this heading"></a></h2>
+<p>Every change form gets a <strong>History</strong> button in the top-right. Clicking it shows:</p>
+<img alt="Audit history view with field diffs" class="screenshot" src="_images/history.png" />
+<p>Each entry shows:</p>
+<ul class="simple">
+<li><p><strong>Timestamp</strong> — date and time of the change</p></li>
+<li><p><strong>Changed by</strong> — the staff user who made the change</p></li>
+<li><p><strong>Field diffs</strong> — old value (strikethrough red) → new value (green)</p></li>
+<li><p><strong>Change type</strong> — Created / Changed / Deleted badge</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="querying-history">
+<h2>Querying History<a class="headerlink" href="#querying-history" title="Link to this heading"></a></h2>
+<p>Access history programmatically:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">customer</span> <span class="o">=</span> <span class="n">Customer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># All history records for this customer</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">customer</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">history_date</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">history_user</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">history_type</span><span class="p">)</span>
+
+<span class="c1"># Get the previous version</span>
+<span class="n">previous</span> <span class="o">=</span> <span class="n">customer</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">prev_record</span>
+
+<span class="c1"># See what changed between two versions</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">customer</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">diff_against</span><span class="p">(</span><span class="n">previous</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">delta</span><span class="o">.</span><span class="n">changes</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">change</span><span class="o">.</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">change</span><span class="o">.</span><span class="n">old</span><span class="si">!r}</span><span class="s2"> → </span><span class="si">{</span><span class="n">change</span><span class="o">.</span><span class="n">new</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="excluding-fields-from-history">
+<h2>Excluding Fields from History<a class="headerlink" href="#excluding-fields-from-history" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span>     <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>  <span class="c1"># don&#39;t track this</span>
+
+    <span class="n">history</span> <span class="o">=</span> <span class="n">HistoricalRecords</span><span class="p">(</span><span class="n">excluded_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="two-factor-auth.html" class="btn btn-neutral float-left" title="Two-Factor Authentication" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="import-export.html" class="btn btn-neutral float-right" title="Import / Export" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Edgar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

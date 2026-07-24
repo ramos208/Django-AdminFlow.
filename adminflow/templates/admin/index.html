@@ -1,0 +1,227 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static adminflow_tags %}
+
+{% block bodyclass %}dashboard-page{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-[1600px] mx-auto w-full">
+    <!-- Welcome Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">Good day, {{ user.get_username|capfirst }}</h2>
+            <p class="text-xs text-on-surface-variant mt-1">Here is a quick overview of your admin console.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="openCommandPalette()" class="flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant text-primary font-bold text-xs hover:bg-surface-low transition-all bg-surface-lowest shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">search</span>
+                {% translate "Global Search" %}
+            </button>
+        </div>
+    </div>
+
+    <!-- Section 1: KPI Stats Cards (2x2 on mobile, 4 cols on desktop) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Users Card -->
+        {% get_user_stats as user_stats %}
+        <div class="glass-card p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow" title="System Users — Active: {{ user_stats.active }}, Inactive: {{ user_stats.inactive }}, Staff: {{ user_stats.staff }}, Super Admins: {{ user_stats.superuser }}, Total: {{ user_stats.total }}">
+            <div class="flex justify-between items-start">
+                <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                    <span class="material-symbols-outlined">group</span>
+                </div>
+                <span class="text-xs text-primary font-bold">
+                    {{ user_stats.total }} Total
+                </span>
+            </div>
+            <div class="mt-4">
+                <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">{% translate "System Users" %}</p>
+                <div class="flex items-center gap-3 mt-2 pt-2 border-t border-outline-variant/40">
+                    <div class="flex items-center gap-1" title="Active Users">
+                        <span class="material-symbols-outlined text-[14px] text-success">check_circle</span>
+                        <span class="text-sm font-bold text-success">{{ user_stats.active }}</span>
+                    </div>
+                    <div class="flex items-center gap-1" title="Inactive Users">
+                        <span class="material-symbols-outlined text-[14px] text-danger">cancel</span>
+                        <span class="text-sm font-bold text-danger">{{ user_stats.inactive }}</span>
+                    </div>
+                    <div class="flex items-center gap-1" title="Staff Users">
+                        <span class="material-symbols-outlined text-[14px] text-primary">badge</span>
+                        <span class="text-sm font-bold text-primary">{{ user_stats.staff }}</span>
+                    </div>
+                    <div class="flex items-center gap-1" title="Super Admins">
+                        <span class="material-symbols-outlined text-[14px] text-warning">shield_person</span>
+                        <span class="text-sm font-bold text-warning">{{ user_stats.superuser }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Database Info -->
+        {% get_system_stats as system_stats %}
+        <div class="glass-card p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow" title="Database Engine: {{ system_stats.db_engine }} — File: {{ system_stats.db_name }}">
+            <div class="flex justify-between items-start">
+                <div class="p-2 bg-success/10 rounded-lg text-success">
+                    <span class="material-symbols-outlined">database</span>
+                </div>
+                <span class="text-xs text-success font-bold flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[12px]">check_circle</span> Connected
+                </span>
+            </div>
+            <div class="mt-4">
+                <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">{% translate "Database Engine" %}</p>
+                <h3 class="text-xl md:text-2xl font-black text-on-surface mt-1">{{ system_stats.db_engine }}</h3>
+
+            </div>
+        </div>
+
+        <!-- Framework & Runtime -->
+        <div class="glass-card p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow" title="Django v{{ system_stats.django_version }} running on Python {{ system_stats.python_version }}">
+            <div class="flex justify-between items-start">
+                <div class="p-2 bg-warning/10 rounded-lg text-warning">
+                    <span class="material-symbols-outlined">code</span>
+                </div>
+                <span class="text-xs text-primary font-bold">
+                    Python {{ system_stats.python_version }}
+                </span>
+            </div>
+            <div class="mt-4">
+                <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">{% translate "Django Version" %}</p>
+                <h3 class="text-xl md:text-2xl font-black text-on-surface mt-1">v{{ system_stats.django_version }}</h3>
+            </div>
+        </div>
+
+        <!-- Admin Registry -->
+        <div class="glass-card p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow" title="Registered Models ({{ system_stats.model_count }}):&#10;{{ system_stats.model_names }}">
+            <div class="flex justify-between items-start">
+                <div class="p-2 bg-info/10 rounded-lg text-info">
+                    <span class="material-symbols-outlined">widgets</span>
+                </div>
+                <span class="text-xs text-info font-bold flex items-center gap-1">
+                    {{ system_stats.app_count }} {% translate "Apps" %}
+                </span>
+            </div>
+            <div class="mt-4">
+                <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">{% translate "Registered Models" %}</p>
+                <h3 class="text-xl md:text-2xl font-black text-on-surface mt-1">{{ system_stats.model_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Apps Grid & Recent Actions Split Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left: App Index Card Grid -->
+        <div class="lg:col-span-2 space-y-6">
+            {% get_admin_app_list as apps %}
+            {% for app in apps %}
+            <div class="border border-outline-variant bg-surface-lowest rounded-xl shadow-sm overflow-hidden">
+                <!-- App header -->
+                <div class="px-5 py-4 bg-surface-low border-b border-outline-variant flex justify-between items-center">
+                    <h3 class="text-sm font-bold text-on-surface tracking-tight">{{ app.name }}</h3>
+                    <a href="{{ app.app_url }}" class="text-xs font-semibold text-primary hover:underline" title="{% blocktranslate with name=app.name %}View all models in {{ name }}{% endblocktranslate %}">
+                        {% translate "Manage app" %} &rarr;
+                    </a>
+                </div>
+                
+                <!-- Models list -->
+                <div class="divide-y divide-outline-variant">
+                    {% for model in app.models %}
+                    <div class="px-5 py-3 flex items-center justify-between hover:bg-surface-low/30 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-lg">{{ model|adminflow_icon }}</span>
+                            <div>
+                                <a href="{{ model.admin_url }}" class="text-xs font-bold text-on-surface hover:text-primary transition-colors">
+                                    {{ model.name }}
+                                </a>
+                                <p class="text-[10px] text-on-surface-variant">Class: {{ model.object_name }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            {% if model.add_url %}
+                            <a href="{{ model.add_url }}" class="flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-[11px] font-bold">
+                                <span class="material-symbols-outlined text-xs">add</span>
+                                {% translate "Add" %}
+                            </a>
+                            {% endif %}
+                            
+                            {% if model.admin_url %}
+                            <a href="{{ model.admin_url }}" class="flex items-center gap-1 px-2 py-1 rounded border border-outline-variant text-on-surface-variant hover:bg-surface-low transition-all text-[11px] font-bold bg-surface-lowest">
+                                <span class="material-symbols-outlined text-xs">visibility</span>
+                                {% translate "View" %}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-8 text-center bg-surface-lowest rounded-xl border border-outline-variant space-y-3">
+                <span class="material-symbols-outlined text-on-surface-variant text-5xl opacity-40">inbox</span>
+                <p class="text-xs text-on-surface-variant">{% translate "You don’t have permission to view or edit anything." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Right: Recent Actions Timeline -->
+        <div class="border border-outline-variant bg-surface-lowest rounded-xl shadow-sm overflow-hidden h-fit">
+            <div class="px-5 py-4 bg-surface-low border-b border-outline-variant">
+                <h3 class="text-sm font-bold text-on-surface">{% translate "Recent Activity" %}</h3>
+            </div>
+            
+            <div class="p-5 max-h-[500px] overflow-y-auto custom-scrollbar">
+                {% load log %}
+                {% get_admin_log 10 as admin_log for_user user %}
+                
+                {% if not admin_log %}
+                <p class="text-xs text-on-surface-variant text-center py-6">{% translate "No recent activity found." %}</p>
+                {% else %}
+                <ul class="space-y-4 relative before:absolute before:top-2 before:bottom-2 before:left-[17px] before:w-0.5 before:bg-outline-variant">
+                    {% for entry in admin_log %}
+                    <li class="flex items-start gap-3 relative z-10">
+                        <!-- Icon indicator based on action flag -->
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center border shadow-sm shrink-0
+                            {% if entry.is_addition %}bg-green-50 border-green-200 text-green-600 dark:bg-green-950/20 dark:border-green-800/30{% elif entry.is_change %}bg-amber-50 border-amber-200 text-amber-600 dark:bg-amber-950/20 dark:border-amber-800/30{% else %}bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950/20 dark:border-rose-800/30{% endif %}">
+                            <span class="material-symbols-outlined text-sm">
+                                {% if entry.is_addition %}add{% elif entry.is_change %}edit{% else %}delete{% endif %}
+                            </span>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="flex-1 space-y-1">
+                            <div class="flex justify-between items-center gap-2">
+                                <span class="text-xs font-bold text-on-surface break-all">
+                                    {% if entry.is_deletion or not entry.get_admin_url %}
+                                        {{ entry.object_repr }}
+                                    {% else %}
+                                        <a href="{{ entry.get_admin_url }}" class="hover:text-primary transition-colors">{{ entry.object_repr }}</a>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            
+                            <p class="text-[10px] text-on-surface-variant leading-relaxed">
+                                {% if entry.content_type %}
+                                    <span class="font-semibold">{{ entry.content_type.name|capfirst }}</span>
+                                {% else %}
+                                    {% translate "Unknown content" %}
+                                {% endif %}
+                                &middot; 
+                                <span class="font-mono text-[9px] bg-surface-low px-1.5 py-0.5 rounded border border-outline-variant">
+                                    {% if entry.is_addition %}{% translate "Added" %}{% elif entry.is_change %}{% translate "Modified" %}{% else %}{% translate "Deleted" %}{% endif %}
+                                </span>
+                            </p>
+                            
+                            {% if entry.change_message %}
+                            <p class="text-[10px] italic text-on-surface-variant bg-surface-low/50 p-1.5 rounded border border-dashed border-outline-variant">
+                                {{ entry.change_message }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

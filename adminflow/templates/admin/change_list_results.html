@@ -1,0 +1,211 @@
+{% load i18n admin_urls adminflow_tags %}
+{% if result_hidden_fields %}
+<div class="hiddenfields">
+{% for item in result_hidden_fields %}{{ item }}{% endfor %}
+</div>
+{% endif %}
+
+{% if results %}
+<div class="overflow-x-auto custom-scrollbar">
+    <table id="result_list" class="w-full text-left border-collapse">
+        <thead>
+            <tr class="bg-surface-low border-b border-outline-variant">
+                {% for header in result_headers %}
+                <th scope="col" class="px-4 py-3 font-semibold text-on-surface-variant uppercase tracking-wider text-[11px]" {{ header.class_attrib }}>
+                    <div class="flex items-center gap-1">
+                        {% if header.sortable %}
+                            <a href="{{ header.url_primary }}" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+                                {{ header.text|capfirst }}
+                                {% if header.sortpriority > 0 %}
+                                    <span class="material-symbols-outlined text-xs">
+                                        {% if header.ascending %}arrow_upward{% else %}arrow_downward{% endif %}
+                                    </span>
+                                {% endif %}
+                            </a>
+                        {% else %}
+                            <span class="text-on-surface-variant">{{ header.text|capfirst }}</span>
+                        {% endif %}
+                    </div>
+                </th>
+                {% endfor %}
+                <th scope="col" class="px-6 py-3 font-semibold text-on-surface-variant uppercase tracking-wider text-[11px] text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/40">
+            {% for result, obj in results|zip_results:cl %}
+                {% if result.form and result.form.non_field_errors %}
+                    <tr class="bg-rose-50 dark:bg-rose-950/20"><td colspan="{{ result|length|add:1 }}" class="px-4 py-2 text-xs text-danger font-semibold">{{ result.form.non_field_errors }}</td></tr>
+                {% endif %}
+                <tr class="hover:bg-surface-low/30 transition-all">
+                    {% for item in result %}
+                        {{ item }}
+                    {% endfor %}
+                    <td class="px-6 py-2.5 text-right align-middle shrink-0 w-24">
+                        <div class="flex items-center justify-end gap-2">
+                            <a href="{% url cl.opts|admin_urlname:'change' obj.pk|admin_urlquote %}" class="p-1.5 hover:bg-primary/10 rounded-lg text-primary transition-all hover:text-primary-dim inline-flex items-center" title="{% translate 'Edit' %}">
+                                <span class="material-symbols-outlined text-sm">edit</span>
+                            </a>
+                            {% if has_delete_permission %}
+                            <a href="{% url cl.opts|admin_urlname:'delete' obj.pk|admin_urlquote %}" class="p-1.5 hover:bg-rose-50 rounded-lg text-rose-500 transition-all hover:text-rose-600 inline-flex items-center" title="{% translate 'Delete' %}">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    /* Styling elements dynamically outputted by Django python code */
+    table#result_list {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+    table#result_list td {
+        padding: 12px 16px !important;
+        font-size: 13px !important;
+        color: var(--tw-prose-body);
+        vertical-align: middle !important;
+    }
+    table#result_list td.action-checkbox, 
+    table#result_list th.action-checkbox-column {
+        width: 48px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+    table#result_list td.action-checkbox input, 
+    table#result_list th.action-checkbox-column input {
+        border-radius: 4px !important;
+        border-color: #c3c6d7 !important;
+        color: #2563eb !important;
+        width: 16px !important;
+        height: 16px !important;
+        cursor: pointer !important;
+    }
+    table#result_list td a {
+        color: #2563eb !important;
+        font-weight: 600 !important;
+    }
+    table#result_list td a:hover {
+        text-decoration: underline !important;
+    }
+    .dark table#result_list td.action-checkbox input {
+        border-color: #475569 !important;
+        background-color: #0f172a !important;
+    }
+
+    /* ── Mobile Stacked Card View ── */
+    @media (max-width: 767px) {
+        div.overflow-x-auto {
+            overflow-x: visible !important;
+        }
+        table#result_list, 
+        table#result_list tbody, 
+        table#result_list tr,
+        table#result_list th,
+        table#result_list td {
+            display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        table#result_list thead {
+            display: none !important;
+        }
+        table#result_list tr {
+            margin: 12px 0 !important;
+            background: var(--surface-lowest, #ffffff) !important;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 16px !important;
+            padding: 16px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+            position: relative !important;
+        }
+
+        /* Top line: Checkbox on left */
+        table#result_list td.action-checkbox,
+        table#result_list th.action-checkbox-column {
+            width: 100% !important;
+            padding: 0 0 12px 0 !important;
+            margin-bottom: 8px !important;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6) !important;
+            display: flex !important;
+            align-items: center !important;
+            min-height: 28px !important;
+        }
+
+        /* Top line: Edit / Delete Actions on right (same line as checkbox) */
+        table#result_list td:last-child {
+            position: absolute !important;
+            top: 12px !important;
+            right: 16px !important;
+            width: auto !important;
+            border-top: none !important;
+            border-bottom: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: center !important;
+            z-index: 10 !important;
+        }
+
+        table#result_list th[data-label],
+        table#result_list td[data-label] {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 9px 0 !important;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.4) !important;
+            text-align: right !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+        }
+
+        table#result_list th[data-label]:last-of-type,
+        table#result_list td[data-label]:last-of-type {
+            border-bottom: none !important;
+        }
+
+        table#result_list [data-label]::before {
+            content: attr(data-label);
+            font-weight: 700 !important;
+            font-size: 10px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            color: #64748b !important;
+            margin-right: 12px !important;
+            text-align: left !important;
+            flex-shrink: 0 !important;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Enhance checkbox styling
+        const checkboxes = document.querySelectorAll('table#result_list input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            cb.classList.add("rounded", "border-outline-variant", "text-primary", "focus:ring-primary", "w-4", "h-4", "cursor-pointer", "dark:bg-slate-800", "dark:border-slate-700");
+        });
+
+        // Add mobile card field labels accurately using both th and td row cells
+        const table = document.getElementById('result_list');
+        if (table) {
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('th, td');
+                cells.forEach((cell, idx) => {
+                    const isCheckbox = cell.classList.contains('action-checkbox') || cell.classList.contains('action-checkbox-column') || cell.querySelector('input[type="checkbox"]');
+                    const isActions = idx === cells.length - 1;
+                    if (headers[idx] && !isCheckbox && !isActions) {
+                        cell.setAttribute('data-label', headers[idx]);
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% endif %}

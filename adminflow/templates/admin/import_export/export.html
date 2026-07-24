@@ -1,0 +1,199 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static import_export_tags adminflow_tags %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  {{ form.media }}
+  <style>
+    .field-chip input[type="checkbox"] { display: none; }
+    .field-chip label {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 11px; border-radius: 8px; cursor: pointer;
+      font-size: 12px; font-weight: 600; user-select: none; transition: all .15s;
+      border: 1px solid var(--color-outline-variant, #cbd5e1);
+      background: var(--color-surface-low, #f1f5f9);
+      color: var(--color-on-surface, #0f172a);
+    }
+    .field-chip input:checked + label {
+      background: var(--color-primary, #2563eb);
+      border-color: var(--color-primary, #2563eb);
+      color: #fff;
+    }
+    .field-chip label:hover { filter: brightness(.95); }
+    .info-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 11px; border-radius: 8px;
+      font-size: 12px; font-weight: 500;
+      border: 1px dashed var(--color-outline-variant, #cbd5e1);
+      background: var(--color-surface-lowest, #fff);
+      color: var(--color-on-surface-variant, #64748b);
+    }
+  </style>
+{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="flex items-center gap-1.5 text-xs text-on-surface-variant/70 mb-4">
+  <a href="{% url 'admin:index' %}" class="hover:text-primary transition-colors flex items-center">
+    <span class="material-symbols-outlined text-[16px]">home</span>
+  </a>
+  <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+  <a href="{% url 'admin:app_list' app_label=opts.app_label %}" class="hover:text-primary capitalize font-medium">{{ opts.app_config.verbose_name }}</a>
+  <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+  <a href="{% url opts|admin_urlname:'changelist' %}" class="hover:text-primary font-medium">{{ opts.verbose_name_plural|capfirst }}</a>
+  <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+  <span class="text-primary font-bold">{% translate "Export" %}</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-5 max-w-3xl">
+
+  <!-- Header -->
+  <div>
+    <h2 class="text-xl font-black text-on-surface tracking-tight">
+      {% translate "Export" %} {{ opts.verbose_name_plural|capfirst }}
+    </h2>
+    <p class="text-xs text-on-surface-variant mt-1">
+      {% if sub_sheets %}
+        {% translate "XLSX → one file with multiple sheets · JSON → one nested JSON file" %}
+      {% else %}
+        {% translate "Select fields and format, then click Export." %}
+      {% endif %}
+    </p>
+  </div>
+
+  {% if form.non_field_errors %}
+  <div class="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs font-semibold">
+    {{ form.non_field_errors }}
+  </div>
+  {% endif %}
+
+  <form action="{{ export_url }}" method="POST">
+    {% csrf_token %}
+
+    <!-- ── Primary resource: selectable checkboxes ── -->
+    <div class="border border-outline-variant bg-surface-lowest rounded-xl shadow-sm overflow-hidden mb-4">
+      <div class="px-5 py-3 bg-surface-low/40 border-b border-outline-variant flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs font-bold text-on-surface">
+          <span class="material-symbols-outlined text-[16px] text-primary">table_chart</span>
+          {% if primary_sheet_title %}{{ primary_sheet_title }}{% else %}{% translate "Fields to export" %}{% endif %}
+          <span class="text-[10px] font-normal text-on-surface-variant">— click to toggle</span>
+        </div>
+        <label class="flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant cursor-pointer hover:text-on-surface">
+          <input type="checkbox" id="select-all-primary" class="rounded accent-primary" checked
+                 onchange="toggleAll(this)">
+          {% translate "Select all" %}
+        </label>
+      </div>
+
+      <div class="p-5 flex flex-wrap gap-2" id="primary-fields">
+        {% for field in form.visible_fields %}
+          {% if field.field.is_selectable_field %}
+          <span class="field-chip">
+            {{ field }}
+            <label for="{{ field.id_for_label }}">
+              <span class="material-symbols-outlined text-[12px]">check</span>
+              {{ field.label }}
+            </label>
+          </span>
+          {% endif %}
+        {% endfor %}
+        {% if form.export_items.errors %}
+        <p class="w-full text-xs text-red-600 font-semibold mt-1">{{ form.export_items.errors }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ── Sub-sheets: always exported, shown as info ── -->
+    {% for sheet in sub_sheets %}
+    <div class="border border-outline-variant bg-surface-lowest rounded-xl shadow-sm overflow-hidden mb-4">
+      <div class="px-5 py-3 bg-surface-low/40 border-b border-outline-variant flex items-center gap-2">
+        <span class="material-symbols-outlined text-[16px] text-emerald-600">table_rows</span>
+        <span class="text-xs font-bold text-on-surface">{{ sheet.title }}</span>
+        <span class="ml-auto flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+          <span class="material-symbols-outlined text-[11px]">check_circle</span>
+          Always included in XLSX
+        </span>
+      </div>
+      <div class="p-5 flex flex-wrap gap-2">
+        {% for col in sheet.fields %}
+        <span class="info-chip">
+          <span class="material-symbols-outlined text-[12px]">drag_indicator</span>
+          {{ col|title }}
+        </span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Hidden fields -->
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+
+    <!-- Format & non-selectable fields -->
+    <div class="border border-outline-variant bg-surface-lowest rounded-xl shadow-sm p-5 space-y-4 mb-5">
+      {% for field in form.visible_fields %}
+        {% if not field.field.is_selectable_field and not field.field.initial_field %}
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-bold text-on-surface" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          <div class="[&_select]:max-w-xs [&_select]:w-full [&_select]:px-3 [&_select]:py-2
+                      [&_select]:border [&_select]:border-outline-variant [&_select]:rounded-lg
+                      [&_select]:bg-surface-low [&_select]:text-sm [&_select]:text-on-surface
+                      [&_select]:focus:outline-none [&_select]:focus:ring-2 [&_select]:focus:ring-primary/30">
+            {{ field }}
+          </div>
+          {% if field.field.help_text %}<p class="text-[11px] text-on-surface-variant">{{ field.field.help_text|safe }}</p>{% endif %}
+          {{ field.errors }}
+        </div>
+        {% endif %}
+      {% endfor %}
+      {% if sub_sheets %}
+      <p class="text-[11px] text-on-surface-variant/70 border-t border-outline-variant/40 pt-3">
+        <span class="material-symbols-outlined text-[13px] align-middle text-primary">info</span>
+        <strong>xlsx</strong> → one file, one sheet per section &nbsp;·&nbsp;
+        <strong>json</strong> → one <em>.json</em> file with all sections nested inside.
+      </p>
+      {% endif %}
+    </div>
+
+    <!-- Submit -->
+    <div class="flex items-center gap-3">
+      <button type="submit"
+        class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold rounded-lg shadow-md hover:bg-primary/90 transition-all active:scale-[0.98]">
+        <span class="material-symbols-outlined text-[16px]">download</span>
+        {% translate "Export" %}
+      </button>
+      <a href="{% url opts|admin_urlname:'changelist' %}"
+         class="text-xs text-on-surface-variant hover:text-on-surface transition-colors font-medium">
+        {% translate "Cancel" %}
+      </a>
+    </div>
+  </form>
+</div>
+
+<script>
+function toggleAll(masterCb) {
+    document.querySelectorAll('#primary-fields .field-chip input[type="checkbox"]').forEach(cb => {
+        cb.checked = masterCb.checked;
+    });
+}
+
+// Sync select-all on individual change
+document.addEventListener('DOMContentLoaded', function () {
+    // Ensure all primary checkboxes start checked
+    document.querySelectorAll('#primary-fields .field-chip input[type="checkbox"]').forEach(cb => {
+        cb.checked = true;
+        cb.addEventListener('change', syncMaster);
+    });
+});
+
+function syncMaster() {
+    const all = [...document.querySelectorAll('#primary-fields .field-chip input[type="checkbox"]')];
+    document.getElementById('select-all-primary').checked = all.every(c => c.checked);
+}
+</script>
+{% endblock %}

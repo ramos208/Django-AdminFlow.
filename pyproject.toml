@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-adminflow"
+version = "1.0.0"
+description = "A premium, modern SaaS design system for the Django Admin interface with built-in 2FA, history tracking, and import/export"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Edgar", email = "edgar@example.com" }
+]
+keywords = [
+    "django", "admin", "saas", "design-system", "2fa", "otp",
+    "history", "import", "export", "adminflow"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+
+# Core: only Django is strictly required
+dependencies = [
+    "Django>=4.2",
+]
+
+[project.optional-dependencies]
+# Two-factor authentication (TOTP + email + static backup codes)
+otp = [
+    "django-otp>=1.4",
+]
+
+# Per-model change history (audit trail)
+history = [
+    "django-simple-history>=3.4",
+]
+
+# Multi-format import / export (XLSX, JSON) with multi-sheet support
+import-export = [
+    "django-import-export>=4.0",
+    "tablib[xlsx]>=3.5",
+    "openpyxl>=3.1",
+]
+
+# Install everything at once
+all = [
+    "django-otp>=1.4",
+    "django-simple-history>=3.4",
+    "django-import-export>=4.0",
+    "tablib[xlsx]>=3.5",
+    "openpyxl>=3.1",
+]
+
+[project.urls]
+Homepage      = "https://pypi.org/project/django-adminflow/"
+Documentation = "https://github.com/edgar/django-adminflow#readme"
+Repository    = "https://github.com/edgar/django-adminflow"
+"Bug Tracker" = "https://github.com/edgar/django-adminflow/issues"
+Changelog     = "https://github.com/edgar/django-adminflow/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where   = ["."]
+include = ["adminflow*"]
+
+[tool.setuptools.package-data]
+adminflow = [
+    "templates/**/*",
+    "static/**/*",
+    "templatetags/**/*",
+]

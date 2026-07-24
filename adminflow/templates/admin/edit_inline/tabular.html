@@ -1,0 +1,81 @@
+{% load i18n admin_urls static adminflow_tags %}
+<div class="js-inline-admin-formset inline-group space-y-3 mt-6 border border-outline-variant p-5 bg-surface-lowest rounded-xl shadow-sm"
+     id="{{ inline_admin_formset.formset.prefix }}-group"
+     data-inline-type="tabular"
+     data-inline-formset="{{ inline_admin_formset.inline_formset_data }}">
+    
+    <h3 class="text-xs font-black text-on-surface uppercase tracking-wider px-1">
+        {{ inline_admin_formset.opts.verbose_name_plural|capfirst }}
+    </h3>
+    
+    {{ inline_admin_formset.formset.management_form }}
+    {{ inline_admin_formset.formset.non_form_errors }}
+    
+    <div class="overflow-x-auto custom-scrollbar tabular inline-related">
+        <table class="w-full text-left border-collapse text-xs">
+            <thead>
+                <tr class="bg-surface-low border-b border-outline-variant">
+                    <th class="original hidden"></th>
+                    {% for field in inline_admin_formset.fields %}
+                        {% if not field.widget.is_hidden %}
+                            <th class="px-4 py-3 font-semibold text-on-surface-variant uppercase tracking-wider text-[10px]">
+                                {{ field.label|capfirst }}
+                            </th>
+                        {% endif %}
+                    {% endfor %}
+                    {% if inline_admin_formset.formset.can_delete %}
+                        <th class="px-4 py-3 text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider text-center">Delete?</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/40">
+                {% for inline_admin_form in inline_admin_formset %}
+                    {% if inline_admin_form.form.non_field_errors %}
+                        <tr class="row-form-errors"><td colspan="{{ inline_admin_formset.fields|length|add:2 }}" class="px-4 py-2 text-xs text-danger font-semibold">{{ inline_admin_form.form.non_field_errors }}</td></tr>
+                    {% endif %}
+                    <tr class="form-row {% if inline_admin_form.original or inline_admin_form.show_url %}has_original{% endif %}{% if forloop.last and inline_admin_formset.has_add_permission %} empty-form{% endif %} hover:bg-surface-low/20 transition-all {% if inline_admin_form.errors %}bg-rose-50/50{% endif %}"
+                        id="{{ inline_admin_formset.formset.prefix }}-{% if forloop.last and inline_admin_formset.has_add_permission %}empty{% else %}{{ forloop.counter0 }}{% endif %}">
+                        
+                        <td class="original hidden">
+                            {% if inline_admin_form.needs_explicit_pk_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
+                            {% if inline_admin_form.fk_field %}{{ inline_admin_form.fk_field.field }}{% endif %}
+                        </td>
+                        
+                        {% for fieldset in inline_admin_form %}
+                            {% for line in fieldset %}
+                                {% for field in line %}
+                                    {% if not field.field.is_hidden %}
+                                        <td class="px-4 py-2.5 align-middle {% if field.field.name %}field-{{ field.field.name }}{% endif %}">
+                                            {{ field.field.errors }}
+                                            {% if field.field|is_checkbox %}
+                                                <div class="flex justify-center items-center h-full">
+                                                    {{ field.field|add_class:"w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer dark:bg-slate-800" }}
+                                                </div>
+                                            {% elif field.field|is_textarea %}
+                                                {{ field.field|add_class:"w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-lowest text-xs text-on-surface focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900" }}
+                                            {% elif field.field|is_select %}
+                                                {{ field.field|add_class:"w-full pl-3 pr-8 py-1.5 bg-surface-lowest border border-outline-variant rounded-lg text-xs focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900" }}
+                                            {% else %}
+                                                {{ field.field|add_class:"w-full h-9 px-3 rounded-lg border border-outline-variant bg-surface-lowest text-xs text-on-surface focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900" }}
+                                            {% endif %}
+                                        </td>
+                                    {% else %}
+                                        {{ field.field }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                        
+                        {% if inline_admin_formset.formset.can_delete %}
+                            <td class="px-4 py-2.5 align-middle text-center delete">
+                                {% if inline_admin_form.original %}
+                                    {{ inline_admin_form.deletion_field.field|add_class:"w-4 h-4 rounded border-rose-300 text-rose-600 focus:ring-rose-500 cursor-pointer" }}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

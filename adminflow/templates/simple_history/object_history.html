@@ -1,0 +1,186 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<nav class="flex items-center gap-1.5 text-xs text-on-surface-variant/70 mb-4">
+    <a href="{% url 'admin:index' %}" class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[16px]">home</span></a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url 'admin:app_list' app_label=opts.app_label %}" class="hover:text-primary transition-colors capitalize font-medium">{{ opts.app_config.verbose_name }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="hover:text-primary transition-colors font-bold">{{ opts.verbose_name_plural|capfirst }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <a href="{% url opts|admin_urlname:'change' object.pk|admin_urlquote %}" class="hover:text-primary transition-colors font-bold">{{ object|truncatewords:"18" }}</a>
+    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+    <span class="text-primary font-bold">{% translate 'History' %}</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-4xl mx-auto w-full">
+    <!-- Header Block -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl md:text-2xl font-black text-on-surface tracking-tight">
+                {{ object|truncatewords:"10" }} {% translate 'History' %}
+            </h2>
+            <p class="text-xs text-on-surface-variant mt-1">{% translate 'Choose a date from the list below to revert to a previous version of this object.' %}</p>
+        </div>
+    </div>
+
+    <!-- Tab Switcher if connected inlines history is present -->
+    {% if orders_history or user_info_history %}
+    <div class="flex flex-wrap bg-surface-low border border-outline-variant/60 p-1.5 rounded-xl gap-2 w-max max-w-full shadow-sm mb-6">
+        <button type="button" class="tab-btn active bg-primary text-white text-[11px] font-bold px-4 py-2.5 rounded-lg shadow-sm transition-all focus:outline-none cursor-pointer" data-tab="model-history">
+            {{ opts.verbose_name|capfirst }} {% translate 'History' %}
+        </button>
+        {% if orders_history %}
+        <button type="button" class="tab-btn text-on-surface-variant hover:bg-surface-lowest/50 text-[11px] font-semibold px-4 py-2.5 rounded-lg transition-all focus:outline-none cursor-pointer" data-tab="related-orders-history">
+            {% translate 'Connected Orders History' %}
+        </button>
+        {% endif %}
+        {% if user_info_history %}
+        <button type="button" class="tab-btn text-on-surface-variant hover:bg-surface-lowest/50 text-[11px] font-semibold px-4 py-2.5 rounded-lg transition-all focus:outline-none cursor-pointer" data-tab="related-profile-history">
+            {% translate 'Connected Profile History' %}
+        </button>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Core Model History Content Tab -->
+    <div class="tab-content" id="model-history">
+        <div class="module">
+          {% if page_obj.object_list %}
+            {% include object_history_list_template %}
+          {% else %}
+            <p>{% trans "This object doesn't have a change history." %}</p>
+          {% endif %}
+        </div>
+    </div>
+
+    <!-- Related Orders History Content Tab -->
+    {% if orders_history %}
+    <div class="tab-content hidden" id="related-orders-history">
+        <table id="change-history">
+            <thead>
+                <tr>
+                    <th scope="col">{% translate 'Order' %}</th>
+                    <th scope="col">{% translate 'Product' %}</th>
+                    <th scope="col">{% translate 'Date/time' %}</th>
+                    <th scope="col">{% translate 'Comment' %}</th>
+                    <th scope="col">{% translate 'Changed by' %}</th>
+                    <th scope="col">{% translate 'Notes' %}</th>
+                    <th scope="col">{% translate 'Changes' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in orders_history %}
+                <tr>
+                    <td>
+                        <a href="{% url 'admin:crm_order_simple_history' record.id record.history_id %}">
+                            Order #{{ record.id }}
+                        </a>
+                    </td>
+                    <td>{{ record.product.name }}</td>
+                    <td>{{ record.history_date }}</td>
+                    <td>{{ record.get_history_type_display }}</td>
+                    <td>{{ record.history_user|default:"None" }}</td>
+                    <td>{{ record.notes|truncatechars:50 }}</td>
+                    <td>
+                        {% if record.history_delta_changes %}
+                            <ul>
+                            {% for change in record.history_delta_changes %}
+                                <li>
+                                    <strong>{{ change.field }}:</strong> {{ change.old }} &rarr; {{ change.new }}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="text-xs text-on-surface-variant/60">No field changes</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Related User Profile History Content Tab -->
+    {% if user_info_history %}
+    <div class="tab-content hidden" id="related-profile-history">
+        <table id="change-history">
+            <thead>
+                <tr>
+                    <th scope="col">{% translate 'Profile' %}</th>
+                    <th scope="col">{% translate 'Location' %}</th>
+                    <th scope="col">{% translate 'Date/time' %}</th>
+                    <th scope="col">{% translate 'Comment' %}</th>
+                    <th scope="col">{% translate 'Changed by' %}</th>
+                    <th scope="col">{% translate 'Website' %}</th>
+                    <th scope="col">{% translate 'Changes' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in user_info_history %}
+                <tr>
+                    <td>
+                        <a href="{% url 'admin:crm_userinformation_simple_history' record.id record.history_id %}">
+                            Profile #{{ record.id }}
+                        </a>
+                    </td>
+                    <td>{{ record.location|default:"None" }}</td>
+                    <td>{{ record.history_date }}</td>
+                    <td>{{ record.get_history_type_display }}</td>
+                    <td>{{ record.history_user|default:"None" }}</td>
+                    <td>{{ record.website|default:"None" }}</td>
+                    <td>
+                        {% if record.history_delta_changes %}
+                            <ul>
+                            {% for change in record.history_delta_changes %}
+                                <li>
+                                    <strong>{{ change.field }}:</strong> {{ change.old }} &rarr; {{ change.new }}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="text-xs text-on-surface-variant/60">No field changes</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Toggle buttons active state
+                tabBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-primary', 'text-white', 'shadow-sm', 'font-bold');
+                    b.classList.add('text-on-surface-variant', 'hover:bg-surface-lowest/50', 'font-semibold');
+                });
+                this.classList.add('active', 'bg-primary', 'text-white', 'shadow-sm', 'font-bold');
+                this.classList.remove('text-on-surface-variant', 'hover:bg-surface-lowest/50', 'font-semibold');
+                
+                // Toggle contents
+                tabContents.forEach(content => {
+                    if (content.id === tabId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

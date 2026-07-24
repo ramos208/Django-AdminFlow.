@@ -1,0 +1,511 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start &mdash; django-adminflow</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/custom/custom.css?v=64936ca2" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=bf67f3fc"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="UI Features" href="ui-features.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            django-adminflow
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-adminflow">Installing AdminFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#core-ui-only">Core UI only</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#with-two-factor-authentication">With Two-Factor Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#with-audit-history">With Audit History</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#with-import-export">With Import / Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#everything-at-once">Everything at once</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#dependency-reference">Dependency Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#step-1-install">Step 1 — Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-settings-py">Step 2 — <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installed-apps">INSTALLED_APPS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#middleware">MIDDLEWARE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#templates">TEMPLATES</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adminflow-core-settings">AdminFlow Core Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#email-for-email-otp">Email (for Email OTP)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#full-example-settings-py">Full Example <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-run-migrations">Step 3 — Run migrations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-4-collect-static-files">Step 4 — Collect static files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-5-visit-your-admin">Step 5 — Visit your admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui-features.html">UI Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#dashboard">Dashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#sidebar-navigation">Sidebar Navigation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#model-list-changelist">Model List (Changelist)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#model-change-form">Model Change Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#login-page">Login Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui-features.html#customisation-settings">Customisation Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="two-factor-auth.html">Two-Factor Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#setting-up-the-user-admin">Setting Up the User Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#how-it-works">How It Works</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="two-factor-auth.html#login-flow">Login Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="two-factor-auth.html#user-2fa-management">User 2FA Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#admin-bulk-actions">Admin Bulk Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#email-otp-settings">Email OTP Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="two-factor-auth.html#disabling-2fa-requirement">Disabling 2FA Requirement</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="audit-history.html">Audit History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="audit-history.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audit-history.html#adding-history-to-a-model">Adding History to a Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audit-history.html#enabling-the-history-admin">Enabling the History Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audit-history.html#history-view">History View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audit-history.html#querying-history">Querying History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audit-history.html#excluding-fields-from-history">Excluding Fields from History</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="import-export.html">Import / Export</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#export-formats">Export Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#setting-up-resources">Setting Up Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#enabling-multi-sheet-export">Enabling Multi-Sheet Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#the-export-page">The Export Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#xlsx-output">XLSX Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#json-output">JSON Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#the-import-page">The Import Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="import-export.html#api-reference">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.combined_sheets"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.combined_sheets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.export_formats_override"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.export_formats_override</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.get_export_formats"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.get_export_formats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.import_action"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.import_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="import-export.html#adminflow.import_export.MultiSheetExportImportMixin.init_request_context_data"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.init_request_context_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#all-settings">All Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#branding">Branding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#login-page">Login Page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#theme-colours">Theme Colours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#sidebar">Sidebar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#ui-layout">UI &amp; Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#two-factor-auth">Two-Factor Auth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#per-model-icon">Per-Model Icon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#app-label-in-sidebar">App Label in Sidebar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#export-format-override">Export Format Override</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#added">Added</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">django-adminflow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick Start</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/edgar/django-adminflow/blob/main/docs/quickstart.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ui-features.html" class="btn btn-neutral float-right" title="UI Features" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h1>
+<p>This guide gets AdminFlow running in your project in under 5 minutes.</p>
+<hr class="docutils" />
+<section id="step-1-install">
+<h2>Step 1 — Install<a class="headerlink" href="#step-1-install" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;django-adminflow[all]&quot;</span><span class="w">   </span><span class="c1"># or pick individual extras</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="step-2-settings-py">
+<h2>Step 2 — <code class="docutils literal notranslate"><span class="pre">settings.py</span></code><a class="headerlink" href="#step-2-settings-py" title="Link to this heading"></a></h2>
+<p>Here is the <strong>complete</strong> <code class="docutils literal notranslate"><span class="pre">settings.py</span></code> configuration with every AdminFlow setting documented.</p>
+<section id="installed-apps">
+<h3>INSTALLED_APPS<a class="headerlink" href="#installed-apps" title="Link to this heading"></a></h3>
+<p>Add <code class="docutils literal notranslate"><span class="pre">&quot;adminflow&quot;</span></code> <strong>before</strong> <code class="docutils literal notranslate"><span class="pre">&quot;django.contrib.admin&quot;</span></code>.
+Add the optional apps only for the integrations you installed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;adminflow&quot;</span><span class="p">,</span>                              <span class="c1"># ← must be FIRST, before django.contrib.admin</span>
+    <span class="s2">&quot;django.contrib.admin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.auth&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.contenttypes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.sessions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.messages&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.staticfiles&quot;</span><span class="p">,</span>
+
+    <span class="c1"># Your own apps</span>
+    <span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+
+    <span class="c1"># ── Optional: add only what you installed ──────────────────────────────</span>
+    <span class="s2">&quot;simple_history&quot;</span><span class="p">,</span>                         <span class="c1"># audit history</span>
+    <span class="s2">&quot;import_export&quot;</span><span class="p">,</span>                          <span class="c1"># import / export</span>
+    <span class="s2">&quot;django_otp&quot;</span><span class="p">,</span>                             <span class="c1"># 2FA core</span>
+    <span class="s2">&quot;django_otp.plugins.otp_totp&quot;</span><span class="p">,</span>            <span class="c1"># TOTP (Google Authenticator, Authy)</span>
+    <span class="s2">&quot;django_otp.plugins.otp_email&quot;</span><span class="p">,</span>           <span class="c1"># email one-time passwords</span>
+    <span class="s2">&quot;django_otp.plugins.otp_static&quot;</span><span class="p">,</span>          <span class="c1"># backup / recovery codes</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="middleware">
+<h3>MIDDLEWARE<a class="headerlink" href="#middleware" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;django.middleware.security.SecurityMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_otp.middleware.OTPMiddleware&quot;</span><span class="p">,</span>                      <span class="c1"># ← 2FA (after AuthenticationMiddleware)</span>
+    <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.clickjacking.XFrameOptionsMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span>        <span class="c1"># ← history (records who made the change)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">OTPMiddleware</span></code> must come <strong>after</strong> <code class="docutils literal notranslate"><span class="pre">AuthenticationMiddleware</span></code>.
+<code class="docutils literal notranslate"><span class="pre">HistoryRequestMiddleware</span></code> must come <strong>after</strong> <code class="docutils literal notranslate"><span class="pre">AuthenticationMiddleware</span></code>.</p>
+</div>
+</section>
+<section id="templates">
+<h3>TEMPLATES<a class="headerlink" href="#templates" title="Link to this heading"></a></h3>
+<p>Add AdminFlow’s context processor so templates can access settings like the title and theme:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;django.template.backends.django.DjangoTemplates&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DIRS&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;APP_DIRS&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;OPTIONS&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;context_processors&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;django.template.context_processors.request&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;django.contrib.auth.context_processors.auth&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;django.contrib.messages.context_processors.messages&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;adminflow.context_processors.adminflow_settings&quot;</span><span class="p">,</span>  <span class="c1"># ← required</span>
+            <span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">adminflow.context_processors.adminflow_settings</span></code> is <strong>required</strong>.
+Without it the sidebar title, theme colours and login panel text will not render.</p>
+</div>
+</section>
+<section id="adminflow-core-settings">
+<h3>AdminFlow Core Settings<a class="headerlink" href="#adminflow-core-settings" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ── Branding ──────────────────────────────────────────────────────────────</span>
+<span class="n">ADMINFLOW_TITLE</span>   <span class="o">=</span> <span class="s2">&quot;My App&quot;</span>          <span class="c1"># sidebar header + browser tab title</span>
+<span class="n">ADMINFLOW_COMPANY</span> <span class="o">=</span> <span class="s2">&quot;My Company&quot;</span>      <span class="c1"># shown in the footer</span>
+<span class="c1"># ADMINFLOW_LOGO  = &quot;logo.svg&quot;        # path relative to MEDIA_URL</span>
+
+<span class="c1"># ── Theme colours ─────────────────────────────────────────────────────────</span>
+<span class="n">ADMINFLOW_PRIMARY_COLOR</span>             <span class="o">=</span> <span class="s2">&quot;#1f2021&quot;</span>
+<span class="n">ADMINFLOW_SECONDARY_COLOR</span>           <span class="o">=</span> <span class="s2">&quot;#475569&quot;</span>
+<span class="n">ADMINFLOW_SUCCESS_COLOR</span>             <span class="o">=</span> <span class="s2">&quot;#10B981&quot;</span>
+<span class="n">ADMINFLOW_WARNING_COLOR</span>             <span class="o">=</span> <span class="s2">&quot;#F59E0B&quot;</span>
+<span class="n">ADMINFLOW_DANGER_COLOR</span>              <span class="o">=</span> <span class="s2">&quot;#EF4444&quot;</span>
+
+<span class="c1"># ── Sidebar ────────────────────────────────────────────────────────────────</span>
+<span class="n">ADMINFLOW_SIDEBAR_COLOR</span>             <span class="o">=</span> <span class="s2">&quot;#0f172a&quot;</span>   <span class="c1"># sidebar background</span>
+<span class="n">ADMINFLOW_SIDEBAR_TEXT_COLOR</span>        <span class="o">=</span> <span class="s2">&quot;#94a3b8&quot;</span>   <span class="c1"># inactive item text</span>
+<span class="n">ADMINFLOW_SIDEBAR_ACTIVE_TEXT_COLOR</span> <span class="o">=</span> <span class="s2">&quot;#ffffff&quot;</span>   <span class="c1"># active item text</span>
+<span class="n">ADMINFLOW_SIDEBAR_COLLAPSIBLE</span>       <span class="o">=</span> <span class="kc">True</span>        <span class="c1"># allow sidebar to collapse</span>
+<span class="n">ADMINFLOW_SIDEBAR_WIDTH</span>             <span class="o">=</span> <span class="mi">280</span>         <span class="c1"># width in pixels</span>
+
+<span class="c1"># ── UI ─────────────────────────────────────────────────────────────────────</span>
+<span class="n">ADMINFLOW_BORDER_RADIUS</span>             <span class="o">=</span> <span class="s2">&quot;16px&quot;</span>      <span class="c1"># card / input corner radius</span>
+<span class="n">ADMINFLOW_FONT</span>                      <span class="o">=</span> <span class="s2">&quot;Inter&quot;</span>     <span class="c1"># Google Font name</span>
+<span class="n">ADMINFLOW_ENABLE_COMMAND_PALETTE</span>    <span class="o">=</span> <span class="kc">True</span>        <span class="c1"># Cmd+K quick search</span>
+
+<span class="c1"># ── Login page hero banner ─────────────────────────────────────────────────</span>
+<span class="n">ADMINFLOW_LOGIN_TITLE</span>    <span class="o">=</span> <span class="s2">&quot;Welcome back&quot;</span>
+<span class="n">ADMINFLOW_LOGIN_SUBTITLE</span> <span class="o">=</span> <span class="s2">&quot;Sign in to manage your application.&quot;</span>
+
+<span class="c1"># ── 2FA ───────────────────────────────────────────────────────────────────</span>
+<span class="n">ADMINFLOW_DJANGO_OTP</span> <span class="o">=</span> <span class="kc">True</span>    <span class="c1"># show OTP verification screen after login</span>
+</pre></div>
+</div>
+</section>
+<section id="email-for-email-otp">
+<h3>Email (for Email OTP)<a class="headerlink" href="#email-for-email-otp" title="Link to this heading"></a></h3>
+<p>Required when using <code class="docutils literal notranslate"><span class="pre">django_otp.plugins.otp_email</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">EMAIL_BACKEND</span>       <span class="o">=</span> <span class="s2">&quot;django.core.mail.backends.smtp.EmailBackend&quot;</span>
+<span class="n">EMAIL_HOST</span>          <span class="o">=</span> <span class="s2">&quot;smtp.gmail.com&quot;</span>
+<span class="n">EMAIL_PORT</span>          <span class="o">=</span> <span class="mi">587</span>
+<span class="n">EMAIL_USE_TLS</span>       <span class="o">=</span> <span class="kc">True</span>
+<span class="n">EMAIL_HOST_USER</span>     <span class="o">=</span> <span class="s2">&quot;noreply@myapp.com&quot;</span>
+<span class="n">EMAIL_HOST_PASSWORD</span> <span class="o">=</span> <span class="s2">&quot;your-smtp-password&quot;</span>
+<span class="n">DEFAULT_FROM_EMAIL</span>  <span class="o">=</span> <span class="n">EMAIL_HOST_USER</span>
+
+<span class="c1"># django-otp email sender overrides</span>
+<span class="n">OTP_EMAIL_SENDER</span>            <span class="o">=</span> <span class="n">EMAIL_HOST_USER</span>
+<span class="n">OTP_EMAIL_FROM_EMAIL</span>        <span class="o">=</span> <span class="n">EMAIL_HOST_USER</span>
+<span class="n">OTP_EMAIL_COOLDOWN_DURATION</span> <span class="o">=</span> <span class="mi">60</span>   <span class="c1"># seconds between OTP requests</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Store <code class="docutils literal notranslate"><span class="pre">EMAIL_HOST_PASSWORD</span></code> in an <code class="docutils literal notranslate"><span class="pre">.env</span></code> file and load it with
+<code class="docutils literal notranslate"><span class="pre">python-dotenv</span></code> or <code class="docutils literal notranslate"><span class="pre">django-environ</span></code> — never commit credentials to source control.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="full-example-settings-py">
+<h2>Full Example <code class="docutils literal notranslate"><span class="pre">settings.py</span></code><a class="headerlink" href="#full-example-settings-py" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">BASE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s2">&quot;your-secret-key&quot;</span>
+<span class="n">DEBUG</span>      <span class="o">=</span> <span class="kc">True</span>
+<span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;adminflow&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.admin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.auth&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.contenttypes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.sessions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.messages&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.staticfiles&quot;</span><span class="p">,</span>
+    <span class="c1"># your apps</span>
+    <span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+    <span class="c1"># optional integrations</span>
+    <span class="s2">&quot;simple_history&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;import_export&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_otp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_otp.plugins.otp_totp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_otp.plugins.otp_email&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_otp.plugins.otp_static&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;django.middleware.security.SecurityMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_otp.middleware.OTPMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.clickjacking.XFrameOptionsMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">ROOT_URLCONF</span> <span class="o">=</span> <span class="s2">&quot;myproject.urls&quot;</span>
+
+<span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;django.template.backends.django.DjangoTemplates&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DIRS&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;APP_DIRS&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;OPTIONS&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;context_processors&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;django.template.context_processors.request&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;django.contrib.auth.context_processors.auth&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;django.contrib.messages.context_processors.messages&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;adminflow.context_processors.adminflow_settings&quot;</span><span class="p">,</span>  <span class="c1"># ← required</span>
+            <span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+
+<span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;ENGINE&quot;</span><span class="p">:</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;db.sqlite3&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">STATIC_URL</span>  <span class="o">=</span> <span class="s2">&quot;static/&quot;</span>
+<span class="n">MEDIA_URL</span>   <span class="o">=</span> <span class="s2">&quot;/media/&quot;</span>
+<span class="n">MEDIA_ROOT</span>  <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;media&quot;</span>
+
+<span class="c1"># ── AdminFlow ──────────────────────────────────────────────────────────────</span>
+<span class="n">ADMINFLOW_TITLE</span>                     <span class="o">=</span> <span class="s2">&quot;My App&quot;</span>
+<span class="n">ADMINFLOW_COMPANY</span>                   <span class="o">=</span> <span class="s2">&quot;My Company&quot;</span>
+<span class="n">ADMINFLOW_PRIMARY_COLOR</span>             <span class="o">=</span> <span class="s2">&quot;#1f2021&quot;</span>
+<span class="n">ADMINFLOW_SECONDARY_COLOR</span>           <span class="o">=</span> <span class="s2">&quot;#475569&quot;</span>
+<span class="n">ADMINFLOW_SUCCESS_COLOR</span>             <span class="o">=</span> <span class="s2">&quot;#10B981&quot;</span>
+<span class="n">ADMINFLOW_WARNING_COLOR</span>             <span class="o">=</span> <span class="s2">&quot;#F59E0B&quot;</span>
+<span class="n">ADMINFLOW_DANGER_COLOR</span>              <span class="o">=</span> <span class="s2">&quot;#EF4444&quot;</span>
+<span class="n">ADMINFLOW_SIDEBAR_COLOR</span>             <span class="o">=</span> <span class="s2">&quot;#0f172a&quot;</span>
+<span class="n">ADMINFLOW_SIDEBAR_TEXT_COLOR</span>        <span class="o">=</span> <span class="s2">&quot;#94a3b8&quot;</span>
+<span class="n">ADMINFLOW_SIDEBAR_ACTIVE_TEXT_COLOR</span> <span class="o">=</span> <span class="s2">&quot;#ffffff&quot;</span>
+<span class="n">ADMINFLOW_SIDEBAR_COLLAPSIBLE</span>       <span class="o">=</span> <span class="kc">True</span>
+<span class="n">ADMINFLOW_SIDEBAR_WIDTH</span>             <span class="o">=</span> <span class="mi">280</span>
+<span class="n">ADMINFLOW_BORDER_RADIUS</span>             <span class="o">=</span> <span class="s2">&quot;16px&quot;</span>
+<span class="n">ADMINFLOW_FONT</span>                      <span class="o">=</span> <span class="s2">&quot;Inter&quot;</span>
+<span class="n">ADMINFLOW_ENABLE_COMMAND_PALETTE</span>    <span class="o">=</span> <span class="kc">True</span>
+<span class="n">ADMINFLOW_LOGIN_TITLE</span>               <span class="o">=</span> <span class="s2">&quot;Welcome back&quot;</span>
+<span class="n">ADMINFLOW_LOGIN_SUBTITLE</span>            <span class="o">=</span> <span class="s2">&quot;Sign in to manage your application.&quot;</span>
+<span class="n">ADMINFLOW_DJANGO_OTP</span>                <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># ── Email OTP ──────────────────────────────────────────────────────────────</span>
+<span class="n">EMAIL_BACKEND</span>               <span class="o">=</span> <span class="s2">&quot;django.core.mail.backends.smtp.EmailBackend&quot;</span>
+<span class="n">EMAIL_HOST</span>                  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EMAIL_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;smtp.gmail.com&quot;</span><span class="p">)</span>
+<span class="n">EMAIL_PORT</span>                  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EMAIL_PORT&quot;</span><span class="p">,</span> <span class="mi">587</span><span class="p">))</span>
+<span class="n">EMAIL_USE_TLS</span>               <span class="o">=</span> <span class="kc">True</span>
+<span class="n">EMAIL_HOST_USER</span>             <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EMAIL_HOST_USER&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">EMAIL_HOST_PASSWORD</span>         <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EMAIL_HOST_PASSWORD&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">DEFAULT_FROM_EMAIL</span>          <span class="o">=</span> <span class="n">EMAIL_HOST_USER</span>
+<span class="n">OTP_EMAIL_SENDER</span>            <span class="o">=</span> <span class="n">EMAIL_HOST_USER</span>
+<span class="n">OTP_EMAIL_FROM_EMAIL</span>        <span class="o">=</span> <span class="n">EMAIL_HOST_USER</span>
+<span class="n">OTP_EMAIL_COOLDOWN_DURATION</span> <span class="o">=</span> <span class="mi">60</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="step-3-run-migrations">
+<h2>Step 3 — Run migrations<a class="headerlink" href="#step-3-run-migrations" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="step-4-collect-static-files">
+<h2>Step 4 — Collect static files<a class="headerlink" href="#step-4-collect-static-files" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>manage.py<span class="w"> </span>collectstatic
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="step-5-visit-your-admin">
+<h2>Step 5 — Visit your admin<a class="headerlink" href="#step-5-visit-your-admin" title="Link to this heading"></a></h2>
+<p>Start your dev server and open <a class="reference external" href="http://localhost:8000/admin/">http://localhost:8000/admin/</a>.</p>
+<img alt="AdminFlow login page" class="screenshot" src="_images/login.png" />
+<p>After login you will see the new dashboard:</p>
+<img alt="AdminFlow dashboard" class="screenshot" src="_images/dashboard.png" />
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="two-factor-auth.html"><span class="doc">Two-Factor Authentication</span></a> — enable 2FA for your staff users</p></li>
+<li><p><a class="reference internal" href="audit-history.html"><span class="doc">Audit History</span></a> — track every change with field-level diffs</p></li>
+<li><p><a class="reference internal" href="import-export.html"><span class="doc">Import / Export</span></a> — export all related data in one file</p></li>
+<li><p><a class="reference internal" href="ui-features.html"><span class="doc">UI Features</span></a> — learn about the sidebar, icons, and more</p></li>
+<li><p><a class="reference internal" href="customization.html"><span class="doc">Customisation</span></a> — full settings reference</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ui-features.html" class="btn btn-neutral float-right" title="UI Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Edgar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

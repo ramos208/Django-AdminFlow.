@@ -1,0 +1,28 @@
+{% load i18n static %}
+{% if cl.search_fields %}
+<form id="changelist-search" method="get" class="flex items-center gap-2 w-full">
+    <div class="relative flex-1 min-w-0">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-60 text-sm">search</span>
+        <input type="text" name="{{ search_var }}" value="{{ cl.query }}" id="searchbar" autofocus 
+               class="w-full pl-9 pr-3 py-1.5 rounded-lg border border-outline-variant bg-surface-low focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs outline-none" 
+               placeholder="{% translate 'Search...' %}"/>
+    </div>
+    
+    <button type="submit" class="shrink-0 px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary/90 transition-all shadow-sm">
+        {% translate 'Search' %}
+    </button>
+    
+    {% if show_result_count %}
+        <span class="text-xs text-on-surface-variant font-medium shrink-0 hidden sm:inline-block">
+            {% blocktranslate count counter=cl.result_count %}{{ counter }} result{% plural %}{{ counter }} results{% endblocktranslate %} 
+            (<a href="?{% if cl.is_popup %}_popup=1{% endif %}" class="text-primary hover:underline">{% blocktranslate with total_count=cl.show_full_result_count %}{{ total_count }} total{% endblocktranslate %}</a>)
+        </span>
+    {% endif %}
+    
+    {% for pair in cl.params.items %}
+        {% if pair.0 != search_var %}
+            <input type="hidden" name="{{ pair.0 }}" value="{{ pair.1 }}"/>
+        {% endif %}
+    {% endfor %}
+</form>
+{% endif %}

@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adminflow.import_export &mdash; django-adminflow</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom/custom.css?v=64936ca2" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=bf67f3fc"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            django-adminflow
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#installing-adminflow">Installing AdminFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#core-ui-only">Core UI only</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#with-two-factor-authentication">With Two-Factor Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#with-audit-history">With Audit History</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#with-import-export">With Import / Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../installation.html#everything-at-once">Everything at once</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#dependency-reference">Dependency Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#step-1-install">Step 1 — Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#step-2-settings-py">Step 2 — <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#step-3-run-migrations">Step 3 — Run migrations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#step-4-collect-static-files">Step 4 — Collect static files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#step-5-visit-your-admin">Step 5 — Visit your admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ui-features.html">UI Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ui-features.html#dashboard">Dashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ui-features.html#sidebar-navigation">Sidebar Navigation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ui-features.html#model-list-changelist">Model List (Changelist)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ui-features.html#model-change-form">Model Change Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ui-features.html#login-page">Login Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ui-features.html#customisation-settings">Customisation Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../two-factor-auth.html">Two-Factor Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../two-factor-auth.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../two-factor-auth.html#setting-up-the-user-admin">Setting Up the User Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../two-factor-auth.html#how-it-works">How It Works</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../two-factor-auth.html#login-flow">Login Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../two-factor-auth.html#user-2fa-management">User 2FA Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../two-factor-auth.html#admin-bulk-actions">Admin Bulk Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../two-factor-auth.html#email-otp-settings">Email OTP Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../two-factor-auth.html#disabling-2fa-requirement">Disabling 2FA Requirement</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../audit-history.html">Audit History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../audit-history.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../audit-history.html#adding-history-to-a-model">Adding History to a Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../audit-history.html#enabling-the-history-admin">Enabling the History Admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../audit-history.html#history-view">History View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../audit-history.html#querying-history">Querying History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../audit-history.html#excluding-fields-from-history">Excluding Fields from History</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../import-export.html">Import / Export</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#export-formats">Export Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#setting-up-resources">Setting Up Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#enabling-multi-sheet-export">Enabling Multi-Sheet Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#the-export-page">The Export Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#xlsx-output">XLSX Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#json-output">JSON Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#the-import-page">The Import Page</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../import-export.html#api-reference">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin.combined_sheets"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.combined_sheets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin.export_formats_override"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.export_formats_override</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin.get_export_formats"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.get_export_formats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin.import_action"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.import_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin.init_request_context_data"><code class="docutils literal notranslate"><span class="pre">MultiSheetExportImportMixin.init_request_context_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../customization.html">Customisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../customization.html#admin-title">Admin Title</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../customization.html#per-model-icons">Per-Model Icons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../customization.html#app-label-display">App Label Display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../customization.html#restricting-export-formats">Restricting Export Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../customization.html#custom-2fa-inlines">Custom 2FA Inlines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../changelog.html#added">Added</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">django-adminflow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">adminflow.import_export</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for adminflow.import_export</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">adminflow.import_export</span>
+<span class="sd">=======================</span>
+<span class="sd">Plug-and-play multi-sheet export/import mixin for Django admin.</span>
+
+<span class="sd">Usage::</span>
+
+<span class="sd">    from adminflow.import_export import MultiSheetExportImportMixin</span>
+<span class="sd">    from import_export.admin import ImportExportModelAdmin</span>
+
+<span class="sd">    class CustomerAdmin(MultiSheetExportImportMixin, ImportExportModelAdmin, ...):</span>
+<span class="sd">        combined_sheets = [</span>
+<span class="sd">            (&#39;General Details&#39;, CustomerResource, None),</span>
+<span class="sd">            (&#39;Orders&#39;, OrderResource, lambda qs: Order.objects.filter(customer__in=qs)),</span>
+<span class="sd">        ]</span>
+
+<span class="sd">combined_sheets format:</span>
+<span class="sd">    [(sheet_title, ResourceClass, queryset_lambda_or_None), ...]</span>
+
+<span class="sd">Export behaviour:</span>
+<span class="sd">    - XLSX  → one .xlsx file with one sheet per entry (requires openpyxl)</span>
+<span class="sd">    - Other → ZIP archive containing one file per entry (e.g. Customers.csv + Orders.csv)</span>
+
+<span class="sd">Import behaviour:</span>
+<span class="sd">    - Multi-sheet .xlsx → each sheet processed by its paired resource</span>
+<span class="sd">    - Single-sheet / other → falls back to default single-resource import</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tablib</span>
+    <span class="n">HAS_TABLIB</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">HAS_TABLIB</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="MultiSheetExportImportMixin">
+<a class="viewcode-back" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiSheetExportImportMixin</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds multi-resource export/import to any ImportExportModelAdmin subclass.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">combined_sheets</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [(title, ResourceClass, qs_lambda_or_None), ...]</span>
+
+    <span class="c1"># Formats shown in the export form. Override in subclass if needed.</span>
+    <span class="c1"># Defaults to XLSX + JSON when combined_sheets is set; all formats otherwise.</span>
+    <span class="n">export_formats_override</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># set to a list of format classes to force specific formats</span>
+
+    <span class="c1"># ── Restrict available export formats ────────────────────────────────────</span>
+<div class="viewcode-block" id="MultiSheetExportImportMixin.get_export_formats">
+<a class="viewcode-back" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin.get_export_formats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_export_formats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">import_export.formats.base_formats</span><span class="w"> </span><span class="kn">import</span> <span class="n">XLSX</span><span class="p">,</span> <span class="n">JSON</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_formats_override</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_formats_override</span> <span class="k">if</span> <span class="n">f</span><span class="p">()</span><span class="o">.</span><span class="n">is_available</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span><span class="n">XLSX</span><span class="p">,</span> <span class="n">JSON</span><span class="p">]</span> <span class="k">if</span> <span class="n">f</span><span class="p">()</span><span class="o">.</span><span class="n">is_available</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_export_formats</span><span class="p">()</span></div>
+
+
+    <span class="c1"># ── Export page context ───────────────────────────────────────────────────</span>
+<div class="viewcode-block" id="MultiSheetExportImportMixin.init_request_context_data">
+<a class="viewcode-back" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin.init_request_context_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_request_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">init_request_context_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">context</span>
+
+        <span class="n">sub_sheets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">resource_cls</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">resource_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_export_resource_kwargs</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">resource_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">resource_cls</span><span class="p">(</span><span class="o">**</span><span class="n">resource_kwargs</span><span class="p">)</span>
+            <span class="n">col_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">column_name</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">get_user_visible_fields</span><span class="p">()]</span>
+            <span class="n">sub_sheets</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span> <span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="n">col_names</span><span class="p">})</span>
+
+        <span class="n">context</span><span class="p">[</span><span class="s1">&#39;sub_sheets&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub_sheets</span>
+        <span class="n">context</span><span class="p">[</span><span class="s1">&#39;primary_sheet_title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">context</span></div>
+
+
+    <span class="c1"># ── Override _do_file_export to produce XLSX or ZIP ──────────────────────</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_do_file_export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_format</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">,</span> <span class="n">export_form</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">HAS_TABLIB</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_do_file_export</span><span class="p">(</span><span class="n">file_format</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">,</span> <span class="n">export_form</span><span class="p">)</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpResponse</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">import_export.signals</span><span class="w"> </span><span class="kn">import</span> <span class="n">post_export</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">file_format</span><span class="o">.</span><span class="n">get_extension</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">model_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">model_name</span>
+
+        <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;xlsx&#39;</span><span class="p">:</span>
+            <span class="c1"># ── Multi-sheet XLSX ──────────────────────────────────────────</span>
+            <span class="n">book</span> <span class="o">=</span> <span class="n">tablib</span><span class="o">.</span><span class="n">Databook</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">resource_cls</span><span class="p">,</span> <span class="n">qs_func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span><span class="p">:</span>
+                <span class="n">qs</span> <span class="o">=</span> <span class="n">qs_func</span><span class="p">(</span><span class="n">queryset</span><span class="p">)</span> <span class="k">if</span> <span class="n">qs_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">queryset</span>
+                <span class="n">dataset</span> <span class="o">=</span> <span class="n">resource_cls</span><span class="p">()</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">qs</span><span class="p">)</span>
+                <span class="n">dataset</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+                <span class="n">book</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">xlsx</span>  <span class="c1"># bytes</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response</span><span class="p">[</span><span class="s1">&#39;Content-Disposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;attachment; filename=&quot;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s1">_export.xlsx&quot;&#39;</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># ── Truly nested JSON ─────────────────────────────────────────</span>
+            <span class="c1"># Output structure (children embedded inside each parent):</span>
+            <span class="c1"># [</span>
+            <span class="c1">#   {</span>
+            <span class="c1">#     &quot;id&quot;: &quot;1&quot;, &quot;name&quot;: &quot;Rooney&quot;, ...,   ← parent fields</span>
+            <span class="c1">#     &quot;orders&quot;: [                           ← nest_key from sub-sheet title</span>
+            <span class="c1">#       {&quot;id&quot;: &quot;1&quot;, &quot;customer_email&quot;: ..., ...}</span>
+            <span class="c1">#     ]</span>
+            <span class="c1">#   },</span>
+            <span class="c1">#   ...</span>
+            <span class="c1"># ]</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+            <span class="n">primary_title</span><span class="p">,</span> <span class="n">primary_cls</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">sub_sheets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># [(title, cls, qs_func), ...]</span>
+
+            <span class="n">all_records</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">:</span>
+                <span class="c1"># Export this single parent</span>
+                <span class="n">single_qs</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+                <span class="n">parent_ds</span> <span class="o">=</span> <span class="n">primary_cls</span><span class="p">()</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">single_qs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">parent_ds</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">parent_ds</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">parent_row</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">parent_ds</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">parent_ds</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+                <span class="c1"># Nest each sub-sheet under the parent using its title as key</span>
+                <span class="k">for</span> <span class="n">sub_title</span><span class="p">,</span> <span class="n">sub_cls</span><span class="p">,</span> <span class="n">sub_qs_func</span> <span class="ow">in</span> <span class="n">sub_sheets</span><span class="p">:</span>
+                    <span class="n">nest_key</span> <span class="o">=</span> <span class="n">sub_title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">sub_qs_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">child_qs</span> <span class="o">=</span> <span class="n">sub_qs_func</span><span class="p">(</span><span class="n">single_qs</span><span class="p">)</span>
+                        <span class="n">child_ds</span> <span class="o">=</span> <span class="n">sub_cls</span><span class="p">()</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">child_qs</span><span class="p">)</span>
+                        <span class="n">children</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">child_ds</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span> <span class="n">row</span><span class="p">))</span>
+                            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">child_ds</span>
+                        <span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">parent_row</span><span class="p">[</span><span class="n">nest_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">children</span>
+
+                <span class="n">all_records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent_row</span><span class="p">)</span>
+
+            <span class="n">raw_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">all_records</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">raw_json</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">)</span>
+            <span class="n">response</span><span class="p">[</span><span class="s1">&#39;Content-Disposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;attachment; filename=&quot;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s1">_export.json&quot;&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">post_export</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+
+    <span class="c1"># ── Import: detect multi-sheet XLSX ──────────────────────────────────────</span>
+<div class="viewcode-block" id="MultiSheetExportImportMixin.import_action">
+<a class="viewcode-back" href="../../import-export.html#adminflow.import_export.MultiSheetExportImportMixin.import_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">import_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">HAS_TABLIB</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">import_action</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">or</span> <span class="s1">&#39;confirm&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">import_action</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">upload</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;import_file&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;original_file_name&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">upload</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">import_action</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">upload</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">import_action</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">upload</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">book</span> <span class="o">=</span> <span class="n">tablib</span><span class="o">.</span><span class="n">Databook</span><span class="p">()</span>
+            <span class="n">book</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="s1">&#39;xlsx&#39;</span><span class="p">)</span>
+            <span class="n">sheets</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">sheets</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">import_action</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sheets</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">import_action</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
+
+        <span class="n">total_new</span> <span class="o">=</span> <span class="n">total_updated</span> <span class="o">=</span> <span class="n">total_error</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">resource_cls</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combined_sheets</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sheets</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">resource_cls</span><span class="p">()</span><span class="o">.</span><span class="n">import_data</span><span class="p">(</span>
+                    <span class="n">sheets</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                    <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">raise_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">total_new</span>     <span class="o">+=</span> <span class="n">result</span><span class="o">.</span><span class="n">totals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;new&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">total_updated</span> <span class="o">+=</span> <span class="n">result</span><span class="o">.</span><span class="n">totals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">total_error</span>   <span class="o">+=</span> <span class="n">result</span><span class="o">.</span><span class="n">totals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error importing sheet &#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">total_error</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="n">request</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Import finished — </span><span class="si">{</span><span class="n">total_new</span><span class="si">}</span><span class="s2"> new, </span><span class="si">{</span><span class="n">total_updated</span><span class="si">}</span><span class="s2"> updated, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">total_error</span><span class="si">}</span><span class="s2"> errors across all sheets.&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+                <span class="n">request</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Successfully imported all sheets — &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">total_new</span><span class="si">}</span><span class="s2"> new records, </span><span class="si">{</span><span class="n">total_updated</span><span class="si">}</span><span class="s2"> updated.&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span>
+        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;admin:</span><span class="si">{</span><span class="n">opts</span><span class="o">.</span><span class="n">app_label</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">opts</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s1">_changelist&#39;</span><span class="p">)</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Edgar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
