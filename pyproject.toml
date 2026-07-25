@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-adminflow"
-version = "1.0.1"
+version = "1.0.6"
 description = "A premium, modern SaaS design system for the Django Admin interface with built-in 2FA, history tracking, and import/export"
 readme = "README.md"
 license = { text = "MIT" }
@@ -34,30 +34,25 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Application Frameworks",
 ]
 
-# Core: only Django is strictly required
 dependencies = [
     "Django>=4.2",
 ]
 
 [project.optional-dependencies]
-# Two-factor authentication (TOTP + email + static backup codes)
 otp = [
     "django-otp>=1.4",
 ]
 
-# Per-model change history (audit trail)
 history = [
     "django-simple-history>=3.4",
 ]
 
-# Multi-format import / export (XLSX, JSON) with multi-sheet support
 import-export = [
     "django-import-export>=4.0",
     "tablib[xlsx]>=3.5",
     "openpyxl>=3.1",
 ]
 
-# Install everything at once
 all = [
     "django-otp>=1.4",
     "django-simple-history>=3.4",
@@ -68,10 +63,10 @@ all = [
 
 [project.urls]
 Homepage      = "https://pypi.org/project/django-adminflow/"
-Documentation = "https://github.com/edgar/django-adminflow#readme"
-Repository    = "https://github.com/edgar/django-adminflow"
-"Bug Tracker" = "https://github.com/edgar/django-adminflow/issues"
-Changelog     = "https://github.com/edgar/django-adminflow/blob/main/CHANGELOG.md"
+Documentation = "https://django-adminflow.readthedocs.io/en/latest/"
+Repository    = "https://github.com/ramos208/Django-AdminFlow."
+"Bug Tracker" = "https://github.com/ramos208/Django-AdminFlow./issues"
+Changelog     = "https://github.com/ramos208/Django-AdminFlow./blob/master/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where   = ["."]

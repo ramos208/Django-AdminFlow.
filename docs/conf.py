@@ -79,9 +79,9 @@ html_title = "django-adminflow"
 
 html_context = {
     "display_github":       True,
-    "github_user":          "edgar",
-    "github_repo":          "django-adminflow",
-    "github_version":       "main",
+    "github_user":          "ramos208",
+    "github_repo":          "Django-AdminFlow.",
+    "github_version":       "master",
     "conf_py_path":         "/docs/",
     "display_version":      True,
 }

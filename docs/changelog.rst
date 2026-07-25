@@ -6,6 +6,58 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.6`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Use relative image paths in README for native GitHub.com rendering
+
+.. _`1.0.6`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.6
+
+`1.0.5`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Updated documentation link to https://django-adminflow.readthedocs.io/en/latest/ across README and PyPI project URLs
+
+.. _`1.0.5`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.5
+
+`1.0.4`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Updated Documentation URL to point to https://django-adminflow.readthedocs.io/en/latest/
+
+.. _`1.0.4`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.4
+
+`1.0.3`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Updated repo URLs to ramos208/Django-AdminFlow. with trailing period and master branch
+
+.. _`1.0.3`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.3
+
+`1.0.2`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Updated all GitHub URLs to ramos208/Django-AdminFlow
+* Fixed screenshot image links on PyPI README
+* Fixed ReadTheDocs edit-on-GitHub links in conf.py
+
+.. _`1.0.2`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.2
+
 `1.0.1`_ — 2026-07-25
 ----------------------
 
@@ -14,7 +66,7 @@ Added
 
 * Fixed README screenshot images — use absolute GitHub raw URLs so they render on PyPI
 
-.. _`1.0.1`: https://github.com/edgar/django-adminflow/releases/tag/v1.0.1
+.. _`1.0.1`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.1
 
 `1.0.0`_ — 2026-07-23
 -----------------------
@@ -58,4 +110,4 @@ Added
 * i18n — all UI strings wrapped in ``{% translate %}``
 * ``pyproject.toml`` with full PyPI classifiers, optional extras, and project URLs
 
-.. _`1.0.0`: https://github.com/edgar/django-adminflow/releases/tag/v1.0.0
+.. _`1.0.0`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.0

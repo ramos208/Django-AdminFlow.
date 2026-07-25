@@ -6,7 +6,7 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
 [![Django versions](https://img.shields.io/pypi/djversions/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Docs](https://readthedocs.org/projects/django-adminflow/badge/?version=latest)](https://django-adminflow.readthedocs.io/)
+[![Docs](https://readthedocs.org/projects/django-adminflow/badge/?version=latest)](https://django-adminflow.readthedocs.io/en/latest/)
 
 AdminFlow is a **drop-in Django Admin UI template** that replaces the default Django admin with a clean, minimalist SaaS-grade interface. Beyond the UI refresh, it ships with **ready-to-use integrations** for the most popular Django ecosystem packages — two-factor authentication, per-record audit history, and multi-format import/export — so you get powerful admin features with zero boilerplate.
 
@@ -32,19 +32,19 @@ AdminFlow is **not** a full CMS replacement. It is a **UI skin + integration lay
 
 | Login | Dashboard |
 |---|---|
-| ![Login](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/login.png) | ![Dashboard](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/dashboard.png) |
+| ![Login](docs/_static/screenshots/login.png) | ![Dashboard](docs/_static/screenshots/dashboard.png) |
 
 | Customer List | Change Form |
 |---|---|
-| ![Changelist](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/changelist.png) | ![Change form](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/change_form.png) |
+| ![Changelist](docs/_static/screenshots/changelist.png) | ![Change form](docs/_static/screenshots/change_form.png) |
 
 | Export Page | Audit History |
 |---|---|
-| ![Export](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/export.png) | ![History](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/history.png) |
+| ![Export](docs/_static/screenshots/export.png) | ![History](docs/_static/screenshots/history.png) |
 
 | Import Page | 2FA / User Security |
 |---|---|
-| ![Import](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/import_page.png) | ![2FA](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/user_2fa.png) |
+| ![Import](docs/_static/screenshots/import_page.png) | ![2FA](docs/_static/screenshots/user_2fa.png) |
 
 ---
 
@@ -346,7 +346,7 @@ twine upload dist/*
 
 ## Documentation
 
-Full documentation: [django-adminflow.readthedocs.io](https://django-adminflow.readthedocs.io/)
+Full documentation: [django-adminflow.readthedocs.io/en/latest](https://django-adminflow.readthedocs.io/en/latest/)
 
 ## License
 

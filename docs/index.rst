@@ -16,7 +16,7 @@ django-adminflow
    :alt: Django versions
 
 .. image:: https://img.shields.io/badge/License-MIT-blue.svg
-   :target: https://github.com/edgar/django-adminflow/blob/main/LICENSE
+   :target: https://github.com/ramos208/Django-AdminFlow./blob/main/LICENSE
    :alt: License: MIT
 
 ----

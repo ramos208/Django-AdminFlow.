@@ -98,7 +98,7 @@ def prepend_changelog_rst(version: str, date: str, items: list[str]):
         f"{'-' * (len(version) + len(date) + 7)}\n\n"
         f"Added\n~~~~~\n\n"
         f"{bullet_lines}\n\n"
-        f".. _`{version}`: https://github.com/edgar/django-adminflow/releases/tag/v{version}\n\n"
+        f".. _`{version}`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v{version}\n\n"
     )
 
     if CHANGELOG_RST.exists():

@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.0.6] — 2026-07-25
+
+- Use relative image paths in README for native GitHub.com rendering
+
+
+## [1.0.5] — 2026-07-25
+
+- Updated documentation link to https://django-adminflow.readthedocs.io/en/latest/ across README and PyPI project URLs
+
+
+## [1.0.4] — 2026-07-25
+
+- Updated Documentation URL to point to https://django-adminflow.readthedocs.io/en/latest/
+
+
+## [1.0.3] — 2026-07-25
+
+- Updated repo URLs to ramos208/Django-AdminFlow. with trailing period and master branch
+
+
+## [1.0.2] — 2026-07-25
+
+- Updated all GitHub URLs to ramos208/Django-AdminFlow
+- Fixed screenshot image links on PyPI README
+- Fixed ReadTheDocs edit-on-GitHub links in conf.py
+
+
 ## [1.0.1] — 2026-07-25
 
 - Fixed README screenshot images — use absolute GitHub raw URLs so they render on PyPI
