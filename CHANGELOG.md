@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.10] — 2026-07-25
+
+- Fix FieldError on custom User models that use email as USERNAME_FIELD and do not have a username field
+
+
 ## [1.0.9] — 2026-07-25
 
 - Update docs/index.rst badges to robust endpoints matching README

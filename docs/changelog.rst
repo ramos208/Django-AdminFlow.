@@ -6,6 +6,16 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.10`_ — 2026-07-25
+-----------------------
+
+Added
+~~~~~
+
+* Fix FieldError on custom User models that use email as USERNAME_FIELD and do not have a username field
+
+.. _`1.0.10`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.10
+
 `1.0.9`_ — 2026-07-25
 ----------------------
 

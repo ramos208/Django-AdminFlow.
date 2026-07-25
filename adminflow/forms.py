@@ -17,30 +17,62 @@ class AdminFlowLoginForm(AuthenticationForm):
         password = self.cleaned_data.get('password')
 
         if username_input and password:
-            # 1. Try exact username match
-            self.user_cache = authenticate(self.request, username=username_input, password=password)
+            username_field = getattr(User, 'USERNAME_FIELD', 'username')
+            user_fields = [f.name for f in User._meta.get_fields()]
+            has_username_attr = 'username' in user_fields
+            has_email_attr = 'email' in user_fields
 
-            # 2. Try case-insensitive username match
+            # 1. Try standard authenticate with USERNAME_FIELD keyword arg
+            auth_kwargs = {username_field: username_input, 'password': password}
+            self.user_cache = authenticate(self.request, **auth_kwargs)
+
+            # Fallback if custom backend expects 'username=' specifically
+            if self.user_cache is None and username_field != 'username':
+                self.user_cache = authenticate(self.request, username=username_input, password=password)
+
+            # 2. Try case-insensitive lookup on USERNAME_FIELD
             if self.user_cache is None:
+                filter_kwargs = {f"{username_field}__iexact": username_input}
+                user_by_uname = User.objects.filter(**filter_kwargs).first()
+                if user_by_uname:
+                    auth_kwargs = {username_field: user_by_uname.get_username(), 'password': password}
+                    self.user_cache = authenticate(self.request, **auth_kwargs)
+                    if self.user_cache is None:
+                        self.user_cache = authenticate(self.request, username=user_by_uname.get_username(), password=password)
+
+            # 3. Try case-insensitive lookup on 'username' field (if field exists and != USERNAME_FIELD)
+            if self.user_cache is None and has_username_attr and username_field != 'username':
                 user_by_username = User.objects.filter(username__iexact=username_input).first()
                 if user_by_username:
-                    self.user_cache = authenticate(self.request, username=user_by_username.get_username(), password=password)
+                    auth_kwargs = {username_field: user_by_username.get_username(), 'password': password}
+                    self.user_cache = authenticate(self.request, **auth_kwargs)
+                    if self.user_cache is None:
+                        self.user_cache = authenticate(self.request, username=user_by_username.get_username(), password=password)
 
-            # 3. Try case-insensitive email match
-            if self.user_cache is None:
+            # 4. Try case-insensitive lookup on 'email' field (if field exists and != USERNAME_FIELD)
+            if self.user_cache is None and has_email_attr and username_field != 'email':
                 users_by_email = User.objects.filter(email__iexact=username_input)
                 for u in users_by_email:
-                    cached = authenticate(self.request, username=u.get_username(), password=password)
+                    auth_kwargs = {username_field: u.get_username(), 'password': password}
+                    cached = authenticate(self.request, **auth_kwargs)
+                    if cached is None:
+                        cached = authenticate(self.request, username=u.get_username(), password=password)
                     if cached:
                         self.user_cache = cached
                         break
 
-            # 4. Detailed error check if user_cache is still None
+            # 5. Detailed error check if user_cache is still None
             if self.user_cache is None:
-                user_candidate = (
-                    User.objects.filter(username__iexact=username_input).first() or
-                    User.objects.filter(email__iexact=username_input).first()
-                )
+                user_candidate = None
+                filter_kwargs = {f"{username_field}__iexact": username_input}
+                user_candidate = User.objects.filter(**filter_kwargs).first()
+
+                if not user_candidate and has_email_attr and username_field != 'email':
+                    user_candidate = User.objects.filter(email__iexact=username_input).first()
+
+                if not user_candidate and has_username_attr and username_field != 'username':
+                    user_candidate = User.objects.filter(username__iexact=username_input).first()
+
                 if user_candidate and user_candidate.check_password(password):
                     if not user_candidate.is_active:
                         raise ValidationError(
