@@ -37,7 +37,23 @@ Add the OTP middleware **after** ``AuthenticationMiddleware``:
        "django.contrib.auth.middleware.AuthenticationMiddleware",
        "django_otp.middleware.OTPMiddleware",   # ← add this
        ...
+Add to ``urls.py``:
+
+.. code-block:: python
+
+   # urls.py
+   from django.contrib import admin
+   from django.urls import path
+   from adminflow.views import adminflow_verify_2fa_view
+
+   urlpatterns = [
+       path('admin/verify-2fa/', adminflow_verify_2fa_view, name='adminflow_verify_2fa'),
+       path('admin/', admin.site.urls),
    ]
+
+.. note::
+
+   The 2FA verification route must be placed **before** ``admin.site.urls``.
 
 Run migrations:
 

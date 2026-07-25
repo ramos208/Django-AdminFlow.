@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.11] — 2026-07-25
+
+- Add urls.py configuration (adminflow_verify_2fa_view) to documentation and README
+
+
 ## [1.0.10] — 2026-07-25
 
 - Fix FieldError on custom User models that use email as USERNAME_FIELD and do not have a username field

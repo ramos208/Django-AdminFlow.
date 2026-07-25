@@ -269,6 +269,24 @@ Full Example ``settings.py``
 
 ----
 
+Step 2.5 — ``urls.py`` (2FA Verification Route)
+-----------------------------------------------
+
+If using Two-Factor Authentication (``django-otp``), add the 2FA verification view in ``urls.py`` **before** ``admin.site.urls``:
+
+.. code-block:: python
+
+   from django.contrib import admin
+   from django.urls import path
+   from adminflow.views import adminflow_verify_2fa_view
+
+   urlpatterns = [
+       path("admin/verify-2fa/", adminflow_verify_2fa_view, name="adminflow_verify_2fa"),
+       path("admin/", admin.site.urls),
+   ]
+
+----
+
 Step 3 — Run migrations
 -----------------------
 

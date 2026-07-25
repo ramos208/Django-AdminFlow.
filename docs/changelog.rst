@@ -6,6 +6,16 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.11`_ — 2026-07-25
+-----------------------
+
+Added
+~~~~~
+
+* Add urls.py configuration (adminflow_verify_2fa_view) to documentation and README
+
+.. _`1.0.11`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.11
+
 `1.0.10`_ — 2026-07-25
 -----------------------
 
