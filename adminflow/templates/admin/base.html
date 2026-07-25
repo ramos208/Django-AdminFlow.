@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>{% block title %}{% endblock %} | {{ adminflow_title }}</title>
+    <title>{% block title %}{{ title|default:_("Dashboard") }}{% endblock %} | {{ adminflow_title }}</title>
     
     {% if adminflow_favicon %}
         <link rel="icon" href="{{ adminflow_favicon }}" type="image/x-icon"/>

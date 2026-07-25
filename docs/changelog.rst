@@ -6,6 +6,16 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.12`_ — 2026-07-25
+-----------------------
+
+Added
+~~~~~
+
+* Fix browser tab title rendering in admin/base.html to include current page title
+
+.. _`1.0.12`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.12
+
 `1.0.11`_ — 2026-07-25
 -----------------------
 

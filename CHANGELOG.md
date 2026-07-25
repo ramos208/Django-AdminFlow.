@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.12] — 2026-07-25
+
+- Fix browser tab title rendering in admin/base.html to include current page title
+
+
 ## [1.0.11] — 2026-07-25
 
 - Add urls.py configuration (adminflow_verify_2fa_view) to documentation and README
