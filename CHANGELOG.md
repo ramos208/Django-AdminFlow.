@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.7] — 2026-07-25
+
+- Use absolute raw GitHub URLs for screenshots and remove Publishing section from README
+
+
 ## [1.0.6] — 2026-07-25
 
 - Use relative image paths in README for native GitHub.com rendering

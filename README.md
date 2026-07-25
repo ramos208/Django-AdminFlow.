@@ -32,19 +32,19 @@ AdminFlow is **not** a full CMS replacement. It is a **UI skin + integration lay
 
 | Login | Dashboard |
 |---|---|
-| ![Login](docs/_static/screenshots/login.png) | ![Dashboard](docs/_static/screenshots/dashboard.png) |
+| ![Login](https://raw.githubusercontent.com/ramos208/Django-AdminFlow./master/docs/_static/screenshots/login.png) | ![Dashboard](https://raw.githubusercontent.com/ramos208/Django-AdminFlow./master/docs/_static/screenshots/dashboard.png) |
 
 | Customer List | Change Form |
 |---|---|
-| ![Changelist](docs/_static/screenshots/changelist.png) | ![Change form](docs/_static/screenshots/change_form.png) |
+| ![Changelist](https://raw.githubusercontent.com/ramos208/Django-AdminFlow./master/docs/_static/screenshots/changelist.png) | ![Change form](https://raw.githubusercontent.com/ramos208/Django-AdminFlow./master/docs/_static/screenshots/change_form.png) |
 
 | Export Page | Audit History |
 |---|---|
-| ![Export](docs/_static/screenshots/export.png) | ![History](docs/_static/screenshots/history.png) |
+| ![Export](https://raw.githubusercontent.com/ramos208/Django-AdminFlow./master/docs/_static/screenshots/export.png) | ![History](https://raw.githubusercontent.com/ramos208/Django-AdminFlow./master/docs/_static/screenshots/history.png) |
 
 | Import Page | 2FA / User Security |
 |---|---|
-| ![Import](docs/_static/screenshots/import_page.png) | ![2FA](docs/_static/screenshots/user_2fa.png) |
+| ![Import](https://raw.githubusercontent.com/ramos208/Django-AdminFlow./master/docs/_static/screenshots/import_page.png) | ![2FA](https://raw.githubusercontent.com/ramos208/Django-AdminFlow./master/docs/_static/screenshots/user_2fa.png) |
 
 ---
 
@@ -335,14 +335,6 @@ class CrmConfig(AppConfig):
 - All `ADMINFLOW_*` theme settings
 
 ---
-
-## Publishing to PyPI
-
-```bash
-pip install build twine
-python -m build
-twine upload dist/*
-```
 
 ## Documentation
 

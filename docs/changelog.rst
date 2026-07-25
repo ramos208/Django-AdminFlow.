@@ -6,6 +6,16 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.7`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Use absolute raw GitHub URLs for screenshots and remove Publishing section from README
+
+.. _`1.0.7`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.7
+
 `1.0.6`_ — 2026-07-25
 ----------------------
 
