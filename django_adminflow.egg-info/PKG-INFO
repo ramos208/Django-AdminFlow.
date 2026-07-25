@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-adminflow
-Version: 1.0.0
+Version: 1.0.1
 Summary: A premium, modern SaaS design system for the Django Admin interface with built-in 2FA, history tracking, and import/export
 Author-email: Edgar <edgar@example.com>
 License: MIT
@@ -45,14 +45,51 @@ Requires-Dist: openpyxl>=3.1; extra == "all"
 
 # django-adminflow
 
-**A premium, modern SaaS design system for the Django Admin interface.**
+**A modern Django Admin UI template with built-in integrations for popular 3rd party packages.**
 
 [![PyPI version](https://img.shields.io/pypi/v/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
 [![Python versions](https://img.shields.io/pypi/pyversions/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
 [![Django versions](https://img.shields.io/pypi/djversions/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Docs](https://readthedocs.org/projects/django-adminflow/badge/?version=latest)](https://django-adminflow.readthedocs.io/)
 
-AdminFlow replaces the default Django admin skin with a clean, minimalist SaaS design system — dark mode ready, responsive, and production-hardened. Drop it into any Django project with minimal configuration.
+AdminFlow is a **drop-in Django Admin UI template** that replaces the default Django admin with a clean, minimalist SaaS-grade interface. Beyond the UI refresh, it ships with **ready-to-use integrations** for the most popular Django ecosystem packages — two-factor authentication, per-record audit history, and multi-format import/export — so you get powerful admin features with zero boilerplate.
+
+> **One package. Install it, add it to `INSTALLED_APPS`, and your admin instantly looks and works like a premium SaaS product.**
+
+---
+
+## What is AdminFlow?
+
+The default Django admin is functional but dated. AdminFlow wraps it with:
+
+- A **modern, minimalist UI** built with Tailwind utility classes and Material Symbols icons
+- A **collapsible sidebar** with app grouping, icons per model, and active state tracking
+- **Responsive layouts** — works on tablet and desktop
+- **Clean typography** using Inter font (loaded from Google Fonts)
+- **Integrated 3rd party packages** — install the extras you need, and the UI for them is already there
+
+AdminFlow is **not** a full CMS replacement. It is a **UI skin + integration layer** for the Django admin you already use.
+
+---
+
+## Screenshots
+
+| Login | Dashboard |
+|---|---|
+| ![Login](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/login.png) | ![Dashboard](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/dashboard.png) |
+
+| Customer List | Change Form |
+|---|---|
+| ![Changelist](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/changelist.png) | ![Change form](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/change_form.png) |
+
+| Export Page | Audit History |
+|---|---|
+| ![Export](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/export.png) | ![History](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/history.png) |
+
+| Import Page | 2FA / User Security |
+|---|---|
+| ![Import](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/import_page.png) | ![2FA](https://raw.githubusercontent.com/edgar208/django-adminflow/main/docs/_static/screenshots/user_2fa.png) |
 
 ---
 
@@ -60,56 +97,45 @@ AdminFlow replaces the default Django admin skin with a clean, minimalist SaaS d
 
 | Feature | Description |
 |---|---|
-| 🎨 **Modern UI** | Minimalist SaaS design — clean typography, subtle shadows, responsive layout |
-| 🔒 **Two-Factor Auth** | TOTP (Google/Authy), email OTP, and backup codes — add multiple devices |
-| 📜 **Audit History** | Per-record change history with delta diffs, powered by `django-simple-history` |
-| 📤 **Import / Export** | Multi-sheet XLSX and nested JSON export with related models in one file |
-| 🔌 **Plug & Play** | One `INSTALLED_APPS` entry — no boilerplate required |
-| 🌐 **i18n Ready** | All UI strings wrapped in `{% translate %}` |
+| 🎨 **Modern UI** | Minimalist SaaS design — sidebar navigation, clean typography, responsive layout |
+| 🔒 **Two-Factor Auth** | TOTP (Google/Authy), email OTP, backup codes — multi-device support |
+| 📜 **Audit History** | Per-record change history with field-level diffs |
+| 📤 **Import / Export** | Multi-sheet XLSX + nested JSON with related models in one file |
+| 🔌 **Plug & Play** | Add to `INSTALLED_APPS` — no extra config required for core UI |
+| 🌐 **i18n Ready** | All UI strings use `{% translate %}` |
 
 ---
 
 ## Installation
 
-### Minimal (UI only)
-
 ```bash
+# Core UI only
 pip install django-adminflow
-```
 
-### With 2FA support
-
-```bash
+# With 2FA (django-otp)
 pip install "django-adminflow[otp]"
-```
 
-### With audit history
-
-```bash
+# With audit history (django-simple-history)
 pip install "django-adminflow[history]"
-```
 
-### With import / export
-
-```bash
+# With import / export (django-import-export)
 pip install "django-adminflow[import-export]"
-```
 
-### Everything
-
-```bash
+# Everything
 pip install "django-adminflow[all]"
 ```
 
 ---
 
-## Quick Setup
+## Setup — `settings.py`
 
-### 1. `settings.py`
+### `INSTALLED_APPS`
+
+> ⚠️ `"adminflow"` must come **before** `"django.contrib.admin"`
 
 ```python
 INSTALLED_APPS = [
-    "adminflow",          # must come BEFORE django.contrib.admin
+    "adminflow",                              # ← FIRST, before django.contrib.admin
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -117,102 +143,155 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # Optional: add only the ones you installed
-    "simple_history",
-    "import_export",
-    "django_otp",
-    "django_otp.plugins.otp_totp",
-    "django_otp.plugins.otp_email",
-    "django_otp.plugins.otp_static",
+    # Add only what you installed:
+    "simple_history",                         # audit history
+    "import_export",                          # import / export
+    "django_otp",                             # 2FA core
+    "django_otp.plugins.otp_totp",            # TOTP (Google Authenticator, Authy)
+    "django_otp.plugins.otp_email",           # email one-time passwords
+    "django_otp.plugins.otp_static",          # backup / recovery codes
 ]
+```
 
-# Optional: customize the admin title
-ADMINFLOW_TITLE = "My App"
+### `MIDDLEWARE`
 
+```python
 MIDDLEWARE = [
-    ...
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django_otp.middleware.OTPMiddleware",
-    ...
-    "simple_history.middleware.HistoryRequestMiddleware",
+    "django_otp.middleware.OTPMiddleware",                      # ← 2FA (after Auth)
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",        # ← history
 ]
+```
+
+### `TEMPLATES` — context processor (required)
+
+> ⚠️ Without `adminflow.context_processors.adminflow_settings`, the sidebar title, colours and login panel will not render.
+
+```python
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "adminflow.context_processors.adminflow_settings",  # ← required
+            ],
+        },
+    },
+]
+```
+
+### AdminFlow Settings
+
+```python
+# ── Branding ──────────────────────────────────────────────────────────────────
+ADMINFLOW_TITLE   = "My App"          # sidebar header + browser tab title
+ADMINFLOW_COMPANY = "My Company"      # admin footer text
+# ADMINFLOW_LOGO  = "logo.svg"        # path relative to MEDIA_URL (optional)
+
+# ── Login page hero ───────────────────────────────────────────────────────────
+ADMINFLOW_LOGIN_TITLE    = "Welcome back"
+ADMINFLOW_LOGIN_SUBTITLE = "Sign in to manage your application."
+
+# ── Theme colours ─────────────────────────────────────────────────────────────
+ADMINFLOW_PRIMARY_COLOR             = "#1f2021"
+ADMINFLOW_SECONDARY_COLOR           = "#475569"
+ADMINFLOW_SUCCESS_COLOR             = "#10B981"
+ADMINFLOW_WARNING_COLOR             = "#F59E0B"
+ADMINFLOW_DANGER_COLOR              = "#EF4444"
+
+# ── Sidebar ───────────────────────────────────────────────────────────────────
+ADMINFLOW_SIDEBAR_COLOR             = "#0f172a"   # background
+ADMINFLOW_SIDEBAR_TEXT_COLOR        = "#94a3b8"   # inactive item text
+ADMINFLOW_SIDEBAR_ACTIVE_TEXT_COLOR = "#ffffff"   # active item text
+ADMINFLOW_SIDEBAR_COLLAPSIBLE       = True
+ADMINFLOW_SIDEBAR_WIDTH             = 280         # pixels
+
+# ── UI ────────────────────────────────────────────────────────────────────────
+ADMINFLOW_BORDER_RADIUS             = "16px"
+ADMINFLOW_FONT                      = "Inter"     # any Google Font name
+ADMINFLOW_ENABLE_COMMAND_PALETTE    = True        # Cmd+K quick search
+
+# ── 2FA ───────────────────────────────────────────────────────────────────────
+ADMINFLOW_DJANGO_OTP = True    # show OTP verification screen after login
+```
+
+### Email (for Email OTP)
+
+```python
+EMAIL_BACKEND               = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST                  = "smtp.gmail.com"
+EMAIL_PORT                  = 587
+EMAIL_USE_TLS               = True
+EMAIL_HOST_USER             = "noreply@myapp.com"
+EMAIL_HOST_PASSWORD         = "your-smtp-password"    # use .env, never commit
+DEFAULT_FROM_EMAIL          = EMAIL_HOST_USER
+
+OTP_EMAIL_SENDER            = EMAIL_HOST_USER
+OTP_EMAIL_FROM_EMAIL        = EMAIL_HOST_USER
+OTP_EMAIL_COOLDOWN_DURATION = 60    # seconds between OTP requests
 ```
 
 ---
 
 ## 3rd Party Integrations
 
-AdminFlow has built-in support for the following packages. Each is **optional**.
-
 ### 🔒 Two-Factor Authentication — `django-otp`
 
-```bash
-pip install "django-adminflow[otp]"
-```
-
-What AdminFlow adds:
-- OTP verification screen on login (TOTP / email)
-- Per-device 2FA management in the user admin
-- Add multiple authenticator apps or devices per user
-- Backup codes (static OTP) generation
-- Admin actions: *Enable 2FA*, *Generate 10 backup codes*
-
 ```python
-# admin.py — minimal setup
-from adminflow.user_admin import AdminFlowUserAdminMixin, get_2fa_inlines, unregister_otp_models
+# admin.py
+from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from adminflow.user_admin import AdminFlowUserAdminMixin, get_2fa_inlines, unregister_otp_models
+
+User = get_user_model()
 
 @admin.register(User)
 class UserAdmin(AdminFlowUserAdminMixin, BaseUserAdmin):
     inlines = get_2fa_inlines()
 
-unregister_otp_models()
+unregister_otp_models()   # removes raw django-otp admin entries
 ```
+
+**What you get:** TOTP + email OTP + backup codes, multi-device per user, admin bulk actions (*Enable 2FA*, *Generate backup codes*).
 
 ---
 
 ### 📜 Audit History — `django-simple-history`
 
-```bash
-pip install "django-adminflow[history]"
-```
-
-What AdminFlow adds:
-- Styled history list with delta diff highlighting
-- Related model history merged into parent history view
-
 ```python
 # models.py
 from simple_history.models import HistoricalRecords
 
-class Product(models.Model):
-    name = models.CharField(max_length=200)
-    history = HistoricalRecords()
+class Customer(models.Model):
+    name  = models.CharField(max_length=200)
+    email = models.EmailField(unique=True)
+    history = HistoricalRecords()   # ← add this
 
 # admin.py
 from simple_history.admin import SimpleHistoryAdmin
 
-@admin.register(Product)
-class ProductAdmin(SimpleHistoryAdmin):
-    ...
+@admin.register(Customer)
+class CustomerAdmin(SimpleHistoryAdmin):
+    list_display = ('name', 'email')
 ```
 
 ---
 
 ### 📤 Import / Export — `django-import-export`
 
-```bash
-pip install "django-adminflow[import-export]"
-```
-
-Add `import_export` to `INSTALLED_APPS`.
-
-Export formats:
-
-| Format | Output |
-|---|---|
-| **XLSX** | One `.xlsx` file — one sheet per related model |
-| **JSON** | One `.json` file — child records nested inside parent records |
+Add `import_export` to `INSTALLED_APPS`, then use `MultiSheetExportImportMixin`:
 
 ```python
 # resources.py
@@ -222,7 +301,7 @@ from .models import Customer, Order
 
 class CustomerResource(resources.ModelResource):
     class Meta:
-        model = Customer
+        model  = Customer
         fields = ('id', 'name', 'email', 'phone', 'notes', 'date_created')
 
 class OrderResource(resources.ModelResource):
@@ -232,7 +311,7 @@ class OrderResource(resources.ModelResource):
         widget=ForeignKeyWidget(Customer, field='email'),
     )
     class Meta:
-        model = Order
+        model  = Order
         fields = ('id', 'customer', 'product', 'order_date', 'status', 'total_amount')
 
 # admin.py
@@ -247,22 +326,23 @@ class CustomerAdmin(MultiSheetExportImportMixin, ImportExportModelAdmin, admin.M
     ]
 ```
 
-JSON output structure:
+**Export formats:**
+
+| Format | Output |
+|---|---|
+| **xlsx** | One `.xlsx` file — one sheet per resource |
+| **json** | One `.json` file — children nested inside each parent record |
+
+**JSON output example:**
 
 ```json
 [
   {
     "id": "1",
-    "name": "Rooney Hutchinson",
-    "email": "rooney@example.com",
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
     "orders": [
-      {
-        "id": "1",
-        "customer_email": "rooney@example.com",
-        "order_date": "2026-07-22",
-        "status": "delivered",
-        "total_amount": "42222.00"
-      }
+      { "id": "1", "customer_email": "alice@example.com", "order_date": "2026-07-22", "status": "delivered" }
     ]
   }
 ]
@@ -270,18 +350,18 @@ JSON output structure:
 
 ---
 
-## Admin Customisation
+## Customisation
 
 ```python
-# settings.py
-ADMINFLOW_TITLE = "My SaaS App"
-```
-
-```python
-# admin.py — custom Material Symbols icon
+# admin.py — Material Symbols icon per model
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    icon = "inventory_2"
+    icon = "inventory_2"   # browse at fonts.google.com/icons
+
+# apps.py — sidebar group label
+class CrmConfig(AppConfig):
+    name         = "crm"
+    verbose_name = "Customer Relations (CRM)"
 ```
 
 ---
@@ -289,15 +369,15 @@ class ProductAdmin(admin.ModelAdmin):
 ## Changelog
 
 ### v1.0.0 — 2026-07-23
-
 - Initial stable release
-- Modern SaaS admin UI (minimalist, responsive)
-- Full 2FA: TOTP, email OTP, backup codes, multi-device support
-- Audit history with delta diffs (django-simple-history)
+- Modern minimalist admin UI (sidebar, Inter font, responsive)
+- Full 2FA: TOTP, email OTP, backup codes, multi-device
+- Audit history with field-level diffs (django-simple-history)
 - Multi-sheet XLSX export/import (one sheet per related model)
 - Nested JSON export (children embedded inside parent records)
 - `MultiSheetExportImportMixin` for plug-and-play multi-resource export
-- Styled Import / Export buttons and export page
+- Styled Import / Export buttons, export page with field chips, import page
+- All `ADMINFLOW_*` theme settings
 
 ---
 
@@ -305,16 +385,13 @@ class ProductAdmin(admin.ModelAdmin):
 
 ```bash
 pip install build twine
-
-# Build
-cd "AdminFlow Package"
 python -m build
-
-# Upload
 twine upload dist/*
 ```
 
----
+## Documentation
+
+Full documentation: [django-adminflow.readthedocs.io](https://django-adminflow.readthedocs.io/)
 
 ## License
 

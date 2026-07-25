@@ -6,6 +6,16 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.1`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Fixed README screenshot images — use absolute GitHub raw URLs so they render on PyPI
+
+.. _`1.0.1`: https://github.com/edgar/django-adminflow/releases/tag/v1.0.1
+
 `1.0.0`_ — 2026-07-23
 -----------------------
 
