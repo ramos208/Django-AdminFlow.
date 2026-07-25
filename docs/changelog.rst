@@ -6,6 +6,16 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.9`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Update docs/index.rst badges to robust endpoints matching README
+
+.. _`1.0.9`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.9
+
 `1.0.8`_ — 2026-07-25
 ----------------------
 

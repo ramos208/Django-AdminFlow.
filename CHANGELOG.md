@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.9] — 2026-07-25
+
+- Update docs/index.rst badges to robust endpoints matching README
+
+
 ## [1.0.8] — 2026-07-25
 
 - Update shields.io badges to robust endpoints for PyPI and GitHub

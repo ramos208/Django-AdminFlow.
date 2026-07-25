@@ -64,7 +64,15 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-1-install">Step 1 — Install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-2-settings-py">Step 2 — <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-2-settings-py">Step 2 — <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#installed-apps">INSTALLED_APPS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#middleware">MIDDLEWARE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#templates">TEMPLATES</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#adminflow-core-settings">AdminFlow Core Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#email-for-email-otp">Email (for Email OTP)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#full-example-settings-py">Full Example <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-3-run-migrations">Step 3 — Run migrations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-4-collect-static-files">Step 4 — Collect static files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-5-visit-your-admin">Step 5 — Visit your admin</a></li>
@@ -131,16 +139,55 @@
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="customization.html">Customisation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="customization.html#admin-title">Admin Title</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization.html#per-model-icons">Per-Model Icons</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization.html#app-label-display">App Label Display</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization.html#restricting-export-formats">Restricting Export Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization.html#custom-2fa-inlines">Custom 2FA Inlines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#all-settings">All Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#branding">Branding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#login-page">Login Page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#theme-colours">Theme Colours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#sidebar">Sidebar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#ui-layout">UI &amp; Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#two-factor-auth">Two-Factor Auth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#per-model-icon">Per-Model Icon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#app-label-in-sidebar">App Label in Sidebar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#export-format-override">Export Format Override</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.8 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#added">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">1.0.7 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">1.0.6 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">1.0.5 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">1.0.4 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id13">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">1.0.3 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id16">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">1.0.2 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id19">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">1.0.1 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id22">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id24">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">Added</a></li>
 </ul>
 </li>
 </ul>
@@ -163,7 +210,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Two-Factor Authentication</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/edgar/django-adminflow/blob/main/docs/two-factor-auth.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/ramos208/Django-AdminFlow./blob/master/docs/two-factor-auth.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
         <a href="ui-features.html" class="btn btn-neutral float-left" title="UI Features" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>

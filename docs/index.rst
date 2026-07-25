@@ -11,12 +11,12 @@ django-adminflow
    :target: https://pypi.org/project/django-adminflow/
    :alt: Python versions
 
-.. image:: https://img.shields.io/pypi/djversions/django-adminflow.svg
+.. image:: https://img.shields.io/badge/Django-4.2%2B-092E20?logo=django
    :target: https://pypi.org/project/django-adminflow/
-   :alt: Django versions
+   :alt: Django version
 
-.. image:: https://img.shields.io/badge/License-MIT-blue.svg
-   :target: https://github.com/ramos208/Django-AdminFlow./blob/main/LICENSE
+.. image:: https://img.shields.io/pypi/l/django-adminflow.svg
+   :target: https://github.com/ramos208/Django-AdminFlow./blob/master/LICENSE
    :alt: License: MIT
 
 ----
