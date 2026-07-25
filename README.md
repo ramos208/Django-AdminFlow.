@@ -4,9 +4,9 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
 [![Python versions](https://img.shields.io/pypi/pyversions/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
-[![Django versions](https://img.shields.io/pypi/djversions/django-adminflow.svg)](https://pypi.org/project/django-adminflow/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Docs](https://readthedocs.org/projects/django-adminflow/badge/?version=latest)](https://django-adminflow.readthedocs.io/en/latest/)
+[![Django version](https://img.shields.io/badge/Django-4.2%2B-092E20?logo=django)](https://pypi.org/project/django-adminflow/)
+[![License: MIT](https://img.shields.io/pypi/l/django-adminflow.svg)](https://github.com/ramos208/Django-AdminFlow./blob/master/LICENSE)
+[![Docs](https://img.shields.io/badge/docs-readthedocs-blue)](https://django-adminflow.readthedocs.io/en/latest/)
 
 AdminFlow is a **drop-in Django Admin UI template** that replaces the default Django admin with a clean, minimalist SaaS-grade interface. Beyond the UI refresh, it ships with **ready-to-use integrations** for the most popular Django ecosystem packages — two-factor authentication, per-record audit history, and multi-format import/export — so you get powerful admin features with zero boilerplate.
 

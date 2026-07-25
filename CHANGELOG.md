@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.8] — 2026-07-25
+
+- Update shields.io badges to robust endpoints for PyPI and GitHub
+
+
 ## [1.0.7] — 2026-07-25
 
 - Use absolute raw GitHub URLs for screenshots and remove Publishing section from README

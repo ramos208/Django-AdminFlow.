@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-adminflow"
-version = "1.0.7"
+version = "1.0.8"
 description = "A premium, modern SaaS design system for the Django Admin interface with built-in 2FA, history tracking, and import/export"
 readme = "README.md"
 license = { text = "MIT" }

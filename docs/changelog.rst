@@ -6,6 +6,16 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.8`_ — 2026-07-25
+----------------------
+
+Added
+~~~~~
+
+* Update shields.io badges to robust endpoints for PyPI and GitHub
+
+.. _`1.0.8`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.8
+
 `1.0.7`_ — 2026-07-25
 ----------------------
 
