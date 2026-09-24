@@ -25,6 +25,7 @@ adminflow/templates/admin/pagination.html
 adminflow/templates/admin/search_form.html
 adminflow/templates/admin/submit_line.html
 adminflow/templates/admin/verify_2fa.html
+adminflow/templates/admin/auth/user/change_password.html
 adminflow/templates/admin/edit_inline/stacked.html
 adminflow/templates/admin/edit_inline/tabular.html
 adminflow/templates/admin/import_export/change_list_export_item.html
@@ -32,6 +33,7 @@ adminflow/templates/admin/import_export/change_list_import_item.html
 adminflow/templates/admin/import_export/export.html
 adminflow/templates/admin/includes/fieldset.html
 adminflow/templates/admin/includes/toast.html
+adminflow/templates/auth/widgets/read_only_password_hash.html
 adminflow/templates/otp/email/token.html
 adminflow/templates/otp/email/token.txt
 adminflow/templates/registration/logged_out.html

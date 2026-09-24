@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-adminflow
-Version: 1.0.13
+Version: 1.0.14
 Summary: A premium, modern SaaS design system for the Django Admin interface with built-in 2FA, history tracking, and import/export
 Author-email: Edgar <edgar@example.com>
 License: MIT
@@ -209,12 +209,21 @@ urlpatterns = [
 ### AdminFlow Settings
 
 ```python
-# ── Branding ──────────────────────────────────────────────────────────────────
+# ── Branding & Navigation ────────────────────────────────────────────────────
+import os
+
 ADMINFLOW_TITLE   = "My App"          # sidebar header + browser tab title
 ADMINFLOW_COMPANY = "My Company"      # admin footer text
-# ADMINFLOW_LOGO  = "logo.svg"        # path relative to MEDIA_URL (optional)
+# ADMINFLOW_LOGO  = "logo.svg"        # path relative to MEDIA_URL (falls back to initial monogram)
 
-# ── Login page hero ───────────────────────────────────────────────────────────
+# Option A: Read directly from .env
+ADMINFLOW_VIEW_SITE_URL = os.getenv("VIEW_SITE_URL", "https://myapp.example.com")
+
+# Option B: Hardcode custom route or external frontend URL
+ADMINFLOW_VIEW_SITE_URL = "/dashboard/"  # or "https://myapp.example.com"
+
+# ── Login page ────────────────────────────────────────────────────────────────
+ADMINFLOW_LOGIN_VERSION  = 1          # 1: split screen hero layout, 2: clean centered card (no left side)
 ADMINFLOW_LOGIN_TITLE    = "Welcome back"
 ADMINFLOW_LOGIN_SUBTITLE = "Sign in to manage your application."
 

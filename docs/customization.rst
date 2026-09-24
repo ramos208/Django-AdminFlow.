@@ -44,13 +44,24 @@ Branding
      - Company name shown in the admin footer
    * - ``ADMINFLOW_LOGO``
      - *(not set)*
-     - Filename relative to ``MEDIA_URL`` (e.g. ``"logo.svg"`` → ``/media/logo.svg``)
+     - Filename relative to ``MEDIA_URL`` (e.g. ``"logo.svg"`` → ``/media/logo.svg``). If omitted, displays an automatic monogram badge.
+   * - ``ADMINFLOW_VIEW_SITE_URL``
+     - ``"/"``
+     - Custom URL for "View Site" profile button and logged out redirect. Supports reading from ``.env`` (``VIEW_SITE_URL`` / ``SITE_URL``).
 
 .. code-block:: python
+
+   import os
 
    ADMINFLOW_TITLE   = "My SaaS App"
    ADMINFLOW_COMPANY = "Acme Corp"
    ADMINFLOW_LOGO    = "branding/logo.svg"   # optional
+
+   # Option A: Read directly from .env
+   ADMINFLOW_VIEW_SITE_URL = os.getenv("VIEW_SITE_URL", "https://myapp.example.com")
+
+   # Option B: Hardcode custom route or external frontend URL
+   ADMINFLOW_VIEW_SITE_URL = "/dashboard/"  # or "https://myapp.example.com"
 
 Login Page
 ~~~~~~~~~~

@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.14] — 2026-09-24
+
+- **Custom "View Site" Link**: Added `ADMINFLOW_VIEW_SITE_URL` and `ADMINFLOW_SITE_URL` settings with automatic fallback to `.env` (`VIEW_SITE_URL`, `SITE_URL`). Opens in new tab from user profile dropdown and customizes "Return to site" on logged-out pages.
+- **Login Layout Versions**: Added `ADMINFLOW_LOGIN_VERSION = 1` (split-screen hero) and `ADMINFLOW_LOGIN_VERSION = 2` (clean centered card without left banner).
+- **Brand Monogram Logo Fallback**: Added automatic initial / initials badge fallback on sidebar, mobile navigation, and login pages when logo is missing, invalid, or fails to load (`onerror`).
+- **Modern Checkbox & Toggle Cards**: Redesigned checkboxes and boolean fields across standard forms, inlines, and 2FA device setup into interactive toggle cards.
+- **Flatpickr 12-Hour Time Format**: Fixed literal `"g"` formatting in 12-hour time inputs, ensuring proper token conversion (`h:i K` / `H:i`) with `time_24hr` support.
+- **Expanded Model Field Types & Widget Support**: Added rich support for `JSONField`, `ReadOnlyPasswordHashWidget` security cards, password change views, and generic inlines alongside 2FA inlines.
+
 ## [1.0.13] — 2026-07-25
 
 - Default to and enforce light theme across AdminFlow

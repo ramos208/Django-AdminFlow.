@@ -6,6 +6,21 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.14`_ — 2026-09-24
+-----------------------
+
+Added
+~~~~~
+
+* **Custom "View Site" Link**: Added ``ADMINFLOW_VIEW_SITE_URL`` and ``ADMINFLOW_SITE_URL`` settings with fallback to ``.env`` (``VIEW_SITE_URL`` / ``SITE_URL``). Opens in new tab and customizes logged-out return link.
+* **Login Layout Versions**: Added ``ADMINFLOW_LOGIN_VERSION = 1`` (split layout) and ``ADMINFLOW_LOGIN_VERSION = 2`` (clean centered card without left banner).
+* **Brand Initial Monogram Fallback**: Automated fallback monogram badge on sidebar, mobile navbar, and login pages when logo is missing or fails to load.
+* **Redesigned Checkbox Cards**: Modern interactive toggle cards for boolean and checkbox fields in standard forms and inlines.
+* **Flatpickr 12-Hour Format**: Resolved literal ``"g"`` character in 12-hour time inputs with full token mapping.
+* **Extended Field Type Support**: Native support for ``JSONField``, ``ReadOnlyPasswordHashWidget`` security card, and seamless custom user inlines.
+
+.. _`1.0.14`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.14
+
 `1.0.13`_ — 2026-07-25
 -----------------------
 

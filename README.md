@@ -164,10 +164,18 @@ urlpatterns = [
 ### AdminFlow Settings
 
 ```python
-# ── Branding ──────────────────────────────────────────────────────────────────
+# ── Branding & Navigation ────────────────────────────────────────────────────
+import os
+
 ADMINFLOW_TITLE   = "My App"          # sidebar header + browser tab title
 ADMINFLOW_COMPANY = "My Company"      # admin footer text
-# ADMINFLOW_LOGO  = "logo.svg"        # path relative to MEDIA_URL (optional)
+# ADMINFLOW_LOGO  = "logo.svg"        # path relative to MEDIA_URL (falls back to initial monogram)
+
+# Option A: Read directly from .env
+ADMINFLOW_VIEW_SITE_URL = os.getenv("VIEW_SITE_URL", "https://myapp.example.com")
+
+# Option B: Hardcode custom route or external frontend URL
+ADMINFLOW_VIEW_SITE_URL = "/dashboard/"  # or "https://myapp.example.com"
 
 # ── Login page ────────────────────────────────────────────────────────────────
 ADMINFLOW_LOGIN_VERSION  = 1          # 1: split screen hero layout, 2: clean centered card (no left side)
