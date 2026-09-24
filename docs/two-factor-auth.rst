@@ -37,6 +37,8 @@ Add the OTP middleware **after** ``AuthenticationMiddleware``:
        "django.contrib.auth.middleware.AuthenticationMiddleware",
        "django_otp.middleware.OTPMiddleware",   # ← add this
        ...
+   ]
+
 Add to ``urls.py``:
 
 .. code-block:: python

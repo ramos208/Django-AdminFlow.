@@ -21,8 +21,8 @@ except Exception:
 project   = "django-adminflow"
 copyright = "2026, Edgar"
 author    = "Edgar"
-release   = "1.0.0"
-version   = "1.0"
+release   = "1.0.14"
+version   = "1.0.14"
 
 # -- General configuration ----------------------------------------------------
 extensions = [
@@ -53,7 +53,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # -- intersphinx --------------------------------------------------------------
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "django": ("https://docs.djangoproject.com/en/stable/", "https://docs.djangoproject.com/en/stable/_objects/"),
+    "django": ("https://docs.djangoproject.com/en/stable/", None),
 }
 
 # -- Options for HTML output --------------------------------------------------
@@ -67,7 +67,6 @@ html_theme_options = {
     "includehidden":        True,
     "titles_only":          False,
     "style_external_links": True,
-    "display_version":      True,
     "prev_next_buttons_location": "both",
 }
 
