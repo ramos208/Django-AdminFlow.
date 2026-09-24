@@ -1,12 +1,12 @@
 {% load i18n adminflow_tags %}
-<fieldset class="space-y-4 {% if not is_inline %}border border-outline-variant bg-surface-lowest p-4 sm:p-6 rounded-xl shadow-sm{% endif %}">
+<fieldset class="space-y-4 {% if not is_inline %}border border-outline-variant bg-surface-lowest p-4 sm:p-6 rounded-xl shadow-xs dark:bg-slate-950/40 dark:border-slate-800/80{% endif %}">
     {% if fieldset.name %}
         {% if is_inline %}
             <h4 class="text-xs font-bold text-on-surface uppercase tracking-wider mb-2 px-1">
                 {{ fieldset.name }}
             </h4>
         {% else %}
-            <legend class="text-xs font-black text-on-surface uppercase tracking-wider px-2 bg-surface-lowest">
+            <legend class="text-xs font-black text-on-surface uppercase tracking-wider px-2 bg-surface-lowest dark:bg-slate-900">
                 {{ fieldset.name }}
             </legend>
         {% endif %}
@@ -20,29 +20,63 @@
         {% for line in fieldset %}
             <div class="grid grid-cols-1 {% if line.fields|length > 1 %}md:grid-cols-{{ line.fields|length }}{% endif %} gap-4">
                 {% for field in line %}
-                    <div class="space-y-1.5 {% if field.errors %}text-danger{% endif %}">
-                        <!-- Label -->
-                        <div class="flex items-center justify-between">
-                            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" for="{{ field.field.id_for_label }}">
-                                {{ field.field.label }}
-                                {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
-                            </label>
-                        </div>
-                        
-                        <!-- Input Control -->
-                        <div class="relative">
-                            {% if field.is_readonly %}
-                                <div class="px-3 py-2 bg-surface-low border border-outline-variant rounded-lg text-xs text-on-surface font-mono">
-                                    {{ field.contents }}
+                    {% if not field.is_readonly and field.field|is_checkbox %}
+                        <!-- Checkbox / Boolean Field Styled Card -->
+                        <div class="space-y-1.5 {% if field.errors %}text-danger{% endif %}">
+                            <label for="{{ field.field.id_for_label }}" class="flex items-start gap-3 p-3.5 rounded-xl border border-outline-variant/60 bg-surface-lowest hover:bg-surface-low/50 hover:border-primary/40 transition-all cursor-pointer select-none group shadow-xs dark:bg-slate-900/60 dark:border-slate-800">
+                                <div class="flex items-center h-5 mt-0.5">
+                                    {{ field.field|add_class:"w-4 h-4 rounded border-outline-variant text-primary focus:ring-2 focus:ring-primary/20 accent-primary cursor-pointer transition-all dark:border-slate-700 dark:bg-slate-800" }}
                                 </div>
-                            {% else %}
-                                {% if field.field|is_checkbox %}
-                                    <div class="flex items-center gap-2 py-2">
-                                        {{ field.field|add_class:"w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer dark:bg-slate-800 dark:border-slate-700" }}
-                                        <span class="text-xs text-on-surface-variant font-medium select-none">{{ field.field.help_text|safe }}</span>
+                                <div class="space-y-0.5 flex-1">
+                                    <div class="text-xs font-semibold text-on-surface group-hover:text-primary transition-colors flex items-center gap-1.5">
+                                        {{ field.field.label }}
+                                        {% if field.field.required %}<span class="text-danger font-bold">*</span>{% endif %}
+                                    </div>
+                                    {% if field.field.help_text %}
+                                        <p class="text-[11px] text-on-surface-variant opacity-80 leading-relaxed font-normal">
+                                            {{ field.field.help_text|safe }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </label>
+                            {% if field.errors %}
+                                <p class="text-[11px] text-danger font-semibold flex items-center gap-1 mt-1 px-1">
+                                    <span class="material-symbols-outlined text-sm">error</span>
+                                    {{ field.errors|striptags }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <!-- Standard Form Field -->
+                        <div class="space-y-1.5 {% if field.errors %}text-danger{% endif %}">
+                            <!-- Label -->
+                            <div class="flex items-center justify-between">
+                                <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" for="{{ field.field.id_for_label }}">
+                                    {{ field.field.label }}
+                                    {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                </label>
+                            </div>
+                            
+                            <!-- Input Control -->
+                            <div class="relative">
+                                {% if field.is_readonly %}
+                                    <div class="px-3 py-2 bg-surface-low border border-outline-variant rounded-lg text-xs text-on-surface font-mono">
+                                        {{ field.contents }}
+                                    </div>
+                                {% elif field.field|is_readonly_password %}
+                                    <div class="py-1">
+                                        {{ field.field }}
+                                    </div>
+                                {% elif field.field|is_radio %}
+                                    <div class="py-2 radiolist space-y-2">
+                                        {{ field.field }}
+                                    </div>
+                                {% elif field.field|is_json_field %}
+                                    <div class="relative">
+                                        {{ field.field|add_class:"w-full px-3.5 py-2.5 rounded-lg border border-outline-variant bg-surface-lowest text-xs font-mono text-on-surface focus:ring-2 focus:ring-primary/15 focus:border-primary transition-all outline-none dark:bg-slate-900 dark:border-slate-800 min-h-[130px] custom-scrollbar" }}
                                     </div>
                                 {% elif field.field|is_textarea %}
-                                    {{ field.field|add_class:"w-full px-3 py-2 rounded-lg border border-outline-variant bg-surface-lowest text-xs text-on-surface focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900 dark:border-slate-800" }}
+                                    {{ field.field|add_class:"w-full px-3 py-2 rounded-lg border border-outline-variant bg-surface-lowest text-xs text-on-surface focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900 dark:border-slate-800 min-h-[100px]" }}
                                 {% elif field.field|is_select %}
                                     {{ field.field|add_class:"w-full pl-3 pr-8 py-2 bg-surface-lowest border border-outline-variant rounded-lg text-xs focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900 dark:border-slate-800" }}
                                 {% elif field.field|is_file %}
@@ -50,24 +84,25 @@
                                 {% else %}
                                     {{ field.field|add_class:"w-full h-10 px-3 rounded-lg border border-outline-variant bg-surface-lowest text-xs text-on-surface focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all outline-none dark:bg-slate-900 dark:border-slate-800" }}
                                 {% endif %}
+                            </div>
+                            
+                            <!-- Field Errors -->
+                            {% if field.errors %}
+                                <p class="text-[11px] text-danger font-semibold flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">error</span>
+                                    {{ field.errors|striptags }}
+                                </p>
+                            {% endif %}
+                            
+                            <!-- Help Text -->
+                            {% if field.field.help_text %}
+                                <p class="text-[10px] text-on-surface-variant opacity-80 leading-relaxed">{{ field.field.help_text|safe }}</p>
                             {% endif %}
                         </div>
-                        
-                        <!-- Field Errors -->
-                        {% if field.errors %}
-                            <p class="text-[11px] text-danger font-semibold flex items-center gap-1">
-                                <span class="material-symbols-outlined text-sm">error</span>
-                                {{ field.errors|striptags }}
-                            </p>
-                        {% endif %}
-                        
-                        <!-- Help Text (Only for non-checkboxes where it is shown inline above) -->
-                        {% if field.field.help_text and not field.field|is_checkbox %}
-                            <p class="text-[10px] text-on-surface-variant opacity-80">{{ field.field.help_text|safe }}</p>
-                        {% endif %}
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% endfor %}
     </div>
 </fieldset>
+

@@ -6,21 +6,107 @@
 {% block messages %}{% endblock %}
 
 {% block content %}
+{% if adminflow_login_version|stringformat:"s" == "2" or adminflow_login_version == "simple" or adminflow_login_version == "centered" or adminflow_login_version == "no-sidebar" or adminflow_login_version == "v2" %}
+<!-- Version 2: Clean Centered Card Layout (No Left Side) -->
+<main class="w-full max-w-md mx-auto my-[5vh] p-8 md:p-10 rounded-2xl shadow-xl bg-surface-lowest border border-outline-variant/70">
+    <div class="w-full space-y-6">
+        <!-- Brand & Header -->
+        <div class="text-center space-y-3">
+            <div class="flex justify-center">
+                {% if adminflow_logo %}
+                    <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-12 w-auto max-h-12 object-contain" onerror="this.style.display='none'; document.getElementById('v2-logo-fallback')?.classList.remove('hidden'); document.getElementById('v2-logo-fallback')?.classList.add('flex');"/>
+                    <div id="v2-logo-fallback" class="h-14 w-14 rounded-2xl bg-primary/10 border border-primary/25 text-primary items-center justify-center font-black text-xl shadow-sm hidden">
+                        <span>{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                    </div>
+                {% elif adminflow_logo_icon %}
+                    <div class="h-14 w-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shadow-sm">
+                        <span class="material-symbols-outlined text-3xl">{{ adminflow_logo_icon }}</span>
+                    </div>
+                {% else %}
+                    <div class="h-14 w-14 rounded-2xl bg-primary/10 border border-primary/25 text-primary flex items-center justify-center font-black text-xl shadow-sm">
+                        <span>{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-on-surface tracking-tight">{{ adminflow_login_title|default:_("Welcome back") }}</h2>
+                <p class="text-xs text-on-surface-variant mt-1">{{ adminflow_login_subtitle|default:_("Sign in to your account to continue") }}</p>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form action="{{ app_path }}" method="post" id="login-form" class="space-y-4">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="p-3 bg-danger/10 border border-danger/20 rounded-xl text-xs text-danger space-y-1">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Username or Email -->
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block" for="id_username">{% translate "Username or email" %}</label>
+                <input type="text" name="username" autofocus required id="id_username" autocapitalize="none" autocomplete="username"
+                       class="w-full h-11 px-3.5 rounded-xl border border-outline-variant bg-surface-lowest text-on-surface text-xs focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none" 
+                       placeholder="{% translate 'Enter username or email' %}"/>
+                {% if form.username.errors %}
+                    <p class="text-[11px] text-danger">{{ form.username.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div class="space-y-1.5">
+                <div class="flex justify-between items-center">
+                    <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block" for="id_password">{% translate "Password" %}</label>
+                    {% if password_reset_url %}
+                        <a href="{{ password_reset_url }}" class="text-[11px] font-bold text-primary hover:underline transition-all">{% translate "Forgot?" %}</a>
+                    {% endif %}
+                </div>
+                <div class="relative">
+                    <input type="password" name="password" required id="id_password" 
+                           class="w-full h-11 px-3.5 pr-10 rounded-xl border border-outline-variant bg-surface-lowest text-on-surface text-xs focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none" 
+                           placeholder="••••••••"/>
+                    <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors focus:outline-none">
+                        <span class="material-symbols-outlined text-[18px]" id="visibilityIcon">visibility</span>
+                    </button>
+                </div>
+                {% if form.password.errors %}
+                    <p class="text-[11px] text-danger">{{ form.password.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}"/>
+
+            <!-- Sign In Button -->
+            <button type="submit" id="btn-signin" class="w-full h-11 mt-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/95 active:scale-[0.99] transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer">
+                <span id="btn-signin-text">{% translate "Sign In" %}</span>
+            </button>
+        </form>
+    </div>
+</main>
+{% else %}
+<!-- Version 1: Split Screen Layout with Decorative Enterprise Hero Panel (Default) -->
 <main class="w-full max-w-5xl h-[650px] flex overflow-hidden rounded-xl shadow-lg bg-surface-lowest border border-outline-variant mx-auto my-[5vh]">
     <!-- Left Side: Decorative Enterprise panel -->
     <section class="hidden md:flex flex-1 bg-gradient-to-br from-primary to-inverse-surface relative items-center justify-center p-12 overflow-hidden">
         <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-success/10 rounded-full blur-3xl"></div>
         <div class="relative z-10 text-center space-y-6">
-            <div class="inline-flex items-center justify-center p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 mb-2 shadow-xl">
+            <div class="inline-flex items-center justify-center p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 mb-2 shadow-xl">
                 {% if adminflow_logo_icon %}
                     <span class="material-symbols-outlined text-white text-5xl">{{ adminflow_logo_icon }}</span>
                 {% elif adminflow_logo %}
-                    <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-12 w-auto max-w-[140px] object-contain filter brightness-0 invert"/>
+                    <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-12 w-auto max-w-[140px] max-h-12 object-contain filter brightness-0 invert" onerror="this.style.display='none'; document.getElementById('v1-hero-logo-fallback')?.classList.remove('hidden'); document.getElementById('v1-hero-logo-fallback')?.classList.add('flex');"/>
+                    <div id="v1-hero-logo-fallback" class="h-14 w-14 rounded-2xl bg-white/15 border border-white/25 text-white font-black text-2xl items-center justify-center shadow-md hidden">
+                        <span>{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                    </div>
                 {% else %}
-                    <svg class="h-12 w-12 text-white fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
+                    <div class="h-14 w-14 rounded-2xl bg-white/15 border border-white/25 text-white font-black text-2xl flex items-center justify-center shadow-md">
+                        <span>{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                    </div>
                 {% endif %}
             </div>
             <h1 class="text-3xl font-extrabold text-white leading-tight font-sans">{{ adminflow_login_title|default:"Master Your Enterprise Flow" }}</h1>
@@ -44,16 +130,23 @@
             <div class="text-center space-y-2">
                 <div class="flex justify-center">
                     {% if adminflow_logo %}
-                        <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-12 w-auto"/>
+                        <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-12 w-auto max-h-12 object-contain" onerror="this.style.display='none'; document.getElementById('v1-right-logo-fallback')?.classList.remove('hidden'); document.getElementById('v1-right-logo-fallback')?.classList.add('flex');"/>
+                        <div id="v1-right-logo-fallback" class="h-12 w-12 rounded-xl bg-primary/10 border border-primary/25 text-primary font-black text-lg items-center justify-center shadow-sm hidden">
+                            <span>{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                        </div>
+                    {% elif adminflow_logo_icon %}
+                        <div class="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shadow-sm">
+                            <span class="material-symbols-outlined text-2xl">{{ adminflow_logo_icon }}</span>
+                        </div>
                     {% else %}
-                        <div class="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-white shadow-md">
-                            <span class="material-symbols-outlined text-2xl">hub</span>
+                        <div class="h-12 w-12 rounded-xl bg-primary/10 border border-primary/25 text-primary font-black text-lg flex items-center justify-center shadow-sm">
+                            <span>{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
                         </div>
                     {% endif %}
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold text-on-surface">Welcome back</h2>
-                    <p class="text-xs text-on-surface-variant">Sign in to manage {{ adminflow_title }}</p>
+                    <h2 class="text-xl font-bold text-on-surface">{% translate "Welcome back" %}</h2>
+                    <p class="text-xs text-on-surface-variant">{% translate "Sign in to manage" %} {{ adminflow_title }}</p>
                 </div>
             </div>
 
@@ -61,12 +154,20 @@
             <form action="{{ app_path }}" method="post" id="login-form" class="space-y-4">
                 {% csrf_token %}
                 
-                <!-- Username -->
+                {% if form.non_field_errors %}
+                    <div class="p-3 bg-danger/10 border border-danger/20 rounded-lg text-xs text-danger space-y-1">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Username or Email -->
                 <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" for="id_username">{% translate "Username" %}</label>
-                    <input type="text" name="username" autofocus required id="id_username" 
+                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" for="id_username">{% translate "Username or email" %}</label>
+                    <input type="text" name="username" autofocus required id="id_username" autocapitalize="none" autocomplete="username"
                            class="w-full h-11 px-3 rounded-lg border border-outline-variant bg-surface-lowest text-on-surface text-xs focus:ring-2 focus:ring-primary/15 focus:border-primary transition-all outline-none" 
-                           placeholder="admin"/>
+                           placeholder="{% translate 'Enter username or email' %}"/>
                     {% if form.username.errors %}
                         <p class="text-[11px] text-danger">{{ form.username.errors|join:", " }}</p>
                     {% endif %}
@@ -77,7 +178,7 @@
                     <div class="flex justify-between items-center">
                         <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" for="id_password">{% translate "Password" %}</label>
                         {% if password_reset_url %}
-                            <a href="{{ password_reset_url }}" class="text-[10px] font-bold text-primary hover:underline transition-all">Forgot?</a>
+                            <a href="{{ password_reset_url }}" class="text-[10px] font-bold text-primary hover:underline transition-all">{% translate "Forgot?" %}</a>
                         {% endif %}
                     </div>
                     <div class="relative">
@@ -103,6 +204,7 @@
         </div>
     </section>
 </main>
+{% endif %}
 
 <!-- Floating Toast Notifications -->
 {% include "admin/includes/toast.html" %}

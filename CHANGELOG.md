@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.13] — 2026-07-25
+
+- Default to and enforce light theme across AdminFlow
+
+
 ## [1.0.12] — 2026-07-25
 
 - Fix browser tab title rendering in admin/base.html to include current page title

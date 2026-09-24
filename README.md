@@ -169,7 +169,8 @@ ADMINFLOW_TITLE   = "My App"          # sidebar header + browser tab title
 ADMINFLOW_COMPANY = "My Company"      # admin footer text
 # ADMINFLOW_LOGO  = "logo.svg"        # path relative to MEDIA_URL (optional)
 
-# ── Login page hero ───────────────────────────────────────────────────────────
+# ── Login page ────────────────────────────────────────────────────────────────
+ADMINFLOW_LOGIN_VERSION  = 1          # 1: split screen hero layout, 2: clean centered card (no left side)
 ADMINFLOW_LOGIN_TITLE    = "Welcome back"
 ADMINFLOW_LOGIN_SUBTITLE = "Sign in to manage your application."
 

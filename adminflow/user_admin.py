@@ -459,10 +459,21 @@ class AdminFlowUserAdminMixin:
     """
 
     def save_formset(self, request, form, formset, change):
+        is_otp_formset = (
+            (HAS_OTP_TOTP and issubclass(formset.model, TOTPDevice)) or
+            (HAS_OTP_EMAIL and issubclass(formset.model, EmailDevice)) or
+            (HAS_OTP_STATIC and issubclass(formset.model, StaticDevice))
+        )
+        if not is_otp_formset:
+            formset.save()
+            return
+
         instances = formset.save(commit=False)
         for obj in formset.deleted_objects:
             obj.delete()
         for instance in instances:
+            if hasattr(instance, "user") and not getattr(instance, "user_id", None):
+                instance.user = form.instance
             if HAS_OTP_TOTP and isinstance(instance, TOTPDevice):
                 if any(getattr(f, "_is_verified", False) for f in formset.forms):
                     instance.confirmed = True

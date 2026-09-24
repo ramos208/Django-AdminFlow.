@@ -62,15 +62,19 @@ Login Page
    * - Setting
      - Default
      - Description
+   * - ``ADMINFLOW_LOGIN_VERSION``
+     - ``1``
+     - ``1`` for split enterprise hero panel, ``2`` for clean centered card without left banner
    * - ``ADMINFLOW_LOGIN_TITLE``
      - ``"Master Your Enterprise Flow"``
-     - Hero heading on the login page right panel
+     - Hero heading on the login page
    * - ``ADMINFLOW_LOGIN_SUBTITLE``
      - *(long default text)*
      - Subheading under the login title
 
 .. code-block:: python
 
+   ADMINFLOW_LOGIN_VERSION  = 1   # 1: split layout, 2: centered clean card (no left side)
    ADMINFLOW_LOGIN_TITLE    = "Welcome back"
    ADMINFLOW_LOGIN_SUBTITLE = "Sign in to manage your application."
 

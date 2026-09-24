@@ -7,7 +7,7 @@ DEFAULTS = {
     'favicon': None,
     'company': 'AdminFlow',
     'sidebar_style': 'rounded',  # rounded, flat, sleek
-    'theme': 'system',  # system, light, dark
+    'theme': 'light',  # system, light, dark
     'density': 'comfortable',  # compact, comfortable
     'layout': 'default',
     'bg_color': '#f8f9ff',
@@ -24,7 +24,7 @@ DEFAULTS = {
     'border_radius': '16px',
     'font': 'Inter',
     'card_shadow': 'medium',
-    'dark_mode': True,
+    'dark_mode': False,
     'compact_tables': True,
     'enable_glass_effect': False,
     'sidebar_collapsible': True,
@@ -47,6 +47,7 @@ DEFAULTS = {
     'enable_theme_builder': True,
     'login_title': 'Master Your Enterprise Flow',
     'login_subtitle': 'A unified administrative engine built for scale, security, and developer productivity within the Django ecosystem.',
+    'login_version': 1,  # 1: split layout with left enterprise hero panel, 2: clean centered card (no left side)
     'django_otp': False,
 }
 
@@ -56,17 +57,59 @@ def adminflow_settings(request):
         setting_name = f"ADMINFLOW_{key.upper()}"
         context[f"adminflow_{key}"] = getattr(settings, setting_name, val)
 
+    # Support ADMINFLOW_LOGIN_STYLE as fallback for ADMINFLOW_LOGIN_VERSION
+    if hasattr(settings, 'ADMINFLOW_LOGIN_STYLE') and not hasattr(settings, 'ADMINFLOW_LOGIN_VERSION'):
+        context['adminflow_login_version'] = getattr(settings, 'ADMINFLOW_LOGIN_STYLE')
+
+    # Calculate initial / initials for fallback logo badge
+    import re
+    brand_name = (context.get('adminflow_company') or context.get('adminflow_title') or 'AdminFlow').strip()
+    words = [w for w in brand_name.split() if w]
+    if len(words) >= 2:
+        initials = f"{words[0][0]}{words[1][0]}".upper()
+    else:
+        caps = re.findall(r'[A-Z]', brand_name)
+        if len(caps) >= 2:
+            initials = f"{caps[0]}{caps[1]}".upper()
+        elif len(brand_name) >= 2:
+            initials = brand_name[:2].upper()
+        else:
+            initials = brand_name[:1].upper() or 'A'
+    context['adminflow_initials'] = initials
+    context['adminflow_initial'] = initials[0] if initials else 'A'
+
     # Automatically resolve logo URL:
     # 1) If user specified ADMINFLOW_LOGO:
     #    - If relative (e.g. 'logo.svg'), resolve against MEDIA_URL ('/media/logo.svg')
     #    - If absolute ('/static/...' or 'https://...'), use directly
-    # 2) If ADMINFLOW_LOGO is not set (None), fall back to default package logo at static('adminflow/img/logo.svg')
+    # 2) If ADMINFLOW_LOGO is None or empty, let templates fall back cleanly to initials badge
     logo = context.get('adminflow_logo')
     if logo:
         if not (logo.startswith('/') or logo.startswith('http://') or logo.startswith('https://')):
             media_url = getattr(settings, 'MEDIA_URL', '/media/')
             context['adminflow_logo'] = f"{media_url.rstrip('/')}/{logo.lstrip('/')}"
     else:
-        context['adminflow_logo'] = static('adminflow/img/logo.png')
+        # Check if default package logo exists or leave as None to display stylish initial logo badge
+        default_logo = static('adminflow/img/logo.png')
+        context['adminflow_logo'] = default_logo if default_logo else None
+
+    # Resolve custom View Site URL:
+    # Priority:
+    # 1. ADMINFLOW_VIEW_SITE_URL (in settings.py)
+    # 2. ADMINFLOW_SITE_URL (in settings.py)
+    # 3. Environment variables: ADMINFLOW_VIEW_SITE_URL, VIEW_SITE_URL, or SITE_URL (.env)
+    # 4. Fallback to site_url or '/'
+    import os
+    view_site_url = getattr(settings, 'ADMINFLOW_VIEW_SITE_URL', None)
+    if view_site_url is None:
+        view_site_url = getattr(settings, 'ADMINFLOW_SITE_URL', None)
+    if view_site_url is None:
+        view_site_url = os.getenv('ADMINFLOW_VIEW_SITE_URL') or os.getenv('VIEW_SITE_URL') or os.getenv('SITE_URL')
+
+    if view_site_url is not None:
+        context['adminflow_view_site_url'] = view_site_url
+        context['site_url'] = view_site_url
+    else:
+        context['adminflow_view_site_url'] = '/'
 
     return context

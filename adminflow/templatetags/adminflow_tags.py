@@ -1,7 +1,26 @@
+from django import forms
 from django import template
 from django.contrib import admin
 
 register = template.Library()
+
+def _get_widget_and_field(obj):
+    """
+    Safely extract (widget, form_field) from an AdminField, BoundField, forms.Field, or Widget.
+    """
+    if obj is None:
+        return None, None
+    if hasattr(obj, 'field') and not hasattr(obj, 'as_widget'):
+        obj = obj.field
+    if hasattr(obj, 'as_widget'):
+        form_field = getattr(obj, 'field', None)
+        widget = getattr(form_field, 'widget', None) or getattr(obj, 'widget', None)
+        return widget, form_field
+    if hasattr(obj, 'widget'):
+        return obj.widget, obj
+    if isinstance(obj, forms.Widget) or hasattr(obj, 'render'):
+        return obj, None
+    return obj, None
 
 @register.filter(name='list_item')
 def list_item(lst, index):
@@ -32,50 +51,98 @@ def zip_results(results, cl):
 @register.filter(name='add_class')
 def add_class(value, arg):
     try:
-        widget = value.field.widget
-        if hasattr(widget, 'widgets'):
-            for subwidget in widget.widgets:
-                css_classes = subwidget.attrs.get('class', '')
-                if css_classes:
-                    subwidget.attrs['class'] = f"{css_classes} {arg}"
-                else:
-                    subwidget.attrs['class'] = arg
-            return value.as_widget()
-        else:
-            css_classes = widget.attrs.get('class', '')
-            if css_classes:
-                css_classes = f"{css_classes} {arg}"
+        if hasattr(value, 'as_widget'):
+            widget, _ = _get_widget_and_field(value)
+            if widget and hasattr(widget, 'widgets'):
+                for subwidget in widget.widgets:
+                    css_classes = subwidget.attrs.get('class', '')
+                    subwidget.attrs['class'] = f"{css_classes} {arg}".strip() if css_classes else arg
+                return value.as_widget()
             else:
-                css_classes = arg
-            return value.as_widget(attrs={'class': css_classes})
+                existing = value.field.widget.attrs.get('class', '') if hasattr(value, 'field') and hasattr(value.field, 'widget') else ''
+                css_classes = f"{existing} {arg}".strip() if existing else arg
+                return value.as_widget(attrs={'class': css_classes})
+        return value
     except Exception:
         return value
 
 @register.filter(name='is_checkbox')
 def is_checkbox(field):
     try:
-        return field.field.widget.__class__.__name__ in ['CheckboxInput', 'CheckboxSelectMultiple']
+        widget, form_field = _get_widget_and_field(field)
+        if isinstance(widget, (forms.CheckboxInput, forms.CheckboxSelectMultiple)):
+            return True
+        if isinstance(form_field, (forms.BooleanField, forms.MultipleChoiceField)) and isinstance(widget, forms.CheckboxInput):
+            return True
+        widget_name = widget.__class__.__name__ if widget else ''
+        return widget_name in ['CheckboxInput', 'CheckboxSelectMultiple', 'AdminCheckboxInput']
+    except Exception:
+        return False
+
+@register.filter(name='is_readonly_password')
+def is_readonly_password(field):
+    try:
+        widget, _ = _get_widget_and_field(field)
+        widget_name = widget.__class__.__name__ if widget else ''
+        return 'ReadOnlyPasswordHash' in widget_name or 'PasswordHash' in widget_name
+    except Exception:
+        return False
+
+@register.filter(name='is_radio')
+def is_radio(field):
+    try:
+        widget, _ = _get_widget_and_field(field)
+        if isinstance(widget, (forms.RadioSelect,)):
+            return True
+        widget_name = widget.__class__.__name__ if widget else ''
+        return 'Radio' in widget_name
     except Exception:
         return False
 
 @register.filter(name='is_select')
 def is_select(field):
     try:
-        return field.field.widget.__class__.__name__ in ['Select', 'SelectMultiple', 'AutocompleteSelect', 'AutocompleteSelectMultiple', 'Select2']
+        widget, _ = _get_widget_and_field(field)
+        if isinstance(widget, (forms.Select, forms.SelectMultiple)):
+            return True
+        widget_name = widget.__class__.__name__ if widget else ''
+        return widget_name in ['Select', 'SelectMultiple', 'AutocompleteSelect', 'AutocompleteSelectMultiple', 'Select2', 'NullBooleanSelect']
+    except Exception:
+        return False
+
+@register.filter(name='is_json_field')
+def is_json_field(field):
+    try:
+        widget, form_field = _get_widget_and_field(field)
+        if isinstance(form_field, forms.JSONField):
+            return True
+        widget_name = widget.__class__.__name__ if widget else ''
+        bf_name = str(getattr(field, 'name', '')).lower()
+        if 'JSON' in widget_name or 'json' in bf_name:
+            return True
+        return False
     except Exception:
         return False
 
 @register.filter(name='is_textarea')
 def is_textarea(field):
     try:
-        return field.field.widget.__class__.__name__ in ['Textarea']
+        widget, _ = _get_widget_and_field(field)
+        if isinstance(widget, forms.Textarea):
+            return True
+        widget_name = widget.__class__.__name__ if widget else ''
+        return 'Textarea' in widget_name or widget_name in ['Textarea', 'AdminTextareaWidget']
     except Exception:
         return False
 
 @register.filter(name='is_file')
 def is_file(field):
     try:
-        return field.field.widget.__class__.__name__ in ['ClearableFileInput', 'FileInput']
+        widget, _ = _get_widget_and_field(field)
+        if isinstance(widget, (forms.FileInput, forms.ClearableFileInput)):
+            return True
+        widget_name = widget.__class__.__name__ if widget else ''
+        return widget_name in ['ClearableFileInput', 'FileInput', 'AdminFileWidget']
     except Exception:
         return False
 

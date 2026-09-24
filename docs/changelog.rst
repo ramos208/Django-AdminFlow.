@@ -6,6 +6,16 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.13`_ — 2026-07-25
+-----------------------
+
+Added
+~~~~~
+
+* Default to and enforce light theme across AdminFlow
+
+.. _`1.0.13`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.13
+
 `1.0.12`_ — 2026-07-25
 -----------------------
 

@@ -27,8 +27,8 @@
             <span>{% translate "Log in again" %}</span>
         </a>
 
-        {% if site_url %}
-        <a href="{{ site_url }}" class="w-full h-10 border border-outline-variant bg-surface hover:bg-surface-low text-on-surface-variant rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2">
+        {% if adminflow_view_site_url or site_url %}
+        <a href="{{ adminflow_view_site_url|default:site_url }}" class="w-full h-10 border border-outline-variant bg-surface hover:bg-surface-low text-on-surface-variant rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-[16px]">home</span>
             <span>{% translate "Return to site" %}</span>
         </a>

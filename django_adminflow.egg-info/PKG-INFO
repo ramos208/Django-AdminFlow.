@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-adminflow
-Version: 1.0.12
+Version: 1.0.13
 Summary: A premium, modern SaaS design system for the Django Admin interface with built-in 2FA, history tracking, and import/export
 Author-email: Edgar <edgar@example.com>
 License: MIT
