@@ -78,7 +78,7 @@ The change form features:
 
 * Grouped fieldsets with collapsible sections
 * Inline related models rendered as stacked or tabular inlines
-* **History** button — links to the audit trail (when ``django-simple-history`` is installed)
+* **History** button — links to the audit trail (when ``django-simple-history-relation`` is installed)
 * Save / Save and continue / Save and add another buttons in a sticky footer bar
 
 ----

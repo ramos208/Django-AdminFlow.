@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/documentation_options.js?v=cb0f6c17"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -72,6 +72,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#full-example-settings-py">Full Example <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-2-5-urls-py-2fa-verification-route">Step 2.5 — <code class="docutils literal notranslate"><span class="pre">urls.py</span></code> (2FA Verification Route)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-3-run-migrations">Step 3 — Run migrations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-4-collect-static-files">Step 4 — Collect static files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-5-visit-your-admin">Step 5 — Visit your admin</a></li>
@@ -148,45 +149,79 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#per-model-icon">Per-Model Icon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#grouped-sidebar-navigation">Grouped Sidebar Navigation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#declarative-configuration">Declarative Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#callable-provider">Callable Provider</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#template-extension-hooks">Template Extension Hooks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#app-label-in-sidebar">App Label in Sidebar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#export-format-override">Export Format Override</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">1.0.8 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1.0.15 — 2026-11-17</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#added">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">1.0.7 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id3">1.0.14 — 2026-09-24</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id4">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id6">1.0.6 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id6">1.0.13 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id7">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id9">1.0.5 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id9">1.0.12 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id10">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id12">1.0.4 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id12">1.0.11 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id13">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id15">1.0.3 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id15">1.0.10 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id16">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id18">1.0.2 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id18">1.0.9 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id19">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id21">1.0.1 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id21">1.0.8 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id22">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id24">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id24">1.0.7 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id25">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id27">1.0.6 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id28">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id30">1.0.5 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id31">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id33">1.0.4 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id34">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id36">1.0.3 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id37">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id39">1.0.2 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id40">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id42">1.0.1 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id43">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id45">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id46">Added</a></li>
 </ul>
 </li>
 </ul>
@@ -225,63 +260,136 @@
 The format follows <a class="reference external" href="https://keepachangelog.com/">Keep a Changelog</a>.</p>
 <hr class="docutils" />
 <section id="id1">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.8">1.0.8</a> — 2026-07-25<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.15">1.0.15</a> — 2026-11-17<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <section id="added">
 <h3>Added<a class="headerlink" href="#added" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Dynamic Grouped Sidebar Navigation (ADM-006)</strong>: Added opt-in grouped sidebar navigation via <code class="docutils literal notranslate"><span class="pre">ADMINFLOW_NAVIGATION</span></code> or <code class="docutils literal notranslate"><span class="pre">ADMINFLOW_NAVIGATION_PROVIDER</span></code> with sub-navigation menus, server-side permission filtering, safe URL validation, keyboard accessibility, and sessionStorage accordion state persistence.</p></li>
+<li><p><strong>Enhanced System Checks</strong>: Added Django system checks (<code class="docutils literal notranslate"><span class="pre">adminflow.W001</span></code>, <code class="docutils literal notranslate"><span class="pre">adminflow.E001</span></code>, <code class="docutils literal notranslate"><span class="pre">adminflow.E002</span></code>) validating <code class="docutils literal notranslate"><span class="pre">INSTALLED_APPS</span></code> ordering, navigation configuration, and model icon definitions.</p></li>
+<li><p><strong>Qualified Model Icon Resolver</strong>: Extended <code class="docutils literal notranslate"><span class="pre">adminflow_icon</span></code> filter to resolve <code class="docutils literal notranslate"><span class="pre">app_label.object_name</span></code> qualified keys and callable resolvers.</p></li>
+<li><p><strong>Custom User Model Compatibility</strong>: Made 2FA authentication views, user admin, and forms fully compatible with custom user models without hardcoded assumptions about <code class="docutils literal notranslate"><span class="pre">username</span></code> or <code class="docutils literal notranslate"><span class="pre">email</span></code> fields.</p></li>
+<li><p><strong>Relation-Aware Audit History Integration</strong>: Updated history extras and templates to integrate with <code class="docutils literal notranslate"><span class="pre">django-simple-history-relation&gt;=3.13.1</span></code>, featuring standalone version comparison view (<code class="docutils literal notranslate"><span class="pre">simple_history/compare_versions.html</span></code>) and current snapshot version badges.</p></li>
+<li><p><strong>Narrow Template Extension Points</strong>: Added <code class="docutils literal notranslate"><span class="pre">change_form_messages</span></code>, <code class="docutils literal notranslate"><span class="pre">extra_change_form_head</span></code>, <code class="docutils literal notranslate"><span class="pre">change_form_header_meta</span></code>, <code class="docutils literal notranslate"><span class="pre">index_header_actions</span></code>, and <code class="docutils literal notranslate"><span class="pre">index_extra_panels</span></code> template blocks to prevent message duplication and allow seamless host extension.</p></li>
+</ul>
+</section>
+</section>
+<section id="id3">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.14">1.0.14</a> — 2026-09-24<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h3>Added<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Custom “View Site” Link</strong>: Added <code class="docutils literal notranslate"><span class="pre">ADMINFLOW_VIEW_SITE_URL</span></code> and <code class="docutils literal notranslate"><span class="pre">ADMINFLOW_SITE_URL</span></code> settings with fallback to <code class="docutils literal notranslate"><span class="pre">.env</span></code> (<code class="docutils literal notranslate"><span class="pre">VIEW_SITE_URL</span></code> / <code class="docutils literal notranslate"><span class="pre">SITE_URL</span></code>). Opens in new tab and customizes logged-out return link.</p></li>
+<li><p><strong>Login Layout Versions</strong>: Added <code class="docutils literal notranslate"><span class="pre">ADMINFLOW_LOGIN_VERSION</span> <span class="pre">=</span> <span class="pre">1</span></code> (split layout) and <code class="docutils literal notranslate"><span class="pre">ADMINFLOW_LOGIN_VERSION</span> <span class="pre">=</span> <span class="pre">2</span></code> (clean centered card without left banner).</p></li>
+<li><p><strong>Brand Initial Monogram Fallback</strong>: Automated fallback monogram badge on sidebar, mobile navbar, and login pages when logo is missing or fails to load.</p></li>
+<li><p><strong>Redesigned Checkbox Cards</strong>: Modern interactive toggle cards for boolean and checkbox fields in standard forms and inlines.</p></li>
+<li><p><strong>Flatpickr 12-Hour Format</strong>: Resolved literal <code class="docutils literal notranslate"><span class="pre">&quot;g&quot;</span></code> character in 12-hour time inputs with full token mapping.</p></li>
+<li><p><strong>Extended Field Type Support</strong>: Native support for <code class="docutils literal notranslate"><span class="pre">JSONField</span></code>, <code class="docutils literal notranslate"><span class="pre">ReadOnlyPasswordHashWidget</span></code> security card, and seamless custom user inlines.</p></li>
+</ul>
+</section>
+</section>
+<section id="id6">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.13">1.0.13</a> — 2026-07-25<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="id7">
+<h3>Added<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Default to and enforce light theme across AdminFlow</p></li>
+</ul>
+</section>
+</section>
+<section id="id9">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.12">1.0.12</a> — 2026-07-25<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<section id="id10">
+<h3>Added<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Fix browser tab title rendering in admin/base.html to include current page title</p></li>
+</ul>
+</section>
+</section>
+<section id="id12">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.11">1.0.11</a> — 2026-07-25<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<section id="id13">
+<h3>Added<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Add urls.py configuration (adminflow_verify_2fa_view) to documentation and README</p></li>
+</ul>
+</section>
+</section>
+<section id="id15">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.10">1.0.10</a> — 2026-07-25<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<section id="id16">
+<h3>Added<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Fix FieldError on custom User models that use email as USERNAME_FIELD and do not have a username field</p></li>
+</ul>
+</section>
+</section>
+<section id="id18">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.9">1.0.9</a> — 2026-07-25<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<section id="id19">
+<h3>Added<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Update docs/index.rst badges to robust endpoints matching README</p></li>
+</ul>
+</section>
+</section>
+<section id="id21">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.8">1.0.8</a> — 2026-07-25<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<section id="id22">
+<h3>Added<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Update shields.io badges to robust endpoints for PyPI and GitHub</p></li>
 </ul>
 </section>
 </section>
-<section id="id3">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.7">1.0.7</a> — 2026-07-25<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<section id="id4">
-<h3>Added<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id24">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.7">1.0.7</a> — 2026-07-25<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
+<section id="id25">
+<h3>Added<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Use absolute raw GitHub URLs for screenshots and remove Publishing section from README</p></li>
 </ul>
 </section>
 </section>
-<section id="id6">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.6">1.0.6</a> — 2026-07-25<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
-<section id="id7">
-<h3>Added<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id27">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.6">1.0.6</a> — 2026-07-25<a class="headerlink" href="#id27" title="Link to this heading"></a></h2>
+<section id="id28">
+<h3>Added<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Use relative image paths in README for native GitHub.com rendering</p></li>
 </ul>
 </section>
 </section>
-<section id="id9">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.5">1.0.5</a> — 2026-07-25<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
-<section id="id10">
-<h3>Added<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<section id="id30">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.5">1.0.5</a> — 2026-07-25<a class="headerlink" href="#id30" title="Link to this heading"></a></h2>
+<section id="id31">
+<h3>Added<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Updated documentation link to <a class="reference external" href="https://django-adminflow.readthedocs.io/en/latest/">https://django-adminflow.readthedocs.io/en/latest/</a> across README and PyPI project URLs</p></li>
 </ul>
 </section>
 </section>
-<section id="id12">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.4">1.0.4</a> — 2026-07-25<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
-<section id="id13">
-<h3>Added<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<section id="id33">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.4">1.0.4</a> — 2026-07-25<a class="headerlink" href="#id33" title="Link to this heading"></a></h2>
+<section id="id34">
+<h3>Added<a class="headerlink" href="#id34" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Updated Documentation URL to point to <a class="reference external" href="https://django-adminflow.readthedocs.io/en/latest/">https://django-adminflow.readthedocs.io/en/latest/</a></p></li>
 </ul>
 </section>
 </section>
-<section id="id15">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.3">1.0.3</a> — 2026-07-25<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
-<section id="id16">
-<h3>Added<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<section id="id36">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.3">1.0.3</a> — 2026-07-25<a class="headerlink" href="#id36" title="Link to this heading"></a></h2>
+<section id="id37">
+<h3>Added<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Updated repo URLs to ramos208/Django-AdminFlow. with trailing period and master branch</p></li>
 </ul>
 </section>
 </section>
-<section id="id18">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.2">1.0.2</a> — 2026-07-25<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
-<section id="id19">
-<h3>Added<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<section id="id39">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.2">1.0.2</a> — 2026-07-25<a class="headerlink" href="#id39" title="Link to this heading"></a></h2>
+<section id="id40">
+<h3>Added<a class="headerlink" href="#id40" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Updated all GitHub URLs to ramos208/Django-AdminFlow</p></li>
 <li><p>Fixed screenshot image links on PyPI README</p></li>
@@ -289,19 +397,19 @@ The format follows <a class="reference external" href="https://keepachangelog.co
 </ul>
 </section>
 </section>
-<section id="id21">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.1">1.0.1</a> — 2026-07-25<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
-<section id="id22">
-<h3>Added<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<section id="id42">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.1">1.0.1</a> — 2026-07-25<a class="headerlink" href="#id42" title="Link to this heading"></a></h2>
+<section id="id43">
+<h3>Added<a class="headerlink" href="#id43" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Fixed README screenshot images — use absolute GitHub raw URLs so they render on PyPI</p></li>
 </ul>
 </section>
 </section>
-<section id="id24">
-<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.0">1.0.0</a> — 2026-07-23<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
-<section id="id25">
-<h3>Added<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
+<section id="id45">
+<h2><a class="reference external" href="https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.0">1.0.0</a> — 2026-07-23<a class="headerlink" href="#id45" title="Link to this heading"></a></h2>
+<section id="id46">
+<h3>Added<a class="headerlink" href="#id46" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Modern minimalist admin UI — sidebar navigation, Inter font, Material Symbols icons,
 responsive layout</p></li>

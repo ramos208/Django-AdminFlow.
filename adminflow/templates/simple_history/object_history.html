@@ -24,7 +24,21 @@
                 {{ object|truncatewords:"10" }} {% translate 'History' %}
             </h2>
             <p class="text-xs text-on-surface-variant mt-1">{% translate 'Choose a date from the list below to revert to a previous version of this object.' %}</p>
+            {% if current_history_version %}
+                <p class="text-xs font-semibold text-primary mt-1">Current version · v{{ current_history_version }}</p>
+            {% endif %}
         </div>
+        {% block history_header_actions %}
+        {% if compare_url and compare_form %}
+        <form method="get" action="{{ compare_url }}" class="flex flex-wrap items-center gap-2 bg-surface-lowest border border-outline-variant p-2.5 rounded-xl shadow-sm">
+            <label class="text-[11px] font-bold text-on-surface-variant">{% translate 'From' %} {{ compare_form.from_version }}</label>
+            <label class="text-[11px] font-bold text-on-surface-variant">{% translate 'To' %} {{ compare_form.to_version }}</label>
+            <button type="submit" class="px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold shadow-sm hover:opacity-90 transition-all cursor-pointer">
+                {% translate 'Compare Versions' %}
+            </button>
+        </form>
+        {% endif %}
+        {% endblock %}
     </div>
 
     <!-- Tab Switcher if connected inlines history is present -->
@@ -76,9 +90,14 @@
                 {% for record in orders_history %}
                 <tr>
                     <td>
-                        <a href="{% url 'admin:crm_order_simple_history' record.id record.history_id %}">
+                        {% url 'admin:crm_order_simple_history' record.id record.history_id as order_history_url %}
+                        {% if order_history_url %}
+                        <a href="{{ order_history_url }}">
                             Order #{{ record.id }}
                         </a>
+                        {% else %}
+                            Order #{{ record.id }}
+                        {% endif %}
                     </td>
                     <td>{{ record.product.name }}</td>
                     <td>{{ record.history_date }}</td>
@@ -124,9 +143,14 @@
                 {% for record in user_info_history %}
                 <tr>
                     <td>
-                        <a href="{% url 'admin:crm_userinformation_simple_history' record.id record.history_id %}">
+                        {% url 'admin:crm_userinformation_simple_history' record.id record.history_id as profile_history_url %}
+                        {% if profile_history_url %}
+                        <a href="{{ profile_history_url }}">
                             Profile #{{ record.id }}
                         </a>
+                        {% else %}
+                            Profile #{{ record.id }}
+                        {% endif %}
                     </td>
                     <td>{{ record.location|default:"None" }}</td>
                     <td>{{ record.history_date }}</td>

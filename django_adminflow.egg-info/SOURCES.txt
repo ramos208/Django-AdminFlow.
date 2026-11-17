@@ -2,12 +2,16 @@ README.md
 pyproject.toml
 adminflow/__init__.py
 adminflow/apps.py
+adminflow/checks.py
 adminflow/context_processors.py
 adminflow/forms.py
 adminflow/import_export.py
+adminflow/navigation.py
 adminflow/user_admin.py
 adminflow/views.py
+adminflow/static/adminflow/css/grouped-navigation.css
 adminflow/static/adminflow/img/logo.png
+adminflow/static/adminflow/js/grouped-navigation.js
 adminflow/templates/admin/actions.html
 adminflow/templates/admin/base.html
 adminflow/templates/admin/base_site.html
@@ -32,12 +36,14 @@ adminflow/templates/admin/import_export/change_list_export_item.html
 adminflow/templates/admin/import_export/change_list_import_item.html
 adminflow/templates/admin/import_export/export.html
 adminflow/templates/admin/includes/fieldset.html
+adminflow/templates/admin/includes/grouped_sidebar_nav.html
 adminflow/templates/admin/includes/toast.html
 adminflow/templates/auth/widgets/read_only_password_hash.html
 adminflow/templates/otp/email/token.html
 adminflow/templates/otp/email/token.txt
 adminflow/templates/registration/logged_out.html
 adminflow/templates/registration/password_change_form.html
+adminflow/templates/simple_history/compare_versions.html
 adminflow/templates/simple_history/object_history.html
 adminflow/templates/simple_history/object_history_form.html
 adminflow/templates/simple_history/submit_line.html
@@ -50,3 +56,4 @@ django_adminflow.egg-info/SOURCES.txt
 django_adminflow.egg-info/dependency_links.txt
 django_adminflow.egg-info/requires.txt
 django_adminflow.egg-info/top_level.txt
+tests/test_adminflow.py

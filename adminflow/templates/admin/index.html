@@ -12,12 +12,15 @@
             <p class="text-xs text-on-surface-variant mt-1">Here is a quick overview of your admin console.</p>
         </div>
         <div class="flex items-center gap-2">
+            {% block index_header_actions %}{% endblock %}
             <button onclick="openCommandPalette()" class="flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant text-primary font-bold text-xs hover:bg-surface-low transition-all bg-surface-lowest shadow-sm">
                 <span class="material-symbols-outlined text-[16px]">search</span>
                 {% translate "Global Search" %}
             </button>
         </div>
     </div>
+
+    {% block index_extra_panels %}{% endblock %}
 
     <!-- Section 1: KPI Stats Cards (2x2 on mobile, 4 cols on desktop) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

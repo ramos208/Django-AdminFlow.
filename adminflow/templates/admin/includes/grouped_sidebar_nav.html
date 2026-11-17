@@ -1,0 +1,53 @@
+{% load i18n static adminflow_tags %}
+<link rel="stylesheet" href="{% static 'adminflow/css/grouped-navigation.css' %}"/>
+<script src="{% static 'adminflow/js/grouped-navigation.js' %}" defer></script>
+
+{% url 'admin:index' as admin_index_url %}
+<a href="{{ admin_index_url }}" class="sidebar-link af-nav-dashboard {% if request.path == admin_index_url %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == admin_index_url %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" {% if request.path == admin_index_url %}aria-current="page"{% endif %} title="{% translate 'Dashboard' %}">
+    <span class="material-symbols-outlined text-[22px] shrink-0" aria-hidden="true">dashboard</span>
+    <span class="text-body-sm sidebar-text font-medium">{% translate "Dashboard" %}</span>
+</a>
+
+{% for group in navigation_groups %}
+<details class="af-nav-group" data-nav-key="{{ group.key }}" {% if group.active %}open data-active="true"{% endif %}>
+    <summary title="{{ group.label }}" class="af-nav-heading" style="color: {% if group.active %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};">
+        <span class="material-symbols-outlined text-[22px] shrink-0" aria-hidden="true">{{ group.icon|default:'folder' }}</span>
+        <span class="sidebar-text">{{ group.label }}</span>
+        <span class="af-nav-chevron sidebar-text" aria-hidden="true">&rsaquo;</span>
+    </summary>
+    <div class="af-nav-children">
+        {% for section in group.sections %}
+            {% if section.label %}
+            <details class="af-nav-subgroup" data-nav-key="{{ section.key }}" {% if section.active %}open data-active="true"{% endif %}>
+                <summary title="{{ section.label }}" style="color: {% if section.active %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};">
+                    <span class="sidebar-text">{{ section.label }}</span>
+                    <span class="af-nav-chevron sidebar-text" aria-hidden="true">&rsaquo;</span>
+                </summary>
+            {% endif %}
+            {% for model in section.models %}
+                <a class="af-nav-model{% if model.active %} af-nav-active{% endif %}" href="{{ model.url }}" style="color: {% if model.active %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" {% if model.active %}aria-current="page"{% endif %} title="{{ model.name }}">
+                    {% if model.icon %}<span class="material-symbols-outlined text-[18px] shrink-0" aria-hidden="true">{{ model.icon }}</span>{% endif %}
+                    <span>{{ model.name }}</span>
+                </a>
+            {% endfor %}
+            {% if section.label %}
+            </details>
+            {% endif %}
+        {% endfor %}
+    </div>
+</details>
+{% endfor %}
+
+{% block sidebar_system_links %}
+{% url 'admin:password_change' as admin_password_change_url %}
+{% if admin_password_change_url %}
+<div class="pt-4 border-t border-slate-700/30 sidebar-app-group">
+    <div class="px-4 py-1 text-[11px] font-bold uppercase tracking-wider sidebar-text opacity-50">{% translate "System" %}</div>
+    <a href="{{ admin_password_change_url }}" class="sidebar-link af-nav-dashboard {% if request.path == admin_password_change_url %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == admin_password_change_url %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" {% if request.path == admin_password_change_url %}aria-current="page"{% endif %} title="{% translate 'Change Password' %}">
+        <span class="material-symbols-outlined text-[22px] shrink-0" aria-hidden="true">password</span>
+        <span class="text-body-sm sidebar-text font-medium">{% translate "Change Password" %}</span>
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+

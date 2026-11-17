@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/documentation_options.js?v=cb0f6c17"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -73,6 +73,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#full-example-settings-py">Full Example <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-2-5-urls-py-2fa-verification-route">Step 2.5 — <code class="docutils literal notranslate"><span class="pre">urls.py</span></code> (2FA Verification Route)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-3-run-migrations">Step 3 — Run migrations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-4-collect-static-files">Step 4 — Collect static files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-5-visit-your-admin">Step 5 — Visit your admin</a></li>
@@ -149,45 +150,75 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#per-model-icon">Per-Model Icon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#grouped-sidebar-navigation">Grouped Sidebar Navigation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#declarative-configuration">Declarative Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#callable-provider">Callable Provider</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#template-extension-hooks">Template Extension Hooks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#app-label-in-sidebar">App Label in Sidebar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#export-format-override">Export Format Override</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.8 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.14 — 2026-09-24</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#added">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">1.0.7 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">1.0.13 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">1.0.6 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">1.0.12 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">1.0.5 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">1.0.11 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">1.0.4 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">1.0.10 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id13">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">1.0.3 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">1.0.9 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id16">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">1.0.2 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">1.0.8 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id19">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">1.0.1 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">1.0.7 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id22">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id24">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id24">1.0.6 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id27">1.0.5 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id28">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">1.0.4 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id31">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id33">1.0.3 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id34">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id36">1.0.2 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id37">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id39">1.0.1 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id40">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id42">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id43">Added</a></li>
 </ul>
 </li>
 </ul>
@@ -252,6 +283,27 @@ and bulk admin actions for enabling 2FA across your team.</p>
     <span class="o">...</span>
 <span class="p">]</span>
 </pre></div>
+</div>
+<p>Add to <code class="docutils literal notranslate"><span class="pre">urls.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># urls.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">adminflow.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">adminflow_verify_2fa_view</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;admin/verify-2fa/&#39;</span><span class="p">,</span> <span class="n">adminflow_verify_2fa_view</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;adminflow_verify_2fa&#39;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;admin/&#39;</span><span class="p">,</span> <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The 2FA verification route must be placed <strong>before</strong> <code class="docutils literal notranslate"><span class="pre">admin.site.urls</span></code> and given
+the URL name <code class="docutils literal notranslate"><span class="pre">name='adminflow_verify_2fa'</span></code>. If your project mounts the Django admin
+under a custom URL prefix (for example <code class="docutils literal notranslate"><span class="pre">path('portal-admin/',</span> <span class="pre">admin.site.urls)</span></code>),
+mount <code class="docutils literal notranslate"><span class="pre">path('portal-admin/verify-2fa/',</span> <span class="pre">adminflow_verify_2fa_view,</span> <span class="pre">name='adminflow_verify_2fa')</span></code>
+before <code class="docutils literal notranslate"><span class="pre">admin.site.urls</span></code>; AdminFlow automatically resolves <code class="docutils literal notranslate"><span class="pre">reverse('admin:login')</span></code>
+and <code class="docutils literal notranslate"><span class="pre">reverse('admin:index')</span></code> for redirects.</p>
 </div>
 <p>Run migrations:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate

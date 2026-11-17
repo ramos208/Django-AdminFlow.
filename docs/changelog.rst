@@ -6,6 +6,21 @@ The format follows `Keep a Changelog <https://keepachangelog.com/>`_.
 
 ----
 
+`1.0.15`_ — 2026-11-17
+-----------------------
+
+Added
+~~~~~
+
+* **Dynamic Grouped Sidebar Navigation (ADM-006)**: Added opt-in grouped sidebar navigation via ``ADMINFLOW_NAVIGATION`` or ``ADMINFLOW_NAVIGATION_PROVIDER`` with sub-navigation menus, server-side permission filtering, safe URL validation, keyboard accessibility, and sessionStorage accordion state persistence.
+* **Enhanced System Checks**: Added Django system checks (``adminflow.W001``, ``adminflow.E001``, ``adminflow.E002``) validating ``INSTALLED_APPS`` ordering, navigation configuration, and model icon definitions.
+* **Qualified Model Icon Resolver**: Extended ``adminflow_icon`` filter to resolve ``app_label.object_name`` qualified keys and callable resolvers.
+* **Custom User Model Compatibility**: Made 2FA authentication views, user admin, and forms fully compatible with custom user models without hardcoded assumptions about ``username`` or ``email`` fields.
+* **Relation-Aware Audit History Integration**: Updated history extras and templates to integrate with ``django-simple-history-relation>=3.13.1``, featuring standalone version comparison view (``simple_history/compare_versions.html``) and current snapshot version badges.
+* **Narrow Template Extension Points**: Added ``change_form_messages``, ``extra_change_form_head``, ``change_form_header_meta``, ``index_header_actions``, and ``index_extra_panels`` template blocks to prevent message duplication and allow seamless host extension.
+
+.. _`1.0.15`: https://github.com/ramos208/Django-AdminFlow./releases/tag/v1.0.15
+
 `1.0.14`_ — 2026-09-24
 -----------------------
 

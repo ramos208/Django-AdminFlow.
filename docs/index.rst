@@ -80,7 +80,7 @@ Features at a Glance
    * - 🔒 **Two-Factor Auth**
      - TOTP (Google/Authy), email OTP, backup codes — multi-device support via ``django-otp``
    * - 📜 **Audit History**
-     - Per-record change history with field-level diffs via ``django-simple-history``
+     - Per-record change history with field-level diffs via ``django-simple-history-relation``
    * - 📤 **Import / Export**
      - Multi-sheet XLSX + nested JSON via ``django-import-export``
    * - 🔌 **Plug & Play**

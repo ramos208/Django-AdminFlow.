@@ -735,6 +735,28 @@
             font-weight: 600 !important;
             font-size: 11px !important;
         }
+
+        /* Select2 Admin Autocomplete Responsive & Dark Mode Alignment */
+        body.change-form .related-widget-wrapper > .select2-container,
+        body.change-form .related-widget-wrapper > select:not(.select2-hidden-accessible) {
+            flex: 1 1 220px !important;
+            width: auto !important;
+            min-width: 0 !important;
+        }
+        body.change-form .select2-container--admin-autocomplete .select2-selection {
+            box-sizing: border-box !important;
+            min-height: 40px !important;
+            height: auto !important;
+            border: 1px solid rgba(203, 213, 225, 0.9) !important;
+            border-radius: 8px !important;
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+        }
+        .dark body.change-form .select2-container--admin-autocomplete .select2-selection {
+            border-color: #334155 !important;
+            background-color: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
     </style>
     {% block extrahead %}{% endblock %}
     {% block extrastyle %}{% endblock %}
@@ -753,11 +775,11 @@
                 {% if adminflow_logo %}
                     <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-8 w-auto max-h-8 shrink-0 object-contain" onerror="this.style.display='none'; document.getElementById('sidebar-logo-fallback')?.classList.remove('hidden'); document.getElementById('sidebar-logo-fallback')?.classList.add('flex');"/>
                     <div id="sidebar-logo-fallback" class="h-9 w-9 rounded-xl bg-primary/20 border border-primary/40 text-primary flex items-center justify-center font-black text-sm shrink-0 shadow-sm hidden">
-                        <span class="tracking-tight">{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                        <span class="tracking-tight">{{ adminflow_initials|default:'AF'|slice:':2'|upper }}</span>
                     </div>
                 {% else %}
                     <div class="h-9 w-9 rounded-xl bg-primary/20 border border-primary/40 text-primary flex items-center justify-center font-black text-sm shrink-0 shadow-sm">
-                        <span class="tracking-tight">{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                        <span class="tracking-tight">{{ adminflow_initials|default:'AF'|slice:':2'|upper }}</span>
                     </div>
                 {% endif %}
                 <span class="text-lg sidebar-text font-bold tracking-tight">{{ adminflow_title }}</span>
@@ -771,45 +793,56 @@
         </div>
         
         <!-- Sidebar Menu Items -->
-        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1.5 custom-scrollbar">
-            {% get_admin_app_list as apps %}
-            
-            <a href="{% url 'admin:index' %}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == '/admin/' %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == '/admin/' %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{% translate 'Dashboard' %}">
-                <span class="material-symbols-outlined text-[22px] shrink-0">dashboard</span>
-                <span class="text-body-sm sidebar-text font-medium">{% translate "Dashboard" %}</span>
-            </a>
-            
-            {% for app in apps %}
-            {% if app.app_label != 'otp_email' and app.app_label != 'otp_static' and app.app_label != 'otp_totp' %}
-            <div class="space-y-1 pt-2 sidebar-app-group" id="sidebar-app-{{ app.app_label }}">
-                <div class="flex items-center justify-between px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider sidebar-text opacity-50">
-                    <span>{{ app.name }}</span>
+        {% get_admin_app_list as apps %}
+        {% adminflow_navigation_groups apps as navigation_groups %}
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1.5 custom-scrollbar"{% if navigation_groups %} data-af-grouped-nav="true"{% endif %}>
+            {% block sidebar_nav %}
+            {% if navigation_groups %}
+                {% include "admin/includes/grouped_sidebar_nav.html" %}
+            {% else %}
+                {% url 'admin:index' as admin_index_url %}
+                <a href="{{ admin_index_url }}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == admin_index_url %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == admin_index_url %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{% translate 'Dashboard' %}">
+                    <span class="material-symbols-outlined text-[22px] shrink-0">dashboard</span>
+                    <span class="text-body-sm sidebar-text font-medium">{% translate "Dashboard" %}</span>
+                </a>
+
+                {% for app in apps %}
+                {% if app.app_label != 'otp_email' and app.app_label != 'otp_static' and app.app_label != 'otp_totp' %}
+                <div class="space-y-1 pt-2 sidebar-app-group" id="sidebar-app-{{ app.app_label }}">
+                    <div class="flex items-center justify-between px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider sidebar-text opacity-50">
+                        <span>{{ app.name }}</span>
+                    </div>
+
+                    {% for model in app.models %}
+                    {% if model.object_name != 'UserInformation' and model.object_name != 'EmailDevice' and model.object_name != 'StaticDevice' and model.object_name != 'TOTPDevice' %}
+                    {% url 'admin:'|add:app.app_label|add:'_'|add:model.object_name|lower|add:'_changelist' as reversed_changelist_url %}
+                    {% firstof reversed_changelist_url model.admin_url as model_changelist_url %}
+                    <a href="{{ model_changelist_url }}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == model_changelist_url %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == model_changelist_url %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{{ model.name }}">
+                        <span class="material-symbols-outlined text-[22px] shrink-0">{{ model|adminflow_icon }}</span>
+                        <span class="text-body-sm sidebar-text font-medium">{{ model.name }}</span>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
                 </div>
-                
-                {% for model in app.models %}
-                {% if model.object_name != 'UserInformation' and model.object_name != 'EmailDevice' and model.object_name != 'StaticDevice' and model.object_name != 'TOTPDevice' %}
-                {% url 'admin:'|add:app.app_label|add:'_'|add:model.object_name|lower|add:'_changelist' as model_changelist_url %}
-                <a href="{{ model_changelist_url }}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == model_changelist_url %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == model_changelist_url %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{{ model.name }}">
-                    <span class="material-symbols-outlined text-[22px] shrink-0">{{ model|adminflow_icon }}</span>
-                    <span class="text-body-sm sidebar-text font-medium">{{ model.name }}</span>
-                </a>
                 {% endif %}
+                {% empty %}
+                <p class="text-xs opacity-60 px-4">{% translate "No applications available" %}</p>
                 {% endfor %}
-            </div>
+
+                <!-- Quick System Utilities -->
+                {% block sidebar_system_links %}
+                {% url 'admin:password_change' as admin_password_change_url %}
+                <div class="pt-4 border-t border-slate-700/30 sidebar-app-group">
+                    <div class="px-4 py-1 text-[11px] font-bold uppercase tracking-wider sidebar-text opacity-50">System</div>
+
+                    <a href="{{ admin_password_change_url|default:'/admin/password_change/' }}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == admin_password_change_url %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == admin_password_change_url %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{% translate 'Change Password' %}">
+                        <span class="material-symbols-outlined text-[22px] shrink-0">password</span>
+                        <span class="text-body-sm sidebar-text font-medium">{% translate "Change Password" %}</span>
+                    </a>
+                </div>
+                {% endblock %}
             {% endif %}
-            {% empty %}
-            <p class="text-xs opacity-60 px-4">{% translate "No applications available" %}</p>
-            {% endfor %}
-            
-            <!-- Quick System Utilities -->
-            <div class="pt-4 border-t border-slate-700/30 sidebar-app-group">
-                <div class="px-4 py-1 text-[11px] font-bold uppercase tracking-wider sidebar-text opacity-50">System</div>
-                
-                <a href="{% url 'admin:password_change' %}" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-slate-800/50 {% if request.path == '/admin/password_change/' %}bg-primary shadow-md{% endif %}" style="color: {% if request.path == '/admin/password_change/' %}{{ adminflow_sidebar_active_text_color|default:'#ffffff' }}{% else %}{{ adminflow_sidebar_text_color|default:'#94a3b8' }}{% endif %};" title="{% translate 'Change Password' %}">
-                    <span class="material-symbols-outlined text-[22px] shrink-0">password</span>
-                    <span class="text-body-sm sidebar-text font-medium">{% translate "Change Password" %}</span>
-                </a>
-            </div>
+            {% endblock %}
         </nav>
         
         <!-- Sidebar Footer -->
@@ -845,11 +878,11 @@
                     {% if adminflow_logo %}
                         <img src="{{ adminflow_logo }}" alt="{{ adminflow_title }}" class="h-7 w-auto max-h-7 shrink-0 object-contain" onerror="this.style.display='none'; document.getElementById('mobile-logo-fallback')?.classList.remove('hidden'); document.getElementById('mobile-logo-fallback')?.classList.add('flex');"/>
                         <div id="mobile-logo-fallback" class="h-7 w-7 rounded-lg bg-primary/20 border border-primary/40 text-primary flex items-center justify-center font-black text-xs shrink-0 shadow-xs hidden">
-                            <span>{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                            <span>{{ adminflow_initials|default:'AF'|slice:':2'|upper }}</span>
                         </div>
                     {% else %}
                         <div class="h-7 w-7 rounded-lg bg-primary/20 border border-primary/40 text-primary flex items-center justify-center font-black text-xs shrink-0 shadow-xs">
-                            <span>{{ adminflow_initials|default:adminflow_title|slice:':2'|upper }}</span>
+                            <span>{{ adminflow_initials|default:'AF'|slice:':2'|upper }}</span>
                         </div>
                     {% endif %}
                     {{ adminflow_title }}
@@ -870,6 +903,7 @@
             
             <!-- User Options / Badges -->
             <div class="flex items-center gap-3">
+                {% block topbar_actions %}{% endblock %}
                 {% if adminflow_enable_notifications %}
                 {% get_admin_log 5 as notification_log for_user user %}
                 <div class="relative" id="notifications-dropdown-container">

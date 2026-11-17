@@ -146,14 +146,38 @@ def is_file(field):
     except Exception:
         return False
 
+@register.simple_tag(takes_context=True)
+def adminflow_navigation_groups(context, apps=None):
+    """
+    Return grouped navigation sections when ADMINFLOW_NAVIGATION or
+    ADMINFLOW_NAVIGATION_PROVIDER is configured; otherwise returns [].
+    """
+    from adminflow.navigation import get_grouped_navigation
+
+    request = context.get('request') if isinstance(context, dict) or hasattr(context, 'get') else None
+    return get_grouped_navigation(request=request, apps=apps)
+
+
+@register.simple_tag(takes_context=True)
+def grouped_admin_navigation(context, apps=None):
+    """Alias for adminflow_navigation_groups."""
+    return adminflow_navigation_groups(context, apps=apps)
+
+
 @register.filter(name='adminflow_icon')
 def adminflow_icon(value):
     val_clean = str(value).lower().replace(' ', '').replace('_', '')
-    
+    app_label_clean = ''
+
     # 1. Check if value is a model dict or Model class with ModelAdmin attribute
     if isinstance(value, dict):
+        if value.get('icon'):
+            return str(value['icon']).strip()
         model_cls = value.get('model')
-        model_name = value.get('object_name', str(value))
+        model_name = value.get('object_name') or value.get('name') or str(value)
+        app_label_clean = str(value.get('app_label') or '').lower().replace(' ', '').replace('_', '')
+        if model_cls and hasattr(model_cls, '_meta') and not app_label_clean:
+            app_label_clean = str(model_cls._meta.app_label).lower().replace(' ', '').replace('_', '')
         if model_cls and model_cls in admin.site._registry:
             model_admin = admin.site._registry[model_cls]
             icon = getattr(model_admin, 'icon', None) or getattr(model_admin, 'admin_icon', None)
@@ -162,20 +186,42 @@ def adminflow_icon(value):
         val_clean = str(model_name).lower().replace(' ', '').replace('_', '')
     elif hasattr(value, '_meta'):
         model_cls = value if isinstance(value, type) else value.__class__
+        app_label_clean = str(model_cls._meta.app_label).lower().replace(' ', '').replace('_', '')
         if model_cls in admin.site._registry:
             model_admin = admin.site._registry[model_cls]
             icon = getattr(model_admin, 'icon', None) or getattr(model_admin, 'admin_icon', None)
             if icon:
                 return icon
         val_clean = str(model_cls._meta.object_name).lower().replace(' ', '').replace('_', '')
+    elif isinstance(value, str) and '.' in value:
+        parts = value.split('.', 1)
+        app_label_clean = parts[0].lower().replace(' ', '').replace('_', '')
+        val_clean = parts[1].lower().replace(' ', '').replace('_', '')
 
-    # 2. Check custom user model icons from settings.py
+    # 2. Check custom model icons from settings.py (callable or dict)
     from django.conf import settings
     custom_icons = getattr(settings, 'ADMINFLOW_MODEL_ICONS', {})
-    if custom_icons:
+    if callable(custom_icons):
+        try:
+            resolved = custom_icons(value)
+            if isinstance(resolved, str) and resolved.strip():
+                return resolved.strip()
+        except Exception:
+            pass
+    elif isinstance(custom_icons, dict) and custom_icons:
+        full_clean = f"{app_label_clean}.{val_clean}" if app_label_clean else ''
         for k, icon in custom_icons.items():
-            if str(k).lower().replace(' ', '').replace('_', '') == val_clean:
-                return icon
+            if not isinstance(k, str) or not isinstance(icon, str) or not icon.strip():
+                continue
+            k_norm = k.lower().replace(' ', '').replace('_', '')
+            if full_clean and k_norm == full_clean:
+                return icon.strip()
+        for k, icon in custom_icons.items():
+            if not isinstance(k, str) or not isinstance(icon, str) or not icon.strip():
+                continue
+            k_norm = k.lower().replace(' ', '').replace('_', '')
+            if k_norm == val_clean:
+                return icon.strip()
 
     # 3. Predefined smart model icon mapping
     icons = {

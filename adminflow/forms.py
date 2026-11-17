@@ -4,8 +4,6 @@ from django.contrib.auth import authenticate, get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-User = get_user_model()
-
 class AdminFlowLoginForm(AuthenticationForm):
     username = forms.CharField(
         label=_("Username or Email"),
@@ -13,6 +11,7 @@ class AdminFlowLoginForm(AuthenticationForm):
     )
 
     def clean(self):
+        User = get_user_model()
         username_input = self.cleaned_data.get('username', '').strip()
         password = self.cleaned_data.get('password')
 

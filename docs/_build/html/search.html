@@ -15,7 +15,7 @@
     
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/documentation_options.js?v=cb0f6c17"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -73,6 +73,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#full-example-settings-py">Full Example <code class="docutils literal notranslate"><span class="pre">settings.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-2-5-urls-py-2fa-verification-route">Step 2.5 — <code class="docutils literal notranslate"><span class="pre">urls.py</span></code> (2FA Verification Route)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-3-run-migrations">Step 3 — Run migrations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-4-collect-static-files">Step 4 — Collect static files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-5-visit-your-admin">Step 5 — Visit your admin</a></li>
@@ -149,45 +150,79 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#per-model-icon">Per-Model Icon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#grouped-sidebar-navigation">Grouped Sidebar Navigation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#declarative-configuration">Declarative Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="customization.html#callable-provider">Callable Provider</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="customization.html#template-extension-hooks">Template Extension Hooks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#app-label-in-sidebar">App Label in Sidebar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization.html#export-format-override">Export Format Override</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.8 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.15 — 2026-11-17</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#added">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">1.0.7 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">1.0.14 — 2026-09-24</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">1.0.6 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">1.0.13 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id7">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">1.0.5 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">1.0.12 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id10">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">1.0.4 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">1.0.11 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id13">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">1.0.3 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">1.0.10 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id16">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">1.0.2 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">1.0.9 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id19">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">1.0.1 — 2026-07-25</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">1.0.8 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id22">Added</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id24">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id24">1.0.7 — 2026-07-25</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id25">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id27">1.0.6 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id28">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">1.0.5 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id31">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id33">1.0.4 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id34">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id36">1.0.3 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id37">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id39">1.0.2 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id40">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id42">1.0.1 — 2026-07-25</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id43">Added</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id45">1.0.0 — 2026-07-23</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id46">Added</a></li>
 </ul>
 </li>
 </ul>

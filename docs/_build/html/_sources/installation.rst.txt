@@ -37,7 +37,7 @@ Pulls in ``django-otp`` and its TOTP/email/static plugins:
 With Audit History
 ~~~~~~~~~~~~~~~~~~
 
-Pulls in ``django-simple-history``:
+Pulls in ``django-simple-history-relation``:
 
 .. code-block:: bash
 
@@ -75,8 +75,8 @@ Dependency Reference
      - ``django-otp>=1.4``
      - Two-factor authentication
    * - ``[history]``
-     - ``django-simple-history>=3.4``
-     - Audit trail with field-level diffs
+     - ``django-simple-history-relation>=3.13.1``
+     - Audit trail with field-level & ManyToMany diffs
    * - ``[import-export]``
      - ``django-import-export>=4.0``, ``tablib[xlsx]>=3.5``, ``openpyxl>=3.1``
      - XLSX and JSON data import/export

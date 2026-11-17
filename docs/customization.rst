@@ -224,7 +224,89 @@ Set the ``icon`` attribute on any ``ModelAdmin`` to show a
    class ProductAdmin(admin.ModelAdmin):
        icon = "inventory_2"
 
+Alternatively, map model names or ``"app_label.model_name"`` keys (or pass a callable)
+via ``ADMINFLOW_MODEL_ICONS`` in ``settings.py``:
+
+.. code-block:: python
+
+   ADMINFLOW_MODEL_ICONS = {
+       "auth.user": "manage_accounts",
+       "customer": "contact_mail",
+       "order": "shopping_cart",
+   }
+
 Browse icon names at https://fonts.google.com/icons — use the **Symbols** (outline) variant name.
+
+----
+
+Grouped Sidebar Navigation
+--------------------------
+
+By default, AdminFlow groups sidebar links by Django app using ``admin.site.get_app_list(request)``.
+To organize authorized models into custom collapsible categories or nested sections, configure
+``ADMINFLOW_NAVIGATION`` (or ``ADMINFLOW_NAVIGATION_PROVIDER``) in ``settings.py``.
+
+Model links are always filtered through Django Admin's view/change permissions first; unauthorized
+models are never shown, and unsafe URL schemes are rejected.
+
+Declarative Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   ADMINFLOW_NAVIGATION = [
+       {
+           "key": "users",
+           "label": "Users & Access",
+           "icon": "manage_accounts",
+           "models": ["auth.User", "auth.Group"],
+           "model_labels": {"auth.Group": "Teams & Groups"},
+       },
+       {
+           "key": "catalog",
+           "label": "Catalog & Reference",
+           "icon": "list_alt",
+           "sections": [
+               {"label": "Products", "models": ["shop.Category", "shop.Product"]},
+               {"label": "Locations", "models": ["geo.Region", "geo.City"]},
+           ],
+       },
+       {
+           "key": "system",
+           "label": "System & Other",
+           "icon": "settings",
+           "default": True,  # catch-all for any remaining authorized models
+       },
+   ]
+
+Callable Provider
+~~~~~~~~~~~~~~~~~
+
+You can also point ``ADMINFLOW_NAVIGATION`` (or ``ADMINFLOW_NAVIGATION_PROVIDER``) to a callable
+or dotted import path ``(request, apps) -> list[dict]``:
+
+.. code-block:: python
+
+   ADMINFLOW_NAVIGATION_PROVIDER = "myapp.navigation.build_admin_navigation"
+
+----
+
+Template Extension Hooks
+------------------------
+
+AdminFlow templates provide narrow blocks so host projects do not need to copy full templates:
+
+* ``admin/base.html``:
+  - ``{% block sidebar_nav %}`` — override or wrap sidebar navigation items
+  - ``{% block sidebar_system_links %}`` — customize the bottom System links section
+  - ``{% block topbar_actions %}`` — add action buttons next to the top-bar notification bell
+* ``admin/change_form.html``:
+  - ``{% block extra_change_form_head %}`` — load custom CSS/JS after form widget ``{{ media }}``
+  - ``{% block change_form_header_meta %}`` — display metadata under the form title (automatically renders ``current_history_version`` when present)
+  - ``{% block change_form_messages %}`` — customize the change-form toast notification area
+* ``admin/index.html``:
+  - ``{% block index_header_actions %}`` — add action buttons to the dashboard header
+  - ``{% block index_extra_panels %}`` — insert custom cards/panels above the app grid
 
 ----
 

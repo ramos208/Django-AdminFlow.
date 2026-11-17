@@ -1,9 +1,10 @@
 Audit History
 =============
 
-AdminFlow integrates with `django-simple-history <https://django-simple-history.readthedocs.io/>`_
-to give every model a full per-record change log — who changed what, when, with
-field-level before/after diffs rendered in a clean timeline.
+AdminFlow integrates with `django-simple-history-relation <https://pypi.org/project/django-simple-history-relation/>`_
+(our relationship-aware fork of ``django-simple-history``) to give every model a full
+per-record change log — who changed what, when, with field-level and ManyToMany before/after
+diffs rendered in a clean timeline.
 
 ----
 
@@ -13,6 +14,8 @@ Requirements
 .. code-block:: bash
 
    pip install "django-adminflow[history]"
+   # or directly:
+   pip install django-simple-history-relation
 
 Add to ``INSTALLED_APPS`` and ``MIDDLEWARE``:
 
@@ -43,13 +46,14 @@ Run migrations:
 Adding History to a Model
 --------------------------
 
-Add ``HistoricalRecords`` to any model:
+Add ``HistoricalRecords`` (or ``RelatedHistoricalRecords`` for automatic forward/reverse M2M
+and change-aware tracking) to any model:
 
 .. code-block:: python
 
    # models.py
    from django.db import models
-   from simple_history.models import HistoricalRecords
+   from simple_history.models import HistoricalRecords, RelatedHistoricalRecords
 
    class Customer(models.Model):
        name         = models.CharField(max_length=200)
@@ -58,7 +62,7 @@ Add ``HistoricalRecords`` to any model:
        notes        = models.TextField(blank=True)
        date_created = models.DateTimeField(auto_now_add=True)
 
-       history = HistoricalRecords()   # ← this is all you need
+       history = RelatedHistoricalRecords()   # or HistoricalRecords()
 
        def __str__(self):
            return self.name
@@ -68,17 +72,18 @@ Add ``HistoricalRecords`` to any model:
 Enabling the History Admin
 --------------------------
 
-Use ``SimpleHistoryAdmin`` as your admin base class:
+Use ``SimpleHistoryAdmin`` or ``RelatedHistoryAdmin`` (which adds atomic form+M2M batching
+and side-by-side version comparison) as your admin base class:
 
 .. code-block:: python
 
    # admin.py
    from django.contrib import admin
-   from simple_history.admin import SimpleHistoryAdmin
+   from simple_history.admin import RelatedHistoryAdmin, SimpleHistoryAdmin
    from .models import Customer
 
    @admin.register(Customer)
-   class CustomerAdmin(SimpleHistoryAdmin):
+   class CustomerAdmin(RelatedHistoryAdmin):
        list_display = ('name', 'email', 'phone', 'date_created')
 
 AdminFlow automatically styles the history list and diff view — no extra code needed.

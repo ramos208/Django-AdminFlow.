@@ -7,6 +7,8 @@ class AdminflowConfig(AppConfig):
     label = 'adminflow'
 
     def ready(self):
+        from . import checks  # noqa: F401
+
         # Pre-built Email OTP minimalist templates and subject defaults
         if not hasattr(settings, 'OTP_EMAIL_BODY_HTML_TEMPLATE_PATH'):
             setattr(settings, 'OTP_EMAIL_BODY_HTML_TEMPLATE_PATH', 'otp/email/token.html')

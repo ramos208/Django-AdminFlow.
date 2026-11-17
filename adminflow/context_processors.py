@@ -112,4 +112,7 @@ def adminflow_settings(request):
     else:
         context['adminflow_view_site_url'] = '/'
 
+    from .navigation import is_grouped_navigation_enabled
+    context['adminflow_grouped_navigation_enabled'] = is_grouped_navigation_enabled()
+
     return context

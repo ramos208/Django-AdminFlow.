@@ -55,7 +55,12 @@ Add to ``urls.py``:
 
 .. note::
 
-   The 2FA verification route must be placed **before** ``admin.site.urls``.
+   The 2FA verification route must be placed **before** ``admin.site.urls`` and given
+   the URL name ``name='adminflow_verify_2fa'``. If your project mounts the Django admin
+   under a custom URL prefix (for example ``path('portal-admin/', admin.site.urls)``),
+   mount ``path('portal-admin/verify-2fa/', adminflow_verify_2fa_view, name='adminflow_verify_2fa')``
+   before ``admin.site.urls``; AdminFlow automatically resolves ``reverse('admin:login')``
+   and ``reverse('admin:index')`` for redirects.
 
 Run migrations:
 

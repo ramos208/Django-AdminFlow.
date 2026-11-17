@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-adminflow"
-version = "1.0.14"
+version = "1.0.15"
 description = "A premium, modern SaaS design system for the Django Admin interface with built-in 2FA, history tracking, and import/export"
 readme = "README.md"
 license = { text = "MIT" }
@@ -23,6 +23,8 @@ classifiers = [
     "Framework :: Django :: 4.2",
     "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -30,6 +32,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
 ]
@@ -44,7 +48,7 @@ otp = [
 ]
 
 history = [
-    "django-simple-history>=3.4",
+    "django-simple-history-relation>=3.13.1",
 ]
 
 import-export = [
@@ -55,7 +59,7 @@ import-export = [
 
 all = [
     "django-otp>=1.4",
-    "django-simple-history>=3.4",
+    "django-simple-history-relation>=3.13.1",
     "django-import-export>=4.0",
     "tablib[xlsx]>=3.5",
     "openpyxl>=3.1",

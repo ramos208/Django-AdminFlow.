@@ -289,9 +289,11 @@ if HAS_OTP_EMAIL:
         def clean(self):
             cleaned_data = super().clean()
             if self.instance and hasattr(self.instance, "user") and self.instance.user:
+                user_obj = self.instance.user
+                uname = user_obj.get_username() if hasattr(user_obj, "get_username") else str(user_obj)
                 self.instance.email = (
-                    self.instance.user.email
-                    or f"{self.instance.user.username}@example.com"
+                    getattr(user_obj, "email", None)
+                    or f"{uname}@example.com"
                 )
             self.instance.name = "default"
             return cleaned_data
@@ -484,7 +486,8 @@ class AdminFlowUserAdminMixin:
                     continue
             elif HAS_OTP_EMAIL and isinstance(instance, EmailDevice):
                 if hasattr(instance, "user") and instance.user:
-                    instance.email = instance.user.email or f"{instance.user.username}@example.com"
+                    uname = instance.user.get_username() if hasattr(instance.user, "get_username") else str(instance.user)
+                    instance.email = getattr(instance.user, "email", None) or f"{uname}@example.com"
                     instance.name = "default"
             elif HAS_OTP_STATIC and isinstance(instance, StaticDevice):
                 instance.name = "backup_codes"
@@ -533,7 +536,8 @@ class AdminFlowUserAdminMixin:
         from django.http import HttpResponse
         from django.shortcuts import get_object_or_404
         from django.utils import timezone
-        user = get_object_or_404(User, pk=object_id)
+        user_model = get_user_model()
+        user = get_object_or_404(user_model, pk=object_id)
         device, _ = StaticDevice.objects.get_or_create(
             user=user, name="backup_codes", defaults={"confirmed": True}
         )
@@ -549,7 +553,7 @@ class AdminFlowUserAdminMixin:
         app_title  = getattr(settings, "ADMINFLOW_TITLE", "AdminFlow")
         now_str    = timezone.now().strftime("%Y-%m-%d %H:%M:%S UTC")
         codes_txt  = "\n".join([f"  {i+1:2d}. {t}" for i, t in enumerate(tokens)])
-        user_label = user.email or user.get_username()
+        user_label = getattr(user, "email", None) or (user.get_username() if hasattr(user, "get_username") else str(user))
         content = (
             f"=====================================================\n"
             f"         {app_title.upper()} 2FA EMERGENCY RECOVERY CODES\n"
@@ -572,13 +576,15 @@ class AdminFlowUserAdminMixin:
     def send_email_otp_view(self, request, object_id):
         from django.contrib import messages
         from django.shortcuts import get_object_or_404, redirect
-        user = get_object_or_404(User, pk=object_id)
+        user_model = get_user_model()
+        user = get_object_or_404(user_model, pk=object_id)
+        user_email = getattr(user, "email", None) or ""
         device, _ = EmailDevice.objects.get_or_create(
             user=user, name="default",
-            defaults={"confirmed": False, "email": user.email},
+            defaults={"confirmed": False, "email": user_email},
         )
-        if not device.email:
-            device.email = user.email
+        if not device.email and user_email:
+            device.email = user_email
             device.save()
         device.generate_challenge()
         messages.success(
@@ -590,7 +596,9 @@ class AdminFlowUserAdminMixin:
     def generate_backup_codes_view(self, request, object_id):
         from django.contrib import messages
         from django.shortcuts import get_object_or_404, redirect
-        user = get_object_or_404(User, pk=object_id)
+        user_model = get_user_model()
+        user = get_object_or_404(user_model, pk=object_id)
+        user_label = getattr(user, "email", None) or (user.get_username() if hasattr(user, "get_username") else str(user))
         device, _ = StaticDevice.objects.get_or_create(
             user=user, name="backup_codes", defaults={"confirmed": True}
         )
@@ -603,7 +611,7 @@ class AdminFlowUserAdminMixin:
         _save_batch_tokens(device.pk, codes)
         messages.success(
             request,
-            f"Successfully generated 10 emergency recovery backup codes for {user.email or user.get_username()}."
+            f"Successfully generated 10 emergency recovery backup codes for {user_label}."
         )
         return redirect(request.META.get("HTTP_REFERER", f"/admin/auth/user/{object_id}/change/"))
 
@@ -611,6 +619,7 @@ class AdminFlowUserAdminMixin:
         from django.contrib import messages
         from django.shortcuts import get_object_or_404, redirect
         device = get_object_or_404(TOTPDevice, pk=device_id, user_id=object_id)
+        user_label = getattr(device.user, "email", None) or (device.user.get_username() if hasattr(device.user, "get_username") else str(device.user))
         if request.method == "POST":
             code = request.POST.get("verify_code", "").strip()
             device.tolerance = 2
@@ -620,7 +629,7 @@ class AdminFlowUserAdminMixin:
                 messages.success(
                     request,
                     f"Verification Successful! 2FA Device '{device.name}' is now verified & active "
-                    f"for {device.user.email or device.user.get_username()}."
+                    f"for {user_label}."
                 )
             else:
                 messages.error(

@@ -2,13 +2,13 @@ Django>=4.2
 
 [all]
 django-otp>=1.4
-django-simple-history>=3.4
+django-simple-history-relation>=3.13.1
 django-import-export>=4.0
 tablib[xlsx]>=3.5
 openpyxl>=3.1
 
 [history]
-django-simple-history>=3.4
+django-simple-history-relation>=3.13.1
 
 [import-export]
 django-import-export>=4.0

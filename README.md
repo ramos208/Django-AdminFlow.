@@ -70,7 +70,7 @@ pip install django-adminflow
 # With 2FA (django-otp)
 pip install "django-adminflow[otp]"
 
-# With audit history (django-simple-history)
+# With audit history (django-simple-history-relation)
 pip install "django-adminflow[history]"
 
 # With import / export (django-import-export)
@@ -247,22 +247,22 @@ unregister_otp_models()   # removes raw django-otp admin entries
 
 ---
 
-### 📜 Audit History — `django-simple-history`
+### 📜 Audit History — `django-simple-history-relation`
 
 ```python
 # models.py
-from simple_history.models import HistoricalRecords
+from simple_history.models import HistoricalRecords, RelatedHistoricalRecords
 
 class Customer(models.Model):
     name  = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
-    history = HistoricalRecords()   # ← add this
+    history = RelatedHistoricalRecords()   # or HistoricalRecords()
 
 # admin.py
-from simple_history.admin import SimpleHistoryAdmin
+from simple_history.admin import RelatedHistoryAdmin, SimpleHistoryAdmin
 
 @admin.register(Customer)
-class CustomerAdmin(SimpleHistoryAdmin):
+class CustomerAdmin(RelatedHistoryAdmin):
     list_display = ('name', 'email')
 ```
 
